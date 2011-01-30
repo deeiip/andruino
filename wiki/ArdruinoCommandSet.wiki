@@ -2,8 +2,9 @@
 
 = Introduction =
 
-Command syntax for communicating with Arduino
+
+==Command syntax for communicating with Arduino==
 
 
 || *Command* || *Description* || *Full Command Sequence* ||
-|| 1900 || -10 || 25 ||
+|| B || Control IO on the Arduino B register. || B<Pin Number><Action>
