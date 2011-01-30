@@ -7,4 +7,4 @@
 
 
 || *Command* || *Description* || *Full Command Sequence* ||
-|| B || Control IO on the Arduino B register. || B<Pin Number><Action>
+|| B || Control IO on the Arduino B register. || B<Pin Number><Action>||
