@@ -1,13 +1,9 @@
-#summary One-sentence summary of this page.
+* This page describes the command sets used to interact with Arduino. 
 
 = Introduction =
 
 Command syntax for communicating with Arduino
 
 
-= Details =
-
-Add your content here.  Format your content with:
-  * Text in *bold* or _italic_
-  * Headings, paragraphs, and lists
-  * Automatic links to other wiki pages
+|| *Command* || *Description* || *Full Command Sequence* ||
+|| 1900 || -10 || 25 ||
