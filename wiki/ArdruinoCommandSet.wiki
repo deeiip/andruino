@@ -26,6 +26,11 @@ This section describes the command mapping used to alter the state of an arduino
 ||Hex||H||L||PORT||REGISTER||
 ||0x11||0001||0001||B||DDR||
 ||0x12||0001||0010||B||PORT||
+||0x21||0010||0001||C||DDR||
+||0x22||0010||0010||C||PORT||
+||0x31||0011||0001||D||DDR||
+||0x32||0011||0010||D||PORT||
+
 
 ==Examples==
 
