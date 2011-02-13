@@ -6,8 +6,8 @@ This section describes the command mapping used to alter the state of an arduino
 
 == References / Resources ==
 
-[http://arduino.cc/en/Reference/HomePage]
-[http://pyserial.sourceforge.net/]
+ * [http://arduino.cc/en/Reference/HomePage]
+ * [http://pyserial.sourceforge.net/]
 
 
 ==Command syntax==
