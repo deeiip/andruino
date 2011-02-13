@@ -22,7 +22,7 @@ This section describes the command mapping used to alter the state of an arduino
 
 == AVR Register Bits ==
 
-===_Note: Map specific to Atmel 168 (Standard) Arduino Current release will not include support for PORT-C '['This is the analog interface for the ardunio']'_===
+===_Note: Map specific to Atmel 168 (Standard) Arduino Current release will not include support for PORT-C (This is the analog interface for the ardunio)_===
 
 ||Hex||H||L||PORT||REGISTER||
 ||0x11||0001||0001||B||DDR||
