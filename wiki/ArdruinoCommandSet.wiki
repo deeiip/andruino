@@ -9,6 +9,11 @@ This section describes the command mapping used to alter the state of an arduino
  * [http://arduino.cc/en/Reference/HomePage]
  * [http://pyserial.sourceforge.net/]
 
+=== AVR IO Registers ===
+||Port||Pins||Notes|| 
+||B||8-13||9-11 support PWM||
+||C||0-5||Analog Inputs only||
+||D||0-7||3,5,6 Support PWM||
 
 == Serial Communication ==
 Communication between the host machine and avr consists of two main command types (Read / Write). A read command request will trigger the avr to return 
@@ -37,11 +42,4 @@ Note: current design does not include analog ports
 
 ==Examples==
 
-
-
-
-
-
-
-|| *Command* || *Description* || *Full Command Sequence* ||
-|| B || Control IO on the Arduino B register. || B1L - Set Pin 9 to low ||
+ # Setting Outputs 
