@@ -14,16 +14,17 @@ This section describes the command mapping used to alter the state of an arduino
 
  * Faming Byte   0xFF
  * Command Bytes(2 Read / Wite ) 
-  * Read 0x72 ("r") 
-  * Write 0x77("w")
-   * test
+  # Read 0x72 ("r") 
+  # Write 0x77("w")
  * AVR register Byte 
  * Register Value - Note there are only 2 registers in 
 
 
+== AVR Register Bits ==
 
-
-
+||Hex||H||L||Port||Register||
+||0x11||0001||0001||A||DDR|| 
+||0x12||0001||0010||A||
 ==Examples==
 
 
