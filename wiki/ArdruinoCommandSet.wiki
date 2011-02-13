@@ -10,19 +10,21 @@ This section describes the command mapping used to alter the state of an arduino
  * [http://pyserial.sourceforge.net/]
 
 
-== Serial Frame ==
+== Serial Communication ==
+Communication between the host machine and avr consists of two main command types (Read / Write). A read command request will trigger the avr to return 
+a full list of all IO buffers on the device (See Read-Output below). Write commands on the other hand are more complex.
 
- * Faming Byte   0xFF
- * Command Bytes(2 Read / Wite ) 
-  # Read 0x72 ("r") 
-  # Write 0x77("w")
- * AVR register Byte 
- * Register Value - Note there are only 2 registers in 
+Write commands contain the following syntax:
+Note: current design does not include analog ports
 
+ # Command byte 
+ # Register Address
+ # Register Data
 
-== AVR Register Bits ==
+== Register Addressing ==
 
 ===_Note: Map specific to Atmel 168 (Standard) Arduino Current release will not include support for PORT-C (This is the analog interface for the ardunio)_===
+
 
 ||Hex||H||L||PORT||REGISTER||
 ||0x11||0001||0001||B||DDR||
