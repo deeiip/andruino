@@ -1,10 +1,19 @@
-#     upload your program to the Arduino board.
+############################################################################
+# - This is a general purpose makefile for build arduino projects using 
+# a command line interface. This verion was built to support Linux and has
+# not been tested on windows. 
 #
-# $Id$
+# - Setup -
+# Modify the following parameters for your environment    
+# 1.) INSTALL_DIR - location of arduino software files
+# 2.) Serial port is configured using a shell variable SERIAL_NAME 
+# 	example: export SERIAL_NAME=ttyUSB0
+#
+############################################################################
 
 
 TARGET = $(notdir $(CURDIR))
-INSTALL_DIR = /swpkg/avr/arduino-0018
+INSTALL_DIR = /opt/avr/arduino-0018
 PORT = /dev/$(SERIAL_NAME)
 AVRDUDE_PROGRAMMER = stk500v1
 #MCU = atmega168
