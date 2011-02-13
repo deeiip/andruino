@@ -9,7 +9,16 @@ This section describes the command mapping used to alter the state of an arduino
  * [http://arduino.cc/en/Reference/HomePage]
  * [http://pyserial.sourceforge.net/]
 
-=== AVR IO Registers ===
+
+=== AVR PORT Description ===
+
+||Register Name|| Function||
+||DDR||Data direction register, sets pin states as Input or Output||
+||PORT||
+||PIN
+
+
+=== AVR IO Layout ===
 ||Port||Pins||Notes|| 
 ||B||8-13||9-11 support PWM||
 ||C||0-5||Analog Inputs only||
