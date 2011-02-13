@@ -14,8 +14,8 @@ This section describes the command mapping used to alter the state of an arduino
 
 ||Register Name|| Function||
 ||DDR||Data direction register, sets pin states as Input or Output||
-||PORT||
-||PIN
+||PORT||Output register ||
+||PIN|| Input register ||
 
 
 === AVR IO Layout ===
