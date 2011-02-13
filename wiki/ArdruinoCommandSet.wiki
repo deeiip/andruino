@@ -35,6 +35,24 @@ Note: current design does not include analog ports
  # Register Address
  # Register Data
 
+
+
+== Read Command Output ==
+||Hex||H||L||PORT||REGISTER||
+||0x10||0001||0000||B||DDR||
+||0x11||0001||0001||B||PORT||
+||0x12||0001||0010||B||PIN||
+||0x20||0010||0000||C||DDR||
+||0x21||0010||0001||C||PORT||
+||0x22||0010||0010||C||PIN||
+||0x30||0011||0000||D||DDR||
+||0x31||0011||0001||D||PORT||
+||0x32||0011||0010||D||PIN||
+
+
+
+
+
 == Register Addressing ==
 
 ===_Note: Map specific to Atmel 168 (Standard) Arduino Current release will not include support for PORT-C (This is the analog interface for the ardunio)_===
