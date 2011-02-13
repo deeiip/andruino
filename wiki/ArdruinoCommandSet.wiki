@@ -13,7 +13,7 @@ This section describes the command mapping used to alter the state of an arduino
 ||Port||Pins||Notes|| 
 ||B||8-13||9-11 support PWM||
 ||C||0-5||Analog Inputs only||
-||D||0-7||3,5,6 Support PWM||
+||D||2-7||3,5,6 Support PWM Pins 0-1 reserved for serial IO||
 
 == Serial Communication ==
 Communication between the host machine and avr consists of two main command types (Read / Write). A read command request will trigger the avr to return 
