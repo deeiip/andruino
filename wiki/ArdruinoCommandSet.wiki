@@ -10,21 +10,15 @@ This section describes the command mapping used to alter the state of an arduino
  * [http://pyserial.sourceforge.net/]
 
 
-
-
-
-
 == Serial Frame ==
 
-Faming Byte   0xFF
-Command Bytes(2 Read / Wite ) 
- * Read 0x72 ("r") 
- * Write 0x77("w")
-  * test
-AVR register Byte 
-
-
-Register Value - Note there are only 2 registers in 
+ * Faming Byte   0xFF
+ * Command Bytes(2 Read / Wite ) 
+  * Read 0x72 ("r") 
+  * Write 0x77("w")
+   * test
+ * AVR register Byte 
+ * Register Value - Note there are only 2 registers in 
 
 
 
