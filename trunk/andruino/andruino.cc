@@ -128,7 +128,10 @@ int getSerialByte() {
 		addr.low = serialByte & 0x0F;
 		//addr = serialByte;
 		return serialByte;
-	} 
+	} else {
+		// if the serial port is empty when requested 
+		return -1; 
+	}
 	//	return serialByte;
 }
 
@@ -199,7 +202,21 @@ void serialParser() {
 			// Display map 'M' key
 			sendIOMap();			
 		} else if (currentByte == CMD_WRITE) {
-			
+			int registerAddressByte = getSerialByte();
+			int registerData = getSerialByte();		
+			// if there is nothing on the serial port
+			// getSerialByte  will return -1.
+			// Verify valid data before continuing...
+			if ((registerAddressByte != -1 ) && (registerData != -1) ) {
+				// call process data funtion...
+				Serial.print("Got Valid Command");
+				
+			} else {
+				// return an error to the application 
+				// 
+				Serial.println("{BadData}");
+			}
+
 		}  
 	}
 }
