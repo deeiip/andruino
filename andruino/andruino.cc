@@ -9,6 +9,7 @@ Andruino - Software interface for serial control of the Arduino
 #define TOGGLE_BLINK 50
 #define RUN_BLINK_DELAY 10
 #define StatusLed 13
+#define Statustw 12
 #define NumOfPorts 3
 #define NumOfRegisters 3
 #define DDR 0
@@ -23,6 +24,7 @@ int commandBuffer[2];
 int *CMD;
 byte regMap[NumOfPorts][NumOfRegisters]; 
 volatile int led_status_state = LOW;
+volatile int pintw = HIGH;
 
 struct {
 	unsigned int low : 4; //bits 0-3
@@ -67,6 +69,10 @@ enum {
 void toggleLed() {
 	led_status_state = !led_status_state;
 	digitalWrite(StatusLed, led_status_state);
+}
+void toggletw() {
+	pintw = !pintw;
+	digitalWrite(Statustw, pintw);
 }
 
 void setIOMap() {
@@ -161,11 +167,12 @@ void setup() {
 	Serial.begin(115200);
 	delay(100);
 	pinMode(StatusLed, OUTPUT);
-	pinMode(1, OUTPUT);
 	pinMode(3, OUTPUT);
-	pinMode(4, INPUT);
+	pinMode(4, OUTPUT);
 	pinMode(7, OUTPUT);
-	DDRB = 0x2d;
+	pinMode(12, OUTPUT);
+	pinMode(2, OUTPUT);
+	//DDRB = 0x2d;
 	wait_for_host();
 	Serial.println("Starting...");
 }
@@ -237,6 +244,7 @@ void loop() {
 	if (BlinkCount >= TOGGLE_BLINK ) {
 		BlinkCount =0;
 		toggleLed();
+		toggletw();
 	}
 	BlinkCount++;
 
