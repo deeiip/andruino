@@ -1,64 +1,7 @@
-/*
-Arduino Register Scanning
-Register Values <x>: B,C,D
-PINx  	- Read state of INPUT pins 
-PORTx 	- Stores logic state of Outputs HIGH or LOW
-DDRx 	- Data Dirrection Register (Is port input or output)
------
-Notes; Pins 0&1 are reserved for Serial Communication 
-These pins will showup as inputs on the data register
+/*--------------------------------------------------------------------------------------------
+Andruino - Software interface for serial control of the Arduino
 
----- 
-AVR Register Mapping
-
-Port	Pin-Range	Collection
-B		8-13		0
-C		0-5			1 (Analog Channel) 		
-D		0-7			2
-
-
-||7|6|5|4|3|2|1|0|
-||1|0|0|0|1|0|1|0|
-
-Pins 3,5,6,9,10,11 support PWM
-
-Messaging Options
-1.) XML - Parser too big, will introduce overhead on system
-2.) Json - Library does exist "ajson" however current release is not optimized
-will encounter similar issues as item 1. 
-3.) Custom
-
-
-Custom Options
-1.) Define custom set of control characters for IO mapping.
-2.) Use pin numerical assignment.
-3.) 
-
-
-Command Syntax
-
-First release:
-Command sent to the arduino will consist of a string of 3 character
-
-Two Command type formats
-------------------------------------------
-Single Character Command Syntax
-------------------------------------------
-
-
-------------------------------------------
-Multi-character Command Syntax
-------------------------------------------
-Multi-Character Format
-<Register Letter><Pin Number><State Condition>
-
-Register Letter: [B, C,or D]: This will tell the controller which IO port to control
-Pin Number: [max number 8 [pins 0-7]]
-State Condition: [H, L, Q, I]
-H - Digital High signal
-L - Digital Low signal 
-Q - Query Pin State
-I - Invert current state
+----------------------------------------------------------------------------------------------
 */
 
 #define MAX_MESSAGE_SIZE 3
@@ -71,9 +14,12 @@ I - Invert current state
 #define DDR 0
 #define PORT 1
 #define PIN 2
+#define REG_B 0
+#define REG_C 1
+#define REG_D 2
 
 int BlinkCount = 0;
-int commandBuffer[2];
+int commandBuffer[3];
 int *CMD;
 byte regMap[NumOfPorts][NumOfRegisters]; 
 volatile int led_status_state = LOW;
@@ -82,29 +28,26 @@ struct {
 	unsigned int low : 4;
 	unsigned int high: 4;
 } addr;
+/*
+union regAddr {
+	regAddr(byte hiNbl, byte lowNbl) {
+		data = lowNbl;
+		data |= hiNbl << 4;
+	}	
 
+	byte data;
+};
 
+*/
 enum {
 	// Define the ascii charaters used in the program
 	// 
-	CMD_START = 35, // #
-	CMD_SEND_MAP = 77, // M 
-	CMD_READ = 77,
-	CMD_WRITE = 77,
-	CMD_REGISTER_B = 66, // B
-	CMD_REGISTER_C = 67, // C
-	CMD_REGISTER_D = 68, // D
-	PIN_11 = 66, // B
-	PIN_12 = 67, // C
-	PIN_13 = 68, // D
+	CMD_START = 0x23, // # - start processing
+	CMD_READ = 0x72, // r - read
+	CMD_WRITE = 0x77, // w - write
+	CMD_SAVE = 0x73, // s -  save
 	
 };
-
-
-//byte ddrRegister; // used for testing
-//unsigned char Register[] = {"DDRB", "DDRC", "DDRD"};
-
-// Array to hold the bit map
 
 void toggleLed() {
 	led_status_state = !led_status_state;
@@ -119,23 +62,24 @@ void setIOMap() {
 	// read ddr ports, add map to array
 	// TODO: Change this method to memory address instead of Adruino name. 
 	// 	Would setup support for multiple controller types 
-	regMap[DDR][0] = DDRB;
-	regMap[DDR][1] = DDRC;
-	regMap[DDR][2] = DDRD;
+	regMap[REG_B][DDR] = DDRB;
+	regMap[REG_B][PORT] = PORTB;
+	regMap[REG_B][PIN] = PINB;
 	// Scan Output States
-	regMap[PORT][0] = PORTB;
-	regMap[PORT][1] = PORTC;
-	regMap[PORT][2] = PORTD;
+	regMap[REG_C][DDR] = DDRC;
+	regMap[REG_C][PORT] = PORTC;
+	regMap[REG_C][PIN] = PINC;
 	// Scan Input states
-	regMap[PIN][0] = PINB;
-	regMap[PIN][1] = PINC;
-	regMap[PIN][2] = PIND;
+	regMap[REG_D][DDR] = DDRD;
+	regMap[REG_D][PORT] = PORTD;
+	regMap[REG_D][PIN] = PIND;
 
 }
 
 
-
+/*
 void get_register_state(int map_offset) {
+	
 	
 	char* map_name[3] = {"DDR", "PORT", "PIN"};
 	
@@ -151,16 +95,25 @@ void get_register_state(int map_offset) {
 		//Serial.println(regMap[map_offset][x], BIN);
 	}
 }
-
+*/
 
 
 void sendIOMap() {
 	// Read Map configuration
 	setIOMap();
-	// Send each register to control host
-	get_register_state(DDR);
-    get_register_state(PORT);
-    get_register_state(PIN);
+	// send map for each port
+	Serial.print("{");
+	for (int port =0; port < NumOfPorts; port++ ) {
+		for (int reg=0; reg < NumOfRegisters; reg++ ) {
+			// walk through array and return map to calling application
+							
+		        Serial.print(reg);
+			Serial.print(":");
+			Serial.print(regMap[port][reg], HEX);
+			Serial.print(",");
+		}
+	}
+	Serial.println("}");
 
 }
 
@@ -187,7 +140,7 @@ int getSerialByte() {
 
 void wait_for_host(){
 	// Initial state when device is powered on. 
-	// Initialize state. 
+		// Initialize state. 
 	// Wait for the controlling software to start
 	int result;
 	Serial.flush();
@@ -216,11 +169,6 @@ void setup() {
 	pinMode(4, INPUT);
 	pinMode(7, OUTPUT);
 	DDRB = 0x2d;
-//	pinMode(8, INPUT);
-//	pinMode(10, OUTPUT);
-//	pinMode(12, OUTPUT);
-//	pinMode(9, INPUT);
-//	Serial.flush();
 	wait_for_host();
 	Serial.println("Starting...");
 }
@@ -244,41 +192,14 @@ void serialParser() {
 		Serial.print(") Low (");
 		Serial.print(addr.low, HEX);
 		Serial.println(")");
-		
-		
 
 		// Determine if the byte is a command or command sequence		
-
-		if (expectingCommand) {
-			Serial.println("Expecting Command Loop");
-		} else {
-
-			if (currentByte == CMD_SEND_MAP ) {
-				// Display map 'M' key
-				sendIOMap();			
-			} else if ( (currentByte == CMD_REGISTER_B ) || (currentByte == CMD_REGISTER_C) || (currentByte == CMD_REGISTER_D) ) {
-				// If this is a command then look for the execution path 
-				// Expecting next byte to be command
-				if (expectingCommand) {
-					// If another request is sent before a command sequnce is complete
-					// Reset the buffer and try again
-					expectingCommand = false;
-					// debug
-					Serial.println("Command repeated, resetting");
-				}  else {
-					expectingCommand = true;
-					Serial.println("Waiting for command");
-				}
-			}			
-				
+		if (currentByte == CMD_READ ) {
+			// Display map 'M' key
+			sendIOMap();			
 		} 
-	
-
 	}
 }
-
-
-
 
 
 void loop() {
@@ -300,44 +221,7 @@ void loop() {
 	}
 	BlinkCount++;
 
-	/*
-	// Blink a LED or two
-	if (LedState) {	
-		// If LED state is true (on) turn light off
-		digitalWrite(StatusLed, LOW);
-		LedState = false;
-	} else {
-		digitalWrite(StatusLed, HIGH);
-		LedState = true;
-	}
-
-	Serial.println("Reading DDR");
-	//for (int x = 0; x < sizeof(Register); x++) {
-		Serial.print("Reading Register -> ");
-		//Serial.print(Register[x]);
-		Serial.print(" = ");
-		ddrRegister = 0x04;
-		Serial.priTOntln(&ddrRegister, BIN);
-	//}
-
-	Serial.println("DDR Map");
-	for (int x =0; x < sizeof(regMap[DDR]); x++ ) {
-		Serial.print(x);
-		Serial.print(" = ");
-		Serial.println(regMap[DDR][x], BIN);
-
-	}
-*/
-
-//	delay(2000);
 	delay(RUN_BLINK_DELAY);
-	/*
-	scanIO();
-	get_register_state(DDR);
-	get_register_state(PORT);
-	get_register_state(PIN);
-	*/
-	
 
 }
 
