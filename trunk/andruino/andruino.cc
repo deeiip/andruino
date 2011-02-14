@@ -28,7 +28,7 @@ struct {
 	unsigned int low : 4;
 	unsigned int high: 4;
 } addr;
-/*
+
 union regAddr {
 	regAddr(byte hiNbl, byte lowNbl) {
 		data = lowNbl;
@@ -38,7 +38,7 @@ union regAddr {
 	byte data;
 };
 
-*/
+
 enum {
 	// Define the ascii charaters used in the program
 	// 
@@ -76,28 +76,6 @@ void setIOMap() {
 
 }
 
-
-/*
-void get_register_state(int map_offset) {
-	
-	
-	char* map_name[3] = {"DDR", "PORT", "PIN"};
-	
-	//Serial.print("Map [ ");
-	Serial.print(map_name[map_offset]);
-	//Serial.print(" ]: ");
-	Serial.print(":");
-	//Serial.println(map_offset);
-	for (int x =0; x < sizeof(regMap[map_offset]); x++ ) {
-		Serial.print(x);
-		Serial.print(" = ");
-		Serial.println(regMap[map_offset][x],HEX);
-		//Serial.println(regMap[map_offset][x], BIN);
-	}
-}
-*/
-
-
 void sendIOMap() {
 	// Read Map configuration
 	setIOMap();
@@ -106,8 +84,9 @@ void sendIOMap() {
 	for (int port =0; port < NumOfPorts; port++ ) {
 		for (int reg=0; reg < NumOfRegisters; reg++ ) {
 			// walk through array and return map to calling application
-							
-		        Serial.print(reg);
+			regAddr convertAddr(port +1 ,reg);
+										
+		        Serial.print(convertAddr.data, HEX);
 			Serial.print(":");
 			Serial.print(regMap[port][reg], HEX);
 			Serial.print(",");
