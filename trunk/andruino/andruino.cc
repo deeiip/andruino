@@ -163,6 +163,14 @@ void wait_for_host(){
 }
 
 
+processWriteRequest(int Addr, int Data) {
+	// Process the address listing and update avr
+
+
+
+}
+
+
 void setup() {
 	Serial.begin(115200);
 	delay(100);
@@ -216,7 +224,12 @@ void serialParser() {
 			// Verify valid data before continuing...
 			if ((registerAddressByte != -1 ) && (registerData != -1) ) {
 				// call process data funtion...
+				
+				// debug message
 				Serial.print("Got Valid Command");
+				
+				
+				processWriteRequest(registerAddressByte, registerData);
 				
 			} else {
 				// return an error to the application 
@@ -251,60 +264,4 @@ void loop() {
 	delay(RUN_BLINK_DELAY);
 
 }
-
-/*
-void serialParser() {
-	// parse incomming data
-	//If there is data available on the serial port	
-	int currentByte;
-	bool expectingCommand = false;
-	while (Serial.available() != 0) {
-		// Read all bytes off the serial queue
-		// Save the current byte
-		currentByte = getSerialByte();
-		// print Debug message
-		Serial.print("-Got > ");
-		Serial.println(currentByte, HEX);
-		Serial.print("High (");
-		Serial.print(addr.high, HEX);
-		Serial.print(") Low (");
-		Serial.print(addr.low, HEX);
-		Serial.println(")");
-
-		// Determine if the byte is a command or command sequence		
-		if (currentByte == CMD_READ ) {
-			// Display map 'M' key
-			sendIOMap();			
-		} else if (currentByte == CMD_WRITE) {
-			
-		}  
-	}
-}
-
-
-void loop() {
-	
-	// ---------------------------------------------------------
-	// System should only be interrupted 
-	// When a serial command is received.
-	// ---------------------------------------------------------
-	//Read Serial Queue Depth
-	// If data is available and over depth limit
-	// Read data, determine if it is a valid command to process
-	// ---------------------------------------------------------
-	if (Serial.available() > 0 ) {
-		serialParser();
-	}
-	if (BlinkCount >= TOGGLE_BLINK ) {
-		BlinkCount =0;
-		toggleLed();
-	}
-	BlinkCount++;
-
-	delay(RUN_BLINK_DELAY);
-
-}
-
-*/
-
 
