@@ -70,3 +70,18 @@ Note: current design does not include analog ports
 ==Examples==
 
  # Setting Outputs 
+
+{{{
+ Start program 
+ Send: #
+
+ Read IO state
+ Send: \x72
+
+ Set Pins 12, 13 to outputs
+ Send: \x77\x00\x30
+
+
+
+ 
+}}}
