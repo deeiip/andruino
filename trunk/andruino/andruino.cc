@@ -1,6 +1,12 @@
 /*--------------------------------------------------------------------------------------------
 Andruino - Software interface for serial control of the Arduino
 
+
+
+
+
+
+
 ----------------------------------------------------------------------------------------------
 */
 
@@ -109,6 +115,7 @@ void sendIOMap() {
 		for (int reg=0; reg < NumOfRegisters; reg++ ) {
 			// walk through array and return map to calling application
 			//regAddr convertAddr(port +1 ,reg);
+			regAddr convertAddr(port ,reg);
 										
 		        Serial.print(convertAddr.data, HEX);
 			Serial.print(":");
@@ -167,7 +174,7 @@ void wait_for_host(){
 }
 
 
-void processWriteRequest(int Addr, int Data) {
+int processWriteRequest(int Addr, int Data) {
 	// Process the address listing and update avr
 	// Define bit map for ports
 	// B = 0x3F (00111111)
@@ -176,24 +183,38 @@ void processWriteRequest(int Addr, int Data) {
 	int ioMask[NumOfPorts] = {0x3F, 0x00, 0xFC};
 	int tempMask = 0x00;
 	//Get Register Address
-	xAddr conv(registerAddressByte);
+	xAddr conv(Addr);
 	// Register Addressing
 	// High Nibble = Port ( 0 =B ,1 =C ,or 2 =D)
 	// Low Nibble = Register Type (0=DDR, 1=PORT, 2=PIN [Can not Write TO PIN])
 	if (conv.byteMap.high == 0) {
 		// Process Port B
 		// Apply Port B Mask
-		tempMask = ioMask[conv.byteMap.high] && 
+		tempMask = ioMask[conv.byteMap.high] & Data;
 		if (conv.byteMap.low == 0) {
-			// Configure Direction of IO Pins	
+			// Configure Direction of IO Pins
+			DDRB = tempMask;	
 		} else if (conv.byteMap.low == 1) {
 			// Set state of a pin
-
+			PORTB = tempMask;
 		} else {
 			// TODO add serial error
+			Serial.println("Error[21]: illegal operation");
 		}
 	} else if (conv.byteMap.high == 2) {
 		// Process Port D
+		// Apply Port D Mask
+		tempMask = ioMask[conv.byteMap.high] & Data;
+		if (conv.byteMap.low == 0) {
+			// Configure Direction of IO Pins
+			DDRD = tempMask;	
+		} else if (conv.byteMap.low == 1) {
+			// Set state of a pin
+			PORTD = tempMask;
+		} else {
+			// TODO add serial error
+			Serial.println("Error[21]: illegal operation");
+		}
 
 	} else {
 		// Nothing Good happened return error code
@@ -225,6 +246,7 @@ void serialParser() {
 	//If there is data available on the serial port	
 	int currentByte;
 	bool expectingCommand = false;
+	int returnVal;
 	while (Serial.available() != 0) {
 		// Read all bytes off the serial queue
 		// Save the current byte
@@ -267,7 +289,7 @@ void serialParser() {
 				if ((conv.byteMap.high  == 0) || (conv.byteMap.high == 2)) {
 					// verify requested address is within valid range
 					if ( conv.byteMap.low != 2 ) { 
-						processWriteRequest(registerAddressByte, registerData);
+						returnVal = processWriteRequest(registerAddressByte, registerData);
 			
 					} else {
 						
@@ -301,13 +323,14 @@ void loop() {
 	if (Serial.available() > 0 ) {
 		serialParser();
 	}
+	/*
 	if (BlinkCount >= TOGGLE_BLINK ) {
 		BlinkCount =0;
 		toggleLed();
 		toggletw();
 	}
 	BlinkCount++;
-
+	*/
 	delay(RUN_BLINK_DELAY);
 
 }
