@@ -26,6 +26,9 @@ byte regMap[NumOfPorts][NumOfRegisters];
 volatile int led_status_state = LOW;
 volatile int pintw = HIGH;
 
+
+ 
+
 struct {
 	unsigned int low : 4; //bits 0-3
 	unsigned int high: 4; //bits 4-7 
@@ -105,11 +108,12 @@ void sendIOMap() {
 	for (int port =0; port < NumOfPorts; port++ ) {
 		for (int reg=0; reg < NumOfRegisters; reg++ ) {
 			// walk through array and return map to calling application
-			regAddr convertAddr(port +1 ,reg);
+			//regAddr convertAddr(port +1 ,reg);
 										
 		        Serial.print(convertAddr.data, HEX);
 			Serial.print(":");
 			Serial.print(regMap[port][reg], HEX);
+			// TODO: Update parsing to include 
 			Serial.print(",");
 		}
 	}
@@ -163,9 +167,40 @@ void wait_for_host(){
 }
 
 
-processWriteRequest(int Addr, int Data) {
+void processWriteRequest(int Addr, int Data) {
 	// Process the address listing and update avr
+	// Define bit map for ports
+	// B = 0x3F (00111111)
+	// C = 0x00 (00000000)
+	// D = 0xFC (11111100)
+	int ioMask[NumOfPorts] = {0x3F, 0x00, 0xFC};
+	int tempMask = 0x00;
+	//Get Register Address
+	xAddr conv(registerAddressByte);
+	// Register Addressing
+	// High Nibble = Port ( 0 =B ,1 =C ,or 2 =D)
+	// Low Nibble = Register Type (0=DDR, 1=PORT, 2=PIN [Can not Write TO PIN])
+	if (conv.byteMap.high == 0) {
+		// Process Port B
+		// Apply Port B Mask
+		tempMask = ioMask[conv.byteMap.high] && 
+		if (conv.byteMap.low == 0) {
+			// Configure Direction of IO Pins	
+		} else if (conv.byteMap.low == 1) {
+			// Set state of a pin
 
+		} else {
+			// TODO add serial error
+		}
+	} else if (conv.byteMap.high == 2) {
+		// Process Port D
+
+	} else {
+		// Nothing Good happened return error code
+		return -1;
+	}		
+	
+	
 
 
 }
@@ -226,10 +261,22 @@ void serialParser() {
 				// call process data funtion...
 				
 				// debug message
-				Serial.print("Got Valid Command");
-				
-				
-				processWriteRequest(registerAddressByte, registerData);
+				Serial.println("Got Valid Command");
+				xAddr conv(registerAddressByte);
+
+				if ((conv.byteMap.high  == 0) || (conv.byteMap.high == 2)) {
+					// verify requested address is within valid range
+					if ( conv.byteMap.low != 2 ) { 
+						processWriteRequest(registerAddressByte, registerData);
+			
+					} else {
+						
+						Serial.println("Error[16]: Invalid request Can not write to PIN Register");
+					}
+				} else {
+					Serial.println("Error[15]: Address Out of Range");
+				}
+								
 				
 			} else {
 				// return an error to the application 
