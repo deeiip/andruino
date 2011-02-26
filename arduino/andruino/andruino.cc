@@ -112,16 +112,19 @@ void sendIOMap() {
 	// send map for each port
 	Serial.print("{");
 	for (int port =0; port < NumOfPorts; port++ ) {
+		if (port != 0) {
+			Serial.print(",");
+		}
 		for (int reg=0; reg < NumOfRegisters; reg++ ) {
 			// walk through array and return map to calling application
-			//regAddr convertAddr(port +1 ,reg);
 			regAddr convertAddr(port ,reg);
-										
 		        Serial.print(convertAddr.data, HEX);
 			Serial.print(":");
 			Serial.print(regMap[port][reg], HEX);
 			// TODO: Update parsing to include 
-			Serial.print(",");
+			if (reg != NumOfRegisters -1 ) {
+				Serial.print(",");
+			}
 		}
 	}
 	Serial.println("}");
@@ -156,6 +159,7 @@ void wait_for_host(){
 	// Initial state when device is powered on. 
 		// Initialize state. 
 	// Wait for the controlling software to start
+	pinMode(StatusLed, OUTPUT);
 	int result;
 	Serial.flush();
 	while(1) {
@@ -166,6 +170,7 @@ void wait_for_host(){
 			// Device will exit this state once a '#' character is sent.
 			if (getSerialByte() == CMD_START) {
 				// Send # character to break out of loop
+				digitalWrite(StatusLed, LOW);
 				return;
 			}
 		}
@@ -230,12 +235,6 @@ int processWriteRequest(int Addr, int Data) {
 void setup() {
 	Serial.begin(115200);
 	delay(100);
-	pinMode(StatusLed, OUTPUT);
-	pinMode(3, OUTPUT);
-	pinMode(4, OUTPUT);
-	pinMode(7, OUTPUT);
-	pinMode(12, OUTPUT);
-	pinMode(2, OUTPUT);
 	//DDRB = 0x2d;
 	wait_for_host();
 	Serial.println("Starting...");
@@ -251,6 +250,7 @@ void serialParser() {
 		// Read all bytes off the serial queue
 		// Save the current byte
 		currentByte = getSerialByte();
+		/*
 		// print Debug message
 		Serial.print("-Got > ");
 		Serial.println(currentByte, HEX);
@@ -269,6 +269,7 @@ void serialParser() {
 		Serial.print(" - L: ");
 		Serial.print(conv.byteMap.low, HEX);
 		Serial.println(" end ");
+		*/
 		// Determine if the byte is a command or command sequence		
 		if (currentByte == CMD_READ ) {
 			// Display map 'M' key
@@ -283,7 +284,7 @@ void serialParser() {
 				// call process data funtion...
 				
 				// debug message
-				Serial.println("Got Valid Command");
+				//Serial.println("Got Valid Command");
 				xAddr conv(registerAddressByte);
 
 				if ((conv.byteMap.high  == 0) || (conv.byteMap.high == 2)) {
