@@ -1,6 +1,7 @@
 #import the web py module
 import web
-#from web import form
+import hashlib
+from web import form
 import sqlite3
 import datetime
 
@@ -15,6 +16,9 @@ CherryPyWSGIServer.ssl_private_key = "ssl.key/csu_hrc51_com.key"
 db = web.database(dbn='sqlite', db='andruino.db')
 
 urls  = ("/", "index")
+urls += ("/login", "login")
+urls += ("/logout", "logout")
+urls += ("/whoami", "whoami")
 urls += ("/sqlts", "dtts")
 urls += ("/config", "config")
 urls += ("/devdetails", "devdetails")
@@ -27,6 +31,12 @@ urls += ("/favicon.ico", "favicon")
 app = web.application(urls, globals())
 
 render = web.template.render('templates/')
+
+login_form = form.Form(
+	form.Textbox("username", description="Username"),
+	form.Password("password", description="Password"),
+	form.Button('submit', type='submit', description="Login"),
+)
 
 adddevice_form = form.Form(
 	form.Textbox("name", description="Name"),
@@ -49,9 +59,46 @@ adddetails_form = form.Form(
 	form.Button('submit', type='submit', description="Add Device"),
 )
 
+if web.config.get('_session') is None:
+	store = web.session.DBStore(db, 'sessions')
+	session = web.session.Session(app, store)
+	web.config._session = session
+else:
+	session = web.config._session
+
+
 class index:
 	def GET(self):
 		return 'Hello World!'
+
+class login:
+	def GET(self):
+		f = login_form()
+		return render.login(f)
+
+	def POST(self):
+		wi = web.input()
+		pwdhash = hashlib.md5(wi.password).hexdigest()
+		check = db.query("SELECT * FROM users WHERE username='"+wi.username+"' AND password='"+pwdhash+"';")
+
+		if check: 
+			session.loggedin = True
+			session.username = wi.username
+			raise web.seeother('/whoami')   
+		else:
+			session.loggedin = False
+			return "Invalid credentials"
+
+class logout:
+	def GET(self):
+		session.kill()
+		return ""
+
+class whoami:
+	def GET(self):
+		try:
+			return session.username
+		except AttributeError: raise web.seeother('/login')   
 
 class man:
 	def GET(self):
