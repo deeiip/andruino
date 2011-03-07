@@ -19,14 +19,14 @@ urls  = ("/", "index")
 urls += ("/login", "login")
 urls += ("/logout", "logout")
 urls += ("/whoami", "whoami")
-urls += ("/sqlts", "dtts")
+urls += ("/sqlts", "sqlts")
 urls += ("/config", "config")
 urls += ("/devdetails", "devdetails")
 urls += ("/adddevice", "adddevice")
 urls += ("/adddetails", "adddetails")
 urls += ("/read", "read")
 urls += ("/write", "write")
-urls += ("/man", "man")
+urls += ("/main", "main")
 urls += ("/favicon.ico", "favicon")
 app = web.application(urls, globals())
 
@@ -35,7 +35,7 @@ render = web.template.render('templates/')
 login_form = form.Form(
 	form.Textbox("username", description="Username"),
 	form.Password("password", description="Password"),
-	form.Button('submit', type='submit', description="Login"),
+	form.Button('submit', type='submit', description="Login")
 )
 
 adddevice_form = form.Form(
@@ -43,7 +43,7 @@ adddevice_form = form.Form(
 	form.Textbox("port", description="Port"),
 	form.Textbox("type", description="Type"),
 	form.Dropdown("enabled", [('0', 'Disabled'), ('1', 'Enabled')]),
-	form.Button('submit', type='submit', description="Add Device"),
+	form.Button('submit', type='submit', description="Add Device")
 )
 
 adddetails_form = form.Form(
@@ -56,7 +56,7 @@ adddetails_form = form.Form(
 	form.Textbox("last_value", description="Last Value Sent"),
 	form.Textbox("ts_output", description="Time Value Sent"),
 	form.Dropdown("enabled", [('0', 'Disabled'), ('1', 'Enabled')]),
-	form.Button('submit', type='submit', description="Add Device"),
+	form.Button('submit', type='submit', description="Add Device")
 )
 
 if web.config.get('_session') is None:
@@ -79,13 +79,14 @@ class login:
 	def POST(self):
 		wi = web.input()
 		pwdhash = hashlib.md5(wi.password).hexdigest()
-		check = db.query("SELECT * FROM users WHERE username='"+wi.username+"' AND password='"+pwdhash+"';")
+		check = db.query("SELECT username, email FROM users WHERE username='"+wi.username+"' AND password='"+pwdhash+"';")
 
-		if check: 
-			session.loggedin = True
+		try:
 			session.username = wi.username
-			raise web.seeother('/whoami')   
-		else:
+			session.email = check[0].email
+			session.loggedin = True
+			raise web.seeother('/main')   
+		except:
 			session.loggedin = False
 			return "Invalid credentials"
 
@@ -96,13 +97,15 @@ class logout:
 
 class whoami:
 	def GET(self):
-		try:
-			return session.username
+		try: session.username
 		except AttributeError: raise web.seeother('/login')   
+		return session.username
 
-class man:
+class main:
 	def GET(self):
-		return render.man()
+		try: session.username
+		except AttributeError: raise web.seeother('/login')   
+		return render.main(session.username,session.email)
 
 class favicon:
 	def GET(self):
@@ -111,37 +114,49 @@ class favicon:
 
 class sqlts:
 	def GET(self):
-		dbts = db.query('SELECT NOW() AS now;')
-		return dbts.now
+		dbts = db.query("SELECT DATETIME('now') AS now;")
+		return dbts[0].now
 
 class config:
 	def GET(self):
+		try: session.username
+		except AttributeError: raise web.seeother('/login')   
 		deviceList = db.select('devices')
 		return render.devices("Device List", deviceList)
 
 class devdetails:
 	def GET(self):
+		try: session.username
+		except AttributeError: raise web.seeother('/login')   
 		myvar = web.input()
 		detailList = db.select('details', myvar, where="device_id = $device_id")
 		return render.details("Device Details", detailList)
 
 class read:
 	def GET(self):
+		try: session.username
+		except AttributeError: raise web.seeother('/login')   
 		statuses = db.query('SELECT dev.id as did, det.id, det.label, det.ddr, det.pin, det.value, det.ts_value FROM devices dev, details det WHERE dev.id=det.device_id AND dev.enabled=1 AND det.enabled=1;')
 		return render.status("Status", statuses)
 
 class write:
 	def GET(self):
+		try: session.username
+		except AttributeError: raise web.seeother('/login')   
 		myvar = web.input()
 		db.query("UPDATE details SET value = "+myvar['value']+", last_value = "+myvar['value']+", ts_value=datetime('now'), ts_output=datetime('now') WHERE id = "+ myvar['did'])
 		raise web.seeother('/read')
 
 class adddevice:
 	def GET(self):
+		try: session.username
+		except AttributeError: raise web.seeother('/login')   
 		f = adddevice_form()
 		return render.adddevice(f)
 
 	def POST(self):
+		try: session.username
+		except AttributeError: raise web.seeother('/login')   
 		f = adddevice_form()
 		if not f.validates():
 			return render.adddevice(f)
@@ -150,6 +165,8 @@ class adddevice:
 
 class adddetails:
 	def GET(self):
+		try: session.username
+		except AttributeError: raise web.seeother('/login')   
 		myvar = web.input(device_id='0')
 		device = db.select('devices', myvar, where="id = $device_id")
 		details = db.select('details', myvar, where="device_id = $device_id")
@@ -157,6 +174,8 @@ class adddetails:
 		return render.adddetails(f,device,details)
 
 	def POST(self):
+		try: session.username
+		except AttributeError: raise web.seeother('/login')   
 		myvar = web.input(device_id='0')
 		f = adddetails_form()
 		if not f.validates():
