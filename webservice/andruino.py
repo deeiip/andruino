@@ -16,10 +16,13 @@ db = web.database(dbn='sqlite', db='andruino.db')
 
 urls  = ("/", "index")
 urls += ("/sqlts", "dtts")
-urls += ("/devices", "devices")
+urls += ("/config", "config")
+urls += ("/devdetails", "devdetails")
 urls += ("/adddevice", "adddevice")
 urls += ("/adddetails", "adddetails")
+urls += ("/read", "read")
 urls += ("/write", "write")
+urls += ("/man", "man")
 urls += ("/favicon.ico", "favicon")
 app = web.application(urls, globals())
 
@@ -50,6 +53,10 @@ class index:
 	def GET(self):
 		return 'Hello World!'
 
+class man:
+	def GET(self):
+		return render.man()
+
 class favicon:
 	def GET(self):
 		fi = open('images/favicon.ico','r')
@@ -60,10 +67,27 @@ class sqlts:
 		dbts = db.query('SELECT NOW() AS now;')
 		return dbts.now
 
-class devices:
+class config:
 	def GET(self):
 		deviceList = db.select('devices')
 		return render.devices("Device List", deviceList)
+
+class devdetails:
+	def GET(self):
+		myvar = web.input()
+		detailList = db.select('details', myvar, where="device_id = $device_id")
+		return render.details("Device Details", detailList)
+
+class read:
+	def GET(self):
+		statuses = db.query('SELECT dev.id as did, det.id, det.label, det.ddr, det.pin, det.value, det.ts_value FROM devices dev, details det WHERE dev.id=det.device_id AND dev.enabled=1 AND det.enabled=1;')
+		return render.status("Status", statuses)
+
+class write:
+	def GET(self):
+		myvar = web.input()
+		db.query("UPDATE details SET value = "+myvar['value']+", last_value = "+myvar['value']+", ts_value=datetime('now'), ts_output=datetime('now') WHERE id = "+ myvar['did'])
+		raise web.seeother('/read')
 
 class adddevice:
 	def GET(self):
@@ -76,6 +100,7 @@ class adddevice:
 			return render.adddevice(f)
 		else:
 			return db.insert('devices', **f.d)
+
 class adddetails:
 	def GET(self):
 		myvar = web.input(device_id='0')
