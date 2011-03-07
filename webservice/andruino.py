@@ -18,7 +18,6 @@ db = web.database(dbn='sqlite', db='andruino.db')
 urls  = ("/", "index")
 urls += ("/login", "login")
 urls += ("/logout", "logout")
-urls += ("/whoami", "whoami")
 urls += ("/sqlts", "sqlts")
 urls += ("/config", "config")
 urls += ("/devdetails", "devdetails")
@@ -94,12 +93,6 @@ class logout:
 	def GET(self):
 		session.kill()
 		return ""
-
-class whoami:
-	def GET(self):
-		try: session.username
-		except AttributeError: raise web.seeother('/login')   
-		return session.username
 
 class main:
 	def GET(self):
