@@ -6,8 +6,9 @@
 import os, sys
 import serial
 import threading
-import Queue
+from Queue import Queue
 import time
+import math
 
 
 
@@ -35,8 +36,9 @@ class AndrSerial(threading.Thread):
         '''
             Initialize this thread
         '''
-        
+        self.ThreadRunState = 0
         threading.Thread.__init__(self)
+        self.StopMe = threading.Event()
         # setup the serial port
         self.ser = serial.Serial('/dev/ttyAvr', 115200, timeout=0.25)
         # Wait for the serial post to initialize
@@ -47,8 +49,9 @@ class AndrSerial(threading.Thread):
         '''
             Start the thread
         '''
+        self.ThreadRunState = 1
         self.initAvr()
-        while 1:
+        while self.ThreadRunState:
             '''
                 do this alot
             '''
@@ -60,13 +63,23 @@ class AndrSerial(threading.Thread):
             '''
                 Sleep for a period of time before starting up again...
             '''
-            for s in range(1 , (self.ReadSleepTime / self.QueuePollInterval)):
-                if self.getMsg() != None:
+            waitTime = math.ceil(self.ReadSleepTime / self.QueuePollInterval)
+            print "Going to scan %s times" % (str(waitTime))
+            for s in range(1 , waitTime):
+                msg = self.getMsg() 
+                if msg != None:
                     '''
                         Do something if a message is on the queue
                     '''
+                    print "Got a message -> %s " % (msg)
                     
-            time.sleep(self.ReadSleepTime)
+                time.sleep(self.QueuePollInterval)
+                    
+            #time.sleep(self.ReadSleepTime)
+ 
+        self.cleanup()
+        
+        
         
     def initAvr(self):
         '''
@@ -100,15 +113,37 @@ class AndrSerial(threading.Thread):
             return None
         else: 
             return self.serialQueue.get()
+        
+        
+    def stop(self):
+        '''
+            Stop the tread and close out reasources...
+        '''
+        self.ThreadRunState = 0
     
+    def cleanup(self):
+        '''
+            Clean up open connections prior to exiting
+        '''
+        self.ser.close()
+        
         
 if __name__ == '__main__':
     '''
         Run some tests
     '''
     bar = Queue(0)
-    foo = AndrSerial()
-    foo.start(bar)
+    foo = AndrSerial(bar)
+    foo.start()
+    ''' 
+        Wait 5 minutes, then publish a message to the queue
+    '''
+    time.sleep(45)
+    bar.put('Hello')
+    time.sleep(30)
+    foo.stop()
+    
+    
     
     
         
