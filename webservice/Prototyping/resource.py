@@ -30,7 +30,7 @@ class AndrSerial(threading.Thread):
             
         '''
         
-        self.ReadSleepTime = 20
+        self.ReadSleepTime = 10
         self.QueuePollInterval = 0.5
         self.serialQueue = SerialInterfaceQueue
         '''
@@ -64,6 +64,7 @@ class AndrSerial(threading.Thread):
                 Sleep for a period of time before starting up again...
             '''
             waitTime = math.ceil(self.ReadSleepTime / self.QueuePollInterval)
+            waitTime = int(waitTime)
             print "Going to scan %s times" % (str(waitTime))
             for s in range(1 , waitTime):
                 msg = self.getMsg() 
@@ -132,17 +133,19 @@ if __name__ == '__main__':
     '''
         Run some tests
     '''
-    bar = Queue(0)
-    foo = AndrSerial(bar)
-    foo.start()
-    ''' 
-        Wait 5 minutes, then publish a message to the queue
-    '''
-    time.sleep(45)
-    bar.put('Hello')
-    time.sleep(30)
-    foo.stop()
-    
+    try:
+        bar = Queue(0)
+        foo = AndrSerial(bar)
+        foo.start()
+        ''' 
+            Wait 5 minutes, then publish a message to the queue
+        '''
+        time.sleep(45)
+        bar.put('Hello')
+        time.sleep(30)
+        foo.stop()
+    except KeyboardInterrupt:
+        sys.exit(0)
     
     
     
