@@ -96,7 +96,7 @@ class AndrSerial(threading.Thread):
             Read data from arduino
         '''
         data = self.ser.readline()
-        return data
+        return data.strip()
     
     
     def getMsg(self):
@@ -128,7 +128,27 @@ class AndrSerial(threading.Thread):
         '''
         self.ser.close()
         
+
+
+
+class AndrEmail(threading.Thread):
+    '''
+        Email generator thread
+    '''
+    def __init__(self, SmtpServer=None, EmailAcct=None, EmailPw=None):
+        threading.Thread.__init__()
+        self.MyEmailAddr = EmailAcct
+
+
+    def senfMsg(self, Subject='No Subject Set', Addr, msg='Default Message' ):
+        format = """\
+To: %s
+From: %s
+Subject: %s
+%s
+""" % (Addr, self.MyEmailAddr, Subject, msg)
         
+
 if __name__ == '__main__':
     '''
         Run some tests
@@ -148,8 +168,17 @@ if __name__ == '__main__':
         sys.exit(0)
     
     
-    
-        
+'''
+cmd line examples
+
+format = """\
+To: %s
+From: %s
+Subject: %s
+%s
+""" % (
+
+'''
         
 
 
