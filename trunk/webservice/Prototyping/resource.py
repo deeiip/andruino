@@ -163,7 +163,10 @@ if __name__ == '__main__':
         time.sleep(45)
         bar.put('Hello')
         time.sleep(30)
-        foo.stop()
+        '''
+            Run application 
+        '''
+        #foo.stop()
     except KeyboardInterrupt:
         sys.exit(0)
     
