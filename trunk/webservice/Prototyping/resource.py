@@ -129,7 +129,7 @@ class AndrSerial(threading.Thread):
         self.ser.close()
         
 
-
+"""
 
 class AndrEmail(threading.Thread):
     '''
@@ -141,13 +141,15 @@ class AndrEmail(threading.Thread):
 
 
     def senfMsg(self, Subject='No Subject Set', Addr, msg='Default Message' ):
-        format = """\
+
+        format = '''\
 To: %s
 From: %s
 Subject: %s
 %s
-""" % (Addr, self.MyEmailAddr, Subject, msg)
+''' % (Addr, self.MyEmailAddr, Subject, msg)
         
+"""
 
 if __name__ == '__main__':
     '''
