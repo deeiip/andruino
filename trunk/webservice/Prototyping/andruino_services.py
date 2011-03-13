@@ -9,6 +9,7 @@ import threading
 from Queue import Queue
 import time
 import math
+from struct import *
 
 
 
@@ -37,12 +38,39 @@ class AndrSerial(threading.Thread):
             Initialize this thread
         '''
         self.ThreadRunState = 0
+        self.ThreadRunStatus = False
         threading.Thread.__init__(self)
         self.StopMe = threading.Event()
         # setup the serial port
         self.ser = serial.Serial('/dev/ttyAvr', 115200, timeout=0.25)
         # Wait for the serial post to initialize
         time.sleep(20)
+        
+        '''
+            Translate read string from avr
+            example {0:20,1:0,2:0,10:0,11:0,12:0,20:0,21:1,22:1}
+        '''
+        
+        self.deviceMap = {
+            'B': {
+                'DDR':None,
+                'PIN':None,
+                'PORT':None
+                  },
+            'C': {
+                'DDR':None,
+                'PIN':None,
+                'PORT':None
+                  },
+            'D': {
+                'DDR':None,
+                'PIN':None,
+                'PORT':None
+                  }
+        }
+        
+        
+        
         
 
     def run(self):
@@ -55,8 +83,7 @@ class AndrSerial(threading.Thread):
             '''
                 do this alot
             '''
-            print "Reading Avr "
-            self.ser.write('r')
+            self.ThreadRunStatus = True
             data = self.readAvr()
             print "AVR status = %s" % (data)
             
@@ -95,9 +122,28 @@ class AndrSerial(threading.Thread):
         '''
             Read data from arduino
         '''
+        print "Reading Avr "
+        self.ser.write('r')
         data = self.ser.readline()
+        
         return data.strip()
     
+    
+    def writeAvr(self, addr, data):
+        '''
+            Write message to AVR controller
+            
+        '''
+               
+        HexAddr = pack('B1', int(addr))
+        HexData = pack('B1', int(data))
+        
+        try:
+            ser.write('\x77%s%s' % (HexAddr, HexData))
+        except SerialException:
+            return None
+        
+        
     
     def getMsg(self):
         '''
@@ -126,7 +172,39 @@ class AndrSerial(threading.Thread):
         '''
             Clean up open connections prior to exiting
         '''
+        self.ThreadRunStatus = False
         self.ser.close()
+        
+    def getStatus(self):
+        '''
+            Return Thread run status
+        '''
+        return self.ThreadRunStatus
+        
+    def updateMap(self, data):
+       '''
+           Update deviceMap dictionary
+       '''
+       
+       toPort = {'1':'B', '2':'C', '3':'D'}
+       toReg = {'0':'DDR', '1':'PORT', '2':'PIN'}
+        
+       # Check to see if the input is valid
+       if ((data[0] == '{') and (data[-1] == '}')):
+           print "Have Proper Framing Characters"
+           '''
+               Parse data from controller
+           '''
+           for Registers in data[1,-1].split(','):
+               for RegAddr in Registers.split(':'):
+                   
+           
+       else:
+           print "Malformed response from controller"
+           return None
+           
+       
+       
         
 
 """
