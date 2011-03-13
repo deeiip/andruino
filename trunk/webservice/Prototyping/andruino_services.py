@@ -69,7 +69,11 @@ class AndrSerial(threading.Thread):
                   }
         }
         
-        
+        self.serialMsg = {
+            'ID':None,
+            'TYPE': None,
+            'DATA': None
+        }
         
         
 
@@ -228,7 +232,8 @@ class AndrSerial(threading.Thread):
     
     def printMap(self):
         print "Map: %s " % (self.deviceMap)
-        
+
+    def debugQueueRequestMsg(self):
     
         
 
