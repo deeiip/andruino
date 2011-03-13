@@ -85,6 +85,8 @@ class AndrSerial(threading.Thread):
             '''
             self.ThreadRunStatus = True
             data = self.readAvr()
+            self.updateMap(data)
+            self.printMap()
             print "AVR status = %s" % (data)
             
             '''
@@ -194,17 +196,40 @@ class AndrSerial(threading.Thread):
            print "Have Proper Framing Characters"
            '''
                Parse data from controller
+               Example data:
+               {10:3F,11:2,12:2,20:0,21:0,22:0,30:0,31:0,32:3}
+               
            '''
-           for Registers in data[1,-1].split(','):
-               for RegAddr in Registers.split(':'):
-                   
-           
+           for portRegPair in data[1:-1].split(','):
+               ''' Un-comment for debugging
+                   print "Process Port -> %s" % (portRegPair)
+               '''
+               portRegData = portRegPair.split(':')
+               ''' Un-comment for debugging
+               print "Process Reg -> %s" % (portRegData)
+               print "Type of data %s" % (type(portRegData[0]))
+               print "---High Nibble %s" % (portRegData[0][0])
+               print "----Low Nibble %s" % (portRegData[0][1])   
+               '''    
+               '''
+                   Convert Hex data to binary
+                   binData - convert hex address into binary string
+               '''
+               binData = bin(int(portRegData[1], 16))[2:]
+
+               self.deviceMap[ toPort[ portRegData[0][0] ] ][ toReg[ portRegData[0][1] ] ] = binData
        else:
            print "Malformed response from controller"
            return None
            
        
-       
+    def getMap(self):
+        return self.deviceMap
+    
+    def printMap(self):
+        print "Map: %s " % (self.deviceMap)
+        
+    
         
 
 """
