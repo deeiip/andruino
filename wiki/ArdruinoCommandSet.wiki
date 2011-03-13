@@ -43,8 +43,8 @@ Note: current design does not include analog ports
 ||0x11||0001||0001||B||PORT||
 ||0x12||0001||0010||B||PIN||
 ||0x20||0010||0000||C||DDR||
-||0x31||0010||0001||C||PORT||
-||0x32||0010||0010||C||PIN||
+||0x21||0010||0001||C||PORT||
+||0x22||0010||0010||C||PIN||
 ||0x30||0011||0000||D||DDR||
 ||0x31||0011||0001||D||PORT||
 ||0x32||0011||0010||D||PIN||
@@ -79,7 +79,7 @@ Note: current design does not include analog ports
  Send: \x72
 
  Set Pins 12, 13 to outputs
- Send: \x77\x00\x30
+ Send: \x77\x10\x30
 
 
 
