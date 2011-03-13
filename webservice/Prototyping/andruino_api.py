@@ -42,6 +42,7 @@ class AndruinoApi():
         
     def setOutput(self, pinNumber, pinState):
         '''
+            This method is used to set 
             Set ouput state of a pin attached to the avr controller
             Pin Numbers = 2-13 (0 & 1 reserved for serial communication)
             Pin State = 0 or 1 
@@ -78,6 +79,9 @@ class AndruinoApi():
             '12':'16',
             '13':'32'
         }
+        
+        
+
         
 
     def isOutput(self):
