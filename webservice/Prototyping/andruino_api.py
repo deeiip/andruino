@@ -30,24 +30,12 @@ class AndruinoApi():
         self.emailQueue = Queue(0)
         self.serialThread = None
         self.emailThread = None
+
         
-        
-    def startSerial(self):
-        self.serialThread = AndrSerial(self.serialQueue)
-        self.serialThread.start()
-        
-    def stopSerial(self):
-        self.serialThread.stop()
-        
-        
-    def setOutput(self, pinNumber, pinState):
         '''
-            This method is used to set 
-            Set ouput state of a pin attached to the avr controller
-            Pin Numbers = 2-13 (0 & 1 reserved for serial communication)
-            Pin State = 0 or 1 
-        '''
-        regMap = {
+            Map Pins to Port Interfaces
+        '''        
+        self.pin2PortMap = {
             '0': 'D',
             '1': 'D',
             '2': 'D',
@@ -63,7 +51,11 @@ class AndruinoApi():
             '12':'B',
             '13':'B'   
         }
-        ioMap = { 
+        
+        '''
+            Binary values for pins
+        '''
+        self.pin2BinMap = { 
             '0':'1',
             '1':'2',
             '2':'4',
@@ -79,6 +71,35 @@ class AndruinoApi():
             '12':'16',
             '13':'32'
         }
+
+
+
+
+        
+    def startSerial(self):
+        self.serialThread = AndrSerial(self.serialQueue)
+        self.serialThread.start()
+        
+    def stopSerial(self):
+        self.serialThread.stop()
+        
+        
+    def setOutput(self, pinNumber, pinState):
+        '''
+            This method is used to set 
+            Set ouput state of a pin attached to the avr controller
+            Pin Numbers = 2-13 (0 & 1 reserved for serial communication)
+            Pin State = 0 or 1 
+            THIS SECTION SUPPORTS PORT INTERFACE ONLY (Change IO) 
+        '''
+        '''
+            Cross reference from Ports to Hex commands
+        '''
+        PortMap = {
+            'B':'11',
+            'C':'21',
+            'D':'31',
+        }
         
         
 
@@ -88,12 +109,20 @@ class AndruinoApi():
         '''
             Verify pin is an output
         '''
+        
     
     def configOutput(self):
         '''
             
         '''
-    
+        DDRMap = {
+            'B':'10',
+            'C':'20',
+            'D':'30',
+        }    
+
+
+
 
 if __name__ == '__main__':
     '''
