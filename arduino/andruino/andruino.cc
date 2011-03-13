@@ -1,7 +1,7 @@
 /*--------------------------------------------------------------------------------------------
 Andruino - Software interface for serial control of the Arduino
 
-
+Note: Updated addressing scheme to remove leading zeros
 
 
 
@@ -16,14 +16,14 @@ Andruino - Software interface for serial control of the Arduino
 #define RUN_BLINK_DELAY 10
 #define StatusLed 13
 #define Statustw 12
-#define NumOfPorts 3
+#define NumOfPorts 4
 #define NumOfRegisters 3
 #define DDR 0
 #define PORT 1
 #define PIN 2
-#define REG_B 0
-#define REG_C 1
-#define REG_D 2
+#define REG_B 1
+#define REG_C 2
+#define REG_D 3
 
 int BlinkCount = 0;
 int commandBuffer[2];
@@ -111,8 +111,8 @@ void sendIOMap() {
 	setIOMap();
 	// send map for each port
 	Serial.print("{");
-	for (int port =0; port < NumOfPorts; port++ ) {
-		if (port != 0) {
+	for (int port =1; port < NumOfPorts; port++ ) {
+		if (port != 1) {
 			Serial.print(",");
 		}
 		for (int reg=0; reg < NumOfRegisters; reg++ ) {
@@ -185,14 +185,14 @@ int processWriteRequest(int Addr, int Data) {
 	// B = 0x3F (00111111)
 	// C = 0x00 (00000000)
 	// D = 0xFC (11111100)
-	int ioMask[NumOfPorts] = {0x3F, 0x00, 0xFC};
+	int ioMask[NumOfPorts] = {0x00, 0x3F, 0x00, 0xFC};
 	int tempMask = 0x00;
 	//Get Register Address
 	xAddr conv(Addr);
 	// Register Addressing
 	// High Nibble = Port ( 0 =B ,1 =C ,or 2 =D)
 	// Low Nibble = Register Type (0=DDR, 1=PORT, 2=PIN [Can not Write TO PIN])
-	if (conv.byteMap.high == 0) {
+	if (conv.byteMap.high == 1) {
 		// Process Port B
 		// Apply Port B Mask
 		tempMask = ioMask[conv.byteMap.high] & Data;
@@ -206,7 +206,7 @@ int processWriteRequest(int Addr, int Data) {
 			// TODO add serial error
 			Serial.println("Error[21]: illegal operation");
 		}
-	} else if (conv.byteMap.high == 2) {
+	} else if (conv.byteMap.high == 3) {
 		// Process Port D
 		// Apply Port D Mask
 		tempMask = ioMask[conv.byteMap.high] & Data;
@@ -287,7 +287,8 @@ void serialParser() {
 				//Serial.println("Got Valid Command");
 				xAddr conv(registerAddressByte);
 
-				if ((conv.byteMap.high  == 0) || (conv.byteMap.high == 2)) {
+				//if ((conv.byteMap.high  == 0) || (conv.byteMap.high == 2)) {
+				if ((conv.byteMap.high  == 1) || (conv.byteMap.high == 3)) {
 					// verify requested address is within valid range
 					if ( conv.byteMap.low != 2 ) { 
 						returnVal = processWriteRequest(registerAddressByte, registerData);

@@ -59,11 +59,12 @@ $(INSTALL_DIR)/libraries/LiquidCrystal/LiquidCrystal.cpp \
 $(INSTALL_DIR)/libraries/Matrix/Matrix.cpp \
 $(INSTALL_DIR)/libraries/Servo/Servo.cpp \
 $(INSTALL_DIR)/libraries/SoftwareSerial/SoftwareSerial.cpp \
-$(INSTALL_DIR)/libraries/NewSoftSerial/NewSoftSerial.cpp \
 $(INSTALL_DIR)/libraries/Sprite/Sprite.cpp \
 $(INSTALL_DIR)/libraries/Stepper/Stepper.cpp \
 $(INSTALL_DIR)/libraries/Wire/Wire.cpp  \
 # end of CXX_MODULES
+#$(INSTALL_DIR)/libraries/NewSoftSerial/NewSoftSerial.cpp \
+
 
 CXX_APP = applet/$(TARGET).cpp
 MODULES = $(C_MODULES) $(CXX_MODULES)
