@@ -28,6 +28,9 @@ class AndruinoApi():
         '''
         self.serialQueue = Queue(0)
         self.emailQueue = Queue(0)
+        '''
+            Stub for accessing thread
+        '''
         self.serialThread = None
         self.emailThread = None
 
@@ -36,40 +39,40 @@ class AndruinoApi():
             Map Pins to Port Interfaces
         '''        
         self.pin2PortMap = {
-            '0': 'D',
-            '1': 'D',
-            '2': 'D',
-            '3': 'D',
-            '4': 'D',
-            '5': 'D',
-            '6': 'D',
-            '7': 'D',
-            '8': 'B',
-            '9': 'B',
-            '10':'B',
-            '11':'B',
-            '12':'B',
-            '13':'B'   
+            0: 'D',
+            1: 'D',
+            2: 'D',
+            3: 'D',
+            4: 'D',
+            5: 'D',
+            6: 'D',
+            7: 'D',
+            8: 'B',
+            9: 'B',
+            10:'B',
+            11:'B',
+            12:'B',
+            13:'B'   
         }
         
         '''
             Binary values for pins
         '''
         self.pin2BinMap = { 
-            '0':'1',
-            '1':'2',
-            '2':'4',
-            '3':'8',
-            '4':'16',
-            '5':'32',
-            '6':'64',
-            '7':'128',
-            '8':'1',
-            '9':'2',
-            '10':'4',
-            '11':'8',
-            '12':'16',
-            '13':'32'
+            0:1,
+            1:2,
+            2:4,
+            3:8,
+            4:16,
+            5:32,
+            6:64,
+            7:128,
+            8:1,
+            9:2,
+            10:4,
+            11:8,
+            12:16,
+            13:32
         }
 
 
@@ -98,11 +101,15 @@ class AndruinoApi():
         PortMap = {
             'B':'11',
             'C':'21',
-            'D':'31',
+            'D':'31'
         }
         
-        
-
+        msg = {
+               'ID': int(time.time()),
+               'TYPE': 'WRITE',
+               'DATA': "%s:%s:%s" % (PortMap[self.pin2PortMap[pinNumber]], self.pin2BinMap[pinNumber], pinState)
+        }
+        self.serialQueue.put(msg)
         
 
     def isOutput(self):
@@ -121,7 +128,12 @@ class AndruinoApi():
             'D':'30',
         }    
 
-
+    def getAvrMap(self):
+        '''
+            Get the IO map from the thread
+            returns dictionary of ports and OI states
+        '''
+        return serialThread.getMap()
 
 
 if __name__ == '__main__':
@@ -134,5 +146,7 @@ if __name__ == '__main__':
     for x in range(1,50):
         print "wait # %s" % (x)
         time.sleep(1.25)
+        
+    foo.setOutput(11, 1)
 
     foo.stopSerial()

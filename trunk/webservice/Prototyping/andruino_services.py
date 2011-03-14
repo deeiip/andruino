@@ -41,10 +41,54 @@ class AndrSerial(threading.Thread):
         self.ThreadRunStatus = False
         threading.Thread.__init__(self)
         self.StopMe = threading.Event()
+        
         # setup the serial port
         self.ser = serial.Serial('/dev/ttyAvr', 115200, timeout=0.25)
         # Wait for the serial post to initialize
         time.sleep(20)
+        
+        
+        '''
+            Map Pins to Port Interfaces
+        '''        
+        self.pin2PortMap = {
+            0: 'D',
+            1: 'D',
+            2: 'D',
+            3: 'D',
+            4: 'D',
+            5: 'D',
+            6: 'D',
+            7: 'D',
+            8: 'B',
+            9: 'B',
+            10:'B',
+            11:'B',
+            12:'B',
+            13:'B'   
+        }
+        
+        '''
+            Binary values for pins
+        '''
+        self.pin2BinMap = { 
+            0:1,
+            1:2,
+            2:4,
+            3:8,
+            4:16,
+            5:32,
+            6:64,
+            7:128,
+            8:1,
+            9:2,
+            10:4,
+            11:8,
+            12:16,
+            13:32
+        }
+
+        
         
         '''
             Translate read string from avr
@@ -106,7 +150,7 @@ class AndrSerial(threading.Thread):
                         Do something if a message is on the queue
                     '''
                     print "Got a message -> %s " % (msg)
-                    
+                    self.parseMsg(msg)
                 time.sleep(self.QueuePollInterval)
                     
             #time.sleep(self.ReadSleepTime)
@@ -228,14 +272,43 @@ class AndrSerial(threading.Thread):
            
        
     def getMap(self):
+        '''
+            Return IO map
+        '''
         return self.deviceMap
     
     def printMap(self):
         print "Map: %s " % (self.deviceMap)
 
-    def debugQueueRequestMsg(self):
+    def parseMsg(self, msgData):
+        '''
+            Parse content of messages on queue
+            verify data is correct
+            read message request, determine what operation to perform
+        '''
+        if (msgData['TYPE'] == 'WRITE'):
+            '''
+                Write operation
+            '''
+            
+            
+            
+            
+        elif (msgData['TYPE'] == 'READ'):
+            '''
+                Read operation
+            '''
+            
     
+    def getMsgSyntax (self):
+        '''
+            Return message syntax
+        '''
+        self.serialMsg['ID'] = "<Message ID>"
+        self.serialMsg['TYPE'] = "<Type of request read or write>"
+        self.serialMsg['DATA'] = "<Message payload>" 
         
+        return self.serialMsg
 
 """
 
