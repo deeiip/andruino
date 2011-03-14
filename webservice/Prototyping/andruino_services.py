@@ -47,10 +47,6 @@ class AndrSerial(threading.Thread):
         # Wait for the serial post to initialize
         time.sleep(20)
         
-        
-        '''
-            Map Pins to Port Interfaces
-        '''        
         self.pin2PortMap = {
             0: 'D',
             1: 'D',
@@ -90,6 +86,7 @@ class AndrSerial(threading.Thread):
 
         
         
+        
         '''
             Translate read string from avr
             example {0:20,1:0,2:0,10:0,11:0,12:0,20:0,21:1,22:1}
@@ -99,17 +96,20 @@ class AndrSerial(threading.Thread):
             'B': {
                 'DDR':None,
                 'PIN':None,
-                'PORT':None
+                'PORT':None,
+                'D_PORT':None
                   },
             'C': {
                 'DDR':None,
                 'PIN':None,
-                'PORT':None
+                'PORT':None,
+                'D_PORT':None
                   },
             'D': {
                 'DDR':None,
                 'PIN':None,
-                'PORT':None
+                'PORT':None,
+                'D_PORT':None
                   }
         }
         
@@ -152,85 +152,14 @@ class AndrSerial(threading.Thread):
                     print "Got a message -> %s " % (msg)
                     self.parseMsg(msg)
                 time.sleep(self.QueuePollInterval)
-                    
-            #time.sleep(self.ReadSleepTime)
- 
+        
+        '''
+            Thread looping finished 
+            Clean up and exit program
+        '''
         self.cleanup()
         
-        
-        
-    def initAvr(self):
-        '''
-            Put arduino in run mode
-        '''
-        print "waking up avr"
-        self.ser.write('#')
-        data = self.readAvr()
-        print "Arduino Said %s" % (data)
-        
-    def readAvr(self):
-        '''
-            Read data from arduino
-        '''
-        print "Reading Avr "
-        self.ser.write('r')
-        data = self.ser.readline()
-        
-        return data.strip()
-    
-    
-    def writeAvr(self, addr, data):
-        '''
-            Write message to AVR controller
-            
-        '''
-               
-        HexAddr = pack('B1', int(addr))
-        HexData = pack('B1', int(data))
-        
-        try:
-            ser.write('\x77%s%s' % (HexAddr, HexData))
-        except SerialException:
-            return None
-        
-        
-    
-    def getMsg(self):
-        '''
-            Check for requests on the command queue
-            If a message is found then read the data and 
-            pass the message back
-        '''
-        
-        if self.serialQueue.empty():
-            '''
-                If there are no instructions found waiting on the queue
-                then return None. 
-            '''
-            return None
-        else: 
-            return self.serialQueue.get()
-        
-        
-    def stop(self):
-        '''
-            Stop the tread and close out reasources...
-        '''
-        self.ThreadRunState = 0
-    
-    def cleanup(self):
-        '''
-            Clean up open connections prior to exiting
-        '''
-        self.ThreadRunStatus = False
-        self.ser.close()
-        
-    def getStatus(self):
-        '''
-            Return Thread run status
-        '''
-        return self.ThreadRunStatus
-        
+
     def updateMap(self, data):
        '''
            Update deviceMap dictionary
@@ -264,8 +193,10 @@ class AndrSerial(threading.Thread):
                    binData - convert hex address into binary string
                '''
                binData = bin(int(portRegData[1], 16))[2:]
+               decData = int(portRegData[1], 16)
 
                self.deviceMap[ toPort[ portRegData[0][0] ] ][ toReg[ portRegData[0][1] ] ] = binData
+               self.deviceMap[ toPort[ portRegData[0][0] ] ][ 'D_PORT' ] = decData
        else:
            print "Malformed response from controller"
            return None
@@ -286,11 +217,22 @@ class AndrSerial(threading.Thread):
             verify data is correct
             read message request, determine what operation to perform
         '''
+        print "Parsing message %s" % (msgData)
         if (msgData['TYPE'] == 'WRITE'):
             '''
                 Write operation
             '''
+            print "Write Message = %s" %(msgData)
             
+            if (msgData['STATE'] == 0 ):
+                '''
+                    Turn off IO
+                '''
+                
+            elif (msgData['STATE'] == 1 ):
+                '''
+                    Turn On IO
+                '''
             
             
             
@@ -298,7 +240,92 @@ class AndrSerial(threading.Thread):
             '''
                 Read operation
             '''
+            print "Write Message = %s" %(msgData)
+    
+    
+
+
+       
+        
+    def initAvr(self):
+        '''
+            Put arduino in run mode
+        '''
+        print "waking up avr"
+        self.ser.write('#')
+        data = self.readAvr()
+        print "Arduino Said %s" % (data)
+        
+    def readAvr(self):
+        '''
+            Read data from arduino
+        '''
+        print "Reading Avr "
+        self.ser.write('r')
+        data = self.ser.readline()
+        '''
+            Remove trailing line feed carriage return 
+        '''
+        return data.strip()
+    
+    
+    def writeAvr(self, addr, data):
+        '''
+            Write message to AVR controller
             
+        '''
+               
+        HexAddr = pack('B1', int(addr))
+        HexData = pack('B1', int(data))
+        
+        try:
+            ser.write('\x77%s%s' % (HexAddr, HexData))
+        except SerialException:
+            return None
+        
+        
+    
+    def getMsg(self):
+        '''
+            Check for requests on the command queue
+            If a message is found then read the data and 
+            pass the message back
+        '''
+        
+        if self.serialQueue.empty():
+            '''
+                If there are no instructions found waiting on the queue
+                then return None. 
+            '''
+            return None
+        else: 
+            '''
+                If a message is available on the Queue remove the data 
+                pass it to the calling request
+            '''
+            return self.serialQueue.get()
+        
+        
+    def stop(self):
+        '''
+            Stop the tread and close out reasources...
+        '''
+        self.ThreadRunState = 0
+    
+    def cleanup(self):
+        '''
+            Clean up open connections prior to exiting
+        '''
+        self.ThreadRunStatus = False
+        self.ser.close()
+        
+    def getStatus(self):
+        '''
+            Return Thread run status
+        '''
+        return self.ThreadRunStatus
+        
+
     
     def getMsgSyntax (self):
         '''

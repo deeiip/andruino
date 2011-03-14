@@ -33,10 +33,9 @@ class AndruinoApi():
         '''
         self.serialThread = None
         self.emailThread = None
-
-        
         '''
             Map Pins to Port Interfaces
+            Map must be maintained at this level for multiple device support.
         '''        
         self.pin2PortMap = {
             0: 'D',
@@ -75,10 +74,7 @@ class AndruinoApi():
             13:32
         }
 
-
-
-
-        
+       
     def startSerial(self):
         self.serialThread = AndrSerial(self.serialQueue)
         self.serialThread.start()
@@ -94,7 +90,11 @@ class AndruinoApi():
             Pin Numbers = 2-13 (0 & 1 reserved for serial communication)
             Pin State = 0 or 1 
             THIS SECTION SUPPORTS PORT INTERFACE ONLY (Change IO) 
+            TODO: Add multiple devices (Phase 2)
         '''
+        
+        
+        self.serialThread.setOutput(pinNumber,pinState)
         '''
             Cross reference from Ports to Hex commands
         '''
@@ -107,16 +107,11 @@ class AndruinoApi():
         msg = {
                'ID': int(time.time()),
                'TYPE': 'WRITE',
-               'DATA': "%s:%s:%s" % (PortMap[self.pin2PortMap[pinNumber]], self.pin2BinMap[pinNumber], pinState)
+               'DATA': "%s:%s" % (PortMap[self.pin2PortMap[pinNumber]], self.pin2BinMap[pinNumber]),
+               'STATE': pinState
         }
         self.serialQueue.put(msg)
-        
 
-    def isOutput(self):
-        '''
-            Verify pin is an output
-        '''
-        
     
     def configOutput(self):
         '''
