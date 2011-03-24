@@ -36,45 +36,7 @@ class AndruinoApi():
         '''
             Map Pins to Port Interfaces
             Map must be maintained at this level for multiple device support.
-        '''        
-        self.pin2PortMap = {
-            0: 'D',
-            1: 'D',
-            2: 'D',
-            3: 'D',
-            4: 'D',
-            5: 'D',
-            6: 'D',
-            7: 'D',
-            8: 'B',
-            9: 'B',
-            10:'B',
-            11:'B',
-            12:'B',
-            13:'B'   
-        }
-        
-        '''
-            Binary values for pins
-        '''
-        self.pin2BinMap = { 
-            0:1,
-            1:2,
-            2:4,
-            3:8,
-            4:16,
-            5:32,
-            6:64,
-            7:128,
-            8:1,
-            9:2,
-            10:4,
-            11:8,
-            12:16,
-            13:32
-        }
-
-       
+        '''       
     def startSerial(self):
         self.serialThread = AndrSerial(self.serialQueue)
         self.serialThread.start()
@@ -94,20 +56,15 @@ class AndruinoApi():
         '''
         
         
-        self.serialThread.setOutput(pinNumber,pinState)
+        #self.serialThread.setOutput(pinNumber,pinState)
         '''
             Cross reference from Ports to Hex commands
         '''
-        PortMap = {
-            'B':'11',
-            'C':'21',
-            'D':'31'
-        }
         
         msg = {
                'ID': int(time.time()),
                'TYPE': 'WRITE',
-               'DATA': "%s:%s" % (PortMap[self.pin2PortMap[pinNumber]], self.pin2BinMap[pinNumber]),
+               'DATA': "%s:%s" % (pinNumber, pinState),
                'STATE': pinState
         }
         self.serialQueue.put(msg)
@@ -138,10 +95,14 @@ if __name__ == '__main__':
     foo = AndruinoApi()
     foo.startSerial()
     
-    for x in range(1,50):
+    for x in range(1,10):
         print "wait # %s" % (x)
         time.sleep(1.25)
         
     foo.setOutput(11, 1)
 
+    for x in range(1,10):
+        print "wait # %s" % (x)
+        time.sleep(1.25)
+        
     foo.stopSerial()
