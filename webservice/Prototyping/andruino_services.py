@@ -124,7 +124,7 @@ class AndrSerial(threading.Thread):
         '''
         self.cleanup()
         
-
+    """
     def updateMap(self, data):
        '''
            Update deviceMap dictionary
@@ -166,7 +166,7 @@ class AndrSerial(threading.Thread):
            print "Malformed response from controller"
            return None
            
-       
+    """   
     def getMap(self):
         '''
             Return IO map
