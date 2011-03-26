@@ -110,11 +110,12 @@ if __name__ == '__main__':
     foo.startSerial()
     #print "API sleeping 10 seconds"
     #time.sleep(10)
-    print "Configure 6,10,and 11 as Outputs"
+    print "Configure 10,and 11 as Outputs"
     foo.setConfig(11, 1)
+    print "\n\n"
     foo.setConfig(10, 1)
-    foo.setConfig(6, 1)
-    
+
+    print "Configuration COMPLETE"
     
     for x in range(1,3):
         print "wait # %s" % (x)
@@ -126,12 +127,13 @@ if __name__ == '__main__':
         print "wait # %s" % (x)
         time.sleep(1.25)
     
-    print "Set Pin 6 As Ouptut"
-    foo.setOutput(6, 1)
+
     print "Set Pin 10 As Ouptut"
     foo.setOutput(10, 1)
+    print "-------------DONE SETTING OUTPUT "
     print "Set Pin 11 As Ouptut"
     foo.setOutput(11, 1)
+    print "-------------DONE SETTING OUTPUT "
 
         
     foo.stopSerial()
