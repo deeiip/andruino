@@ -10,13 +10,13 @@ from Queue import Queue
 import time
 import math
 from struct import *
-
+from datamaps import *
 
 
 
 class AndrSerial(threading.Thread):
     
-    def __init__(self, SerialInterfaceQueue):
+    def __init__(self, SerialInterfaceQueue, deviceType='arduino'):
         ''' 
             Setup serial interface
             
@@ -30,6 +30,7 @@ class AndrSerial(threading.Thread):
         
             
         '''
+        self.map = deviceMap(deviceType)
         
         self.ReadSleepTime = 10
         self.QueuePollInterval = 0.5
@@ -48,36 +49,6 @@ class AndrSerial(threading.Thread):
         time.sleep(20)
         
 
-
-        
-        
-        
-        '''
-            Translate read string from avr
-            example {0:20,1:0,2:0,10:0,11:0,12:0,20:0,21:1,22:1}
-        '''
-        
-        self.deviceMap = {
-            'B': {
-                'DDR':None,
-                'PIN':None,
-                'PORT':None,
-                'D_PORT':None
-                  },
-            'C': {
-                'DDR':None,
-                'PIN':None,
-                'PORT':None,
-                'D_PORT':None
-                  },
-            'D': {
-                'DDR':None,
-                'PIN':None,
-                'PORT':None,
-                'D_PORT':None
-                  }
-        }
-        
         self.serialMsg = {
             'ID':None,
             'TYPE': None,
