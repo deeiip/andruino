@@ -13,11 +13,11 @@ class deviceMap():
             Save current map type
         '''
         self.deviceMap = {}
-        self.deviceMap = {}
+        self.AvrMap = {}
         
                
         if (device_type == 'arduino'):
-           loadAvr168()
+           self.loadAvr168()
         else:
             return None  
         
@@ -92,7 +92,12 @@ class deviceMap():
             12:16,
             13:32
         }
-   
+    
+    
+    def getMap(self):
+        return self.AvrMap
+    
+       
     def updateMap(self, data):
        '''
            Update deviceMap dictionary
@@ -128,8 +133,8 @@ class deviceMap():
                binData = bin(int(portRegData[1], 16))[2:]
                decData = int(portRegData[1], 16)
 
-               self.deviceMap[ toPort[ portRegData[0][0] ] ][ toReg[ portRegData[0][1] ] ] = binData
-               self.deviceMap[ toPort[ portRegData[0][0] ] ][ 'D_PORT' ] = decData
+               self.AvrMap[ toPort[ portRegData[0][0] ] ][ toReg[ portRegData[0][1] ] ] = binData
+               self.AvrMap[ toPort[ portRegData[0][0] ] ][ 'D_PORT' ] = decData
        else:
            print "Malformed response from controller"
            return None
