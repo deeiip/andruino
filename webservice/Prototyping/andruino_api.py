@@ -69,6 +69,29 @@ class AndruinoApi():
         }
         self.serialQueue.put(msg)
 
+    def setConfig(self, pinNumber, pinMode):
+        '''
+            This method is used to set 
+            Set ouput state of a pin attached to the avr controller
+            Pin Numbers = 2-13 (0 & 1 reserved for serial communication)
+            Pin State = 0 or 1 
+            THIS SECTION SUPPORTS PORT INTERFACE ONLY (Change IO) 
+            TODO: Add multiple devices (Phase 2)
+        '''
+        
+        
+        #self.serialThread.setOutput(pinNumber,pinState)
+        '''
+            Cross reference from Ports to Hex commands
+        '''
+        
+        msg = {
+               'ID': int(time.time()),
+               'TYPE': 'CFG',
+               'DATA': "%s:%s" % (pinNumber, pinMode),
+        }
+        self.serialQueue.put(msg)
+
     
     def configOutput(self):
         '''
@@ -95,14 +118,23 @@ if __name__ == '__main__':
     foo = AndruinoApi()
     foo.startSerial()
     
-    for x in range(1,10):
+    for x in range(1,3):
         print "wait # %s" % (x)
         time.sleep(1.25)
         
     foo.setOutput(11, 1)
 
-    for x in range(1,10):
+    for x in range(1,3):
         print "wait # %s" % (x)
         time.sleep(1.25)
+    
+    foo.setOutput(6, 1)
+    foo.setOutput(10, 1)
+    
+    for x in range(1,3):
+        print "wait # %s" % (x)
+        time.sleep(1.25)
+    
+    foo.setOutput(10, 0)
         
     foo.stopSerial()
