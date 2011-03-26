@@ -72,9 +72,7 @@ class AndrSerial(threading.Thread):
             '''
             self.ThreadRunStatus = True
             self.readAvr()
-            #''' Send raw avr data to the mapping function'''
-            #self.map.updateMap(data)
-            self.printMap()
+            #self.printMap()
             
             
             '''
@@ -82,14 +80,14 @@ class AndrSerial(threading.Thread):
             '''
             waitTime = math.ceil(self.ReadSleepTime / self.QueuePollInterval)
             waitTime = int(waitTime)
-            print "Going to scan %s times" % (str(waitTime))
+            #print "Going to scan %s times" % (str(waitTime))
             for s in range(1 , waitTime):
                 msg = self.getMsg() 
                 if msg != None:
                     '''
                         Do something if a message is on the queue
                     '''
-                    print "Got a message -> %s " % (msg)
+                    #print "Got a message -> %s " % (msg)
                     self.parseMsg(msg)
                 time.sleep(self.QueuePollInterval)
         
@@ -178,7 +176,6 @@ class AndrSerial(threading.Thread):
         print "---Sending this to the AVR %s" % (ThisReq)
         try:
             self.ser.write('\x77%s%s' % (HexAddr, HexData))
-            time.sleep(2)
         except SerialException:
             return None
         
