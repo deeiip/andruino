@@ -34,26 +34,30 @@ class deviceMap():
                 'DDR':None,
                 'PIN':None,
                 'PORT':None,
-                'D_PORT':None
+                'Dec_PORT':None
                   },
             'C': {
                 'DDR':None,
                 'PIN':None,
                 'PORT':None,
-                'D_PORT':None
+                'Dec_PORT':None
                   },
             'D': {
                 'DDR':None,
                 'PIN':None,
                 'PORT':None,
-                'D_PORT':None
+                'Dec_PORT':None
                   }
         }
         self.deviceMap['DDRMap'] = {
             'B':'10',
             'C':'20',
-            'D':'30'
-                                    
+            'D':'30'                          
+        }
+        self.deviceMap['PORTMap'] = {
+            'B':'11',
+            'C':'21',
+            'D':'31'                          
         }
         
         self.deviceMap['IOMap'] = {
@@ -95,6 +99,9 @@ class deviceMap():
     
     
     def getMap(self):
+        ''' 
+            Return avr dictionary map
+        '''
         return self.AvrMap
     
        
@@ -108,7 +115,6 @@ class deviceMap():
         
        # Check to see if the input is valid
        if ((data[0] == '{') and (data[-1] == '}')):
-           print "Have Proper Framing Characters"
            '''
                Parse data from controller
                Example data:
@@ -116,30 +122,86 @@ class deviceMap():
                
            '''
            for portRegPair in data[1:-1].split(','):
-               ''' Un-comment for debugging
-                   print "Process Port -> %s" % (portRegPair)
+               '''
+               print "Process Port -> %s" % (portRegPair)
                '''
                portRegData = portRegPair.split(':')
-               ''' Un-comment for debugging
+               '''
                print "Process Reg -> %s" % (portRegData)
                print "Type of data %s" % (type(portRegData[0]))
                print "---High Nibble %s" % (portRegData[0][0])
                print "----Low Nibble %s" % (portRegData[0][1])   
-               '''    
+               '''
                '''
                    Convert Hex data to binary
                    binData - convert hex address into binary string
                '''
                binData = bin(int(portRegData[1], 16))[2:]
-               decData = int(portRegData[1], 16)
-
+               
+               ''' Store data values in data dictionary '''
                self.AvrMap[ toPort[ portRegData[0][0] ] ][ toReg[ portRegData[0][1] ] ] = binData
-               self.AvrMap[ toPort[ portRegData[0][0] ] ][ 'D_PORT' ] = decData
+               ''' Save PORT information is decimal format '''
+               #print "Low Nibble is what %s " % (portRegData[0][1])
+               if (portRegData[0][1] == '1'): 
+                   '''
+                       Only capture integer value for PORT data
+                   '''
+                   decData = int(portRegData[1], 16)
+                   self.AvrMap[ toPort[ portRegData[0][0] ] ][ 'Dec_PORT' ] = decData
        else:
            print "Malformed response from controller"
            return None
 
 
-
-
+    def pinToMap(self, AvrReq):
+        ''' 
+            Translate a pin assignment to an AVR address and byte setting
+            Pin - AVR Pin Number
+            State - On or Off
+        '''
+        '''
+            'DATA': '11:1'
+        '''
+        data = AvrReq['DATA'].split(':')
+        '''
+            Get the register number
+        '''
+        
+        PortAddr = self.deviceMap['IOMap'][int(data[0])]
+        PortVal = self.AvrMap[PortAddr]['Dec_PORT']
+        ReqVal = self.deviceMap['AddrMap'][int(data[0])]
+        print "Current Value = %s" % (PortVal) 
+        print "Requested Value = %s" % (ReqVal) 
+        
+        '''
+            Get Operation
+        '''
+        if int(data[1]) == 1:
+            '''
+                Add value
+            '''
+            
+            NewVal = PortVal + ReqVal
+             
+            
+        else: 
+            '''
+                Subtract value
+            '''
+            if PortVal > ReqVal:
+                '''
+                    Prevent writing negative value to register
+                '''
+                NewVal = PortVal - ReqVal
+            else:
+                NewVal = PortVal 
+        
+        print "Write To Port = %s , return -> %s " % (PortAddr, self.deviceMap['DDRMap'][PortAddr])    
+        print "New Value = %s" % (NewVal)
+        if AvrReq['TYPE'] == 'WRITE':
+            convert = {'ADDR': self.deviceMap['PORTMap'][PortAddr], 'VALUE': NewVal }
+            return convert
+        elif AvrReq['TYPE'] == 'CFG': 
+            convert = {'ADDR': self.deviceMap['DDRMap'][PortAddr], 'VALUE': NewVal }
+            return convert
     

@@ -26,9 +26,7 @@ class AndrSerial(threading.Thread):
                             and store the response in the database. 
                             In debug mode, thread will display raw output to the screen.
             QueuePollInterval - Amount of time tread will wait before checking for messages 
-                            on the serialInterfaceQueue...
-        
-            
+                            on the serialInterfaceQueue...    
         '''
         self.map = deviceMap(deviceType)
         
@@ -56,7 +54,6 @@ class AndrSerial(threading.Thread):
         }
         
         
-
     def run(self):
         '''
             Start the thread
@@ -68,10 +65,11 @@ class AndrSerial(threading.Thread):
                 do this alot
             '''
             self.ThreadRunStatus = True
-            data = self.readAvr()
-            self.map.updateMap(data)
+            self.readAvr()
+            #''' Send raw avr data to the mapping function'''
+            #self.map.updateMap(data)
             self.printMap()
-            print "AVR status = %s" % (data)
+            
             
             '''
                 Sleep for a period of time before starting up again...
@@ -112,26 +110,23 @@ class AndrSerial(threading.Thread):
             read message request, determine what operation to perform
         '''
         print "Parsing message %s" % (msgData)
-        if (msgData['TYPE'] == 'WRITE'):
+        if (msgData['TYPE'] == 'READ'):
             '''
-                Write operation
+                Read request operation
             '''
-            print "Write Message = %s" %(msgData)
+            self.readAvr()
+                        
+        else:
+            '''
+                All other operations
+            '''
+            avrWrite = self.map.pinToMap(msgData)
+            #self.map.pinToMap(msgData['DATA'])
+            self.writeAvr(avrWrite['ADDR'], avrWrite['VALUE'])
+            self.readAvr()
             
-            if (msgData['STATE'] == 0 ):
-                '''
-                    Turn off IO
-                '''
-                
-            elif (msgData['STATE'] == 1 ):
-                '''
-                    Turn On IO
-                '''
-        elif (msgData['TYPE'] == 'READ'):
-            '''
-                Read operation
-            '''
-            print "Write Message = %s" %(msgData)
+            
+            
     
        
         
@@ -154,7 +149,10 @@ class AndrSerial(threading.Thread):
         '''
             Remove trailing line feed carriage return 
         '''
-        return data.strip()
+        data = data.strip()
+        self.printMap()
+        print "AVR status = %s" % (data)
+        self.map.updateMap(data)
     
     
     def writeAvr(self, addr, data):
@@ -166,8 +164,10 @@ class AndrSerial(threading.Thread):
         HexAddr = pack('B1', int(addr))
         HexData = pack('B1', int(data))
         
+        ThisReq = "\x77%s%s" % (HexAddr, HexData)
+        print "---Sending this to the AVR %s" % (ThisReq)
         try:
-            ser.write('\x77%s%s' % (HexAddr, HexData))
+            self.ser.write('\x77%s%s' % (HexAddr, HexData))
         except SerialException:
             return None
         
