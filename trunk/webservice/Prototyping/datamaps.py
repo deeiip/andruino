@@ -13,6 +13,22 @@ class deviceMap():
             Save current map type
         '''
         self.deviceMap = {}
+        self.deviceMap = {}
+        
+               
+        if (device_type == 'arduino'):
+           loadAvr168()
+        else:
+            return None  
+        
+            
+        
+        
+    def loadAvr168(self):
+        
+        '''
+            Defines data dictionary for storing AVR config data
+        '''
         self.AvrMap = {
             'B': {
                 'DDR':None,
@@ -33,17 +49,6 @@ class deviceMap():
                 'D_PORT':None
                   }
         }
-               
-        if (device_type == 'arduino'):
-           loadAvr168()
-        else:
-            return None  
-        
-            
-        
-        
-    def loadAvr168(self):
-        
         self.deviceMap['DDRMap'] = {
             'B':'10',
             'C':'20',
