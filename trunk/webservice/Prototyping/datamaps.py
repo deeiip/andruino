@@ -29,6 +29,7 @@ class deviceMap():
         '''
             Defines data dictionary for storing AVR config data
         '''
+        """
         self.AvrMap = {
             'B': {
                 'DDR':None,
@@ -49,15 +50,33 @@ class deviceMap():
                 'Dec_PORT':None
                   }
         }
+        """
+        self.AvrMap = {
+            'B': {
+                'DDR':None,
+                'PIN':None,
+                'PORT':None,
+            },
+            'C': {
+                'DDR':None,
+                'PIN':None,
+                'PORT':None,
+            },
+            'D': {
+                'DDR':None,
+                'PIN':None,
+                'PORT':None,
+            }
+        }
         self.deviceMap['DDRMap'] = {
-            'B':'10',
-            'C':'20',
-            'D':'30'                          
+            'B':'16', # hex 10
+            'C':'32',
+            'D':'48'                          
         }
         self.deviceMap['PORTMap'] = {
-            'B':'11',
-            'C':'21',
-            'D':'31'                          
+            'B':'17',
+            'C':'33',
+            'D':'49'                          
         }
         
         self.deviceMap['IOMap'] = {
@@ -142,12 +161,14 @@ class deviceMap():
                self.AvrMap[ toPort[ portRegData[0][0] ] ][ toReg[ portRegData[0][1] ] ] = binData
                ''' Save PORT information is decimal format '''
                #print "Low Nibble is what %s " % (portRegData[0][1])
+               """
                if (portRegData[0][1] == '1'): 
                    '''
                        Only capture integer value for PORT data
                    '''
                    decData = int(portRegData[1], 16)
                    self.AvrMap[ toPort[ portRegData[0][0] ] ][ 'Dec_PORT' ] = decData
+               """
        else:
            print "Malformed response from controller"
            return None
@@ -168,10 +189,13 @@ class deviceMap():
         '''
         
         PortAddr = self.deviceMap['IOMap'][int(data[0])]
-        PortVal = self.AvrMap[PortAddr]['Dec_PORT']
+        PortBinVal = self.AvrMap[PortAddr]['PORT']
         ReqVal = self.deviceMap['AddrMap'][int(data[0])]
-        print "Current Value = %s" % (PortVal) 
-        print "Requested Value = %s" % (ReqVal) 
+        
+        PortDecVal = int(portRegData[1], 16)
+        
+        print "Current BIN= %s :: DEC= %s :: REQ_VAL %s" % (PortBinVal, ReqVal) 
+        
         
         '''
             Get Operation
@@ -180,7 +204,7 @@ class deviceMap():
             '''
                 Add value
             '''
-            
+            print "OPERATION = ADD"
             NewVal = PortVal + ReqVal
              
             
@@ -188,6 +212,7 @@ class deviceMap():
             '''
                 Subtract value
             '''
+            print "OPERATION = SUBTRACT"
             if PortVal > ReqVal:
                 '''
                     Prevent writing negative value to register
@@ -196,12 +221,21 @@ class deviceMap():
             else:
                 NewVal = PortVal 
         
-        print "Write To Port = %s , return -> %s " % (PortAddr, self.deviceMap['DDRMap'][PortAddr])    
+        
         print "New Value = %s" % (NewVal)
+        
         if AvrReq['TYPE'] == 'WRITE':
+            '''
+                Write an IO bit to the controller
+                Prior to changing the bit inspect the condition of other 
+                outputs
+            '''
+            
+            print "Write To PORT = %s , INT_VAL -> %s, NewVal = %s " % (PortAddr, self.deviceMap['PORTMap'][PortAddr], NewVal)    
             convert = {'ADDR': self.deviceMap['PORTMap'][PortAddr], 'VALUE': NewVal }
             return convert
-        elif AvrReq['TYPE'] == 'CFG': 
+        elif AvrReq['TYPE'] == 'CFG':
+            print "Write To DDR = %s , INT_VAL -> %s, NewVal = %s  " % (PortAddr, self.deviceMap['DDRMap'][PortAddr], NewVal)     
             convert = {'ADDR': self.deviceMap['DDRMap'][PortAddr], 'VALUE': NewVal }
             return convert
     

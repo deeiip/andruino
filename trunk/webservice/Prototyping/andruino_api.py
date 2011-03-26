@@ -88,20 +88,11 @@ class AndruinoApi():
         msg = {
                'ID': int(time.time()),
                'TYPE': 'CFG',
-               'DATA': "%s:%s" % (pinNumber, pinMode),
+               'DATA': "%s:%s" % (pinNumber, pinMode)
         }
         self.serialQueue.put(msg)
 
-    
-    def configOutput(self):
-        '''
-            
-        '''
-        DDRMap = {
-            'B':'10',
-            'C':'20',
-            'D':'30',
-        }    
+   
 
     def getAvrMap(self):
         '''
@@ -117,24 +108,30 @@ if __name__ == '__main__':
     '''
     foo = AndruinoApi()
     foo.startSerial()
+    #print "API sleeping 10 seconds"
+    #time.sleep(10)
+    print "Configure 6,10,and 11 as Outputs"
+    foo.setConfig(11, 1)
+    foo.setConfig(10, 1)
+    foo.setConfig(6, 1)
+    
     
     for x in range(1,3):
         print "wait # %s" % (x)
         time.sleep(1.25)
         
-    foo.setOutput(11, 1)
+    
 
     for x in range(1,3):
         print "wait # %s" % (x)
         time.sleep(1.25)
     
+    print "Set Pin 6 As Ouptut"
     foo.setOutput(6, 1)
+    print "Set Pin 10 As Ouptut"
     foo.setOutput(10, 1)
-    
-    for x in range(1,3):
-        print "wait # %s" % (x)
-        time.sleep(1.25)
-    
-    foo.setOutput(10, 0)
+    print "Set Pin 11 As Ouptut"
+    foo.setOutput(11, 1)
+
         
     foo.stopSerial()
