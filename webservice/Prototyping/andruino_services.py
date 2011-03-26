@@ -44,8 +44,8 @@ class AndrSerial(threading.Thread):
         # setup the serial port
         self.ser = serial.Serial('/dev/ttyAvr', 115200, timeout=0.25)
         # Wait for the serial post to initialize
-        time.sleep(20)
-        
+        print "Thread is sleeping before starting..."
+        time.sleep(15)
 
         self.serialMsg = {
             'ID':None,
@@ -60,6 +60,12 @@ class AndrSerial(threading.Thread):
         '''
         self.ThreadRunState = 1
         self.initAvr()
+        
+        '''
+            Wait until the controller is ready
+        '''
+        
+        
         while self.ThreadRunState:
             '''
                 do this alot
@@ -123,6 +129,7 @@ class AndrSerial(threading.Thread):
             avrWrite = self.map.pinToMap(msgData)
             #self.map.pinToMap(msgData['DATA'])
             self.writeAvr(avrWrite['ADDR'], avrWrite['VALUE'])
+            time.sleep(5)
             self.readAvr()
             
             
@@ -138,21 +145,23 @@ class AndrSerial(threading.Thread):
         self.ser.write('#')
         data = self.readAvr()
         print "Arduino Said %s" % (data)
+
         
     def readAvr(self):
         '''
             Read data from arduino
         '''
-        print "Reading Avr "
+        print "-----Reading Avr ----- "
         self.ser.write('r')
         data = self.ser.readline()
         '''
             Remove trailing line feed carriage return 
         '''
         data = data.strip()
+        self.map.updateMap(data)
         self.printMap()
         print "AVR status = %s" % (data)
-        self.map.updateMap(data)
+        
     
     
     def writeAvr(self, addr, data):
@@ -160,11 +169,11 @@ class AndrSerial(threading.Thread):
             Write message to AVR controller
             
         '''
-               
+        ThisReq = "w%s%s" % (addr, data)      
         HexAddr = pack('B1', int(addr))
         HexData = pack('B1', int(data))
         
-        ThisReq = "\x77%s%s" % (HexAddr, HexData)
+        #ThisReq = "\x77%s%s" % (HexAddr, HexData)
         print "---Sending this to the AVR %s" % (ThisReq)
         try:
             self.ser.write('\x77%s%s' % (HexAddr, HexData))
