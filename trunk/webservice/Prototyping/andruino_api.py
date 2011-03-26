@@ -114,6 +114,8 @@ if __name__ == '__main__':
     foo.setConfig(11, 1)
     print "\n\n"
     foo.setConfig(10, 1)
+    foo.setConfig(7, 1)
+    foo.setConfig(6, 1)
 
     print "Configuration COMPLETE"
     
@@ -121,19 +123,22 @@ if __name__ == '__main__':
         print "wait # %s" % (x)
         time.sleep(1.25)
         
-    
-
+    print "Set Pin 10 As Ouptut"
+    foo.setOutput(10, 1)
+    foo.setOutput(6, 1)
     for x in range(1,3):
         print "wait # %s" % (x)
         time.sleep(1.25)
     
-
-    print "Set Pin 10 As Ouptut"
-    foo.setOutput(10, 1)
-    print "-------------DONE SETTING OUTPUT "
+    
     print "Set Pin 11 As Ouptut"
     foo.setOutput(11, 1)
     print "-------------DONE SETTING OUTPUT "
 
+    for x in range(1,3):
+        print "wait # %s" % (x)
+        time.sleep(1.25)
+    foo.setOutput(7, 1)
+    foo.setOutput(10, 0)
         
     foo.stopSerial()

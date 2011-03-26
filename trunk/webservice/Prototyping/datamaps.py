@@ -29,28 +29,6 @@ class deviceMap():
         '''
             Defines data dictionary for storing AVR config data
         '''
-        """
-        self.AvrMap = {
-            'B': {
-                'DDR':None,
-                'PIN':None,
-                'PORT':None,
-                'Dec_PORT':None
-                  },
-            'C': {
-                'DDR':None,
-                'PIN':None,
-                'PORT':None,
-                'Dec_PORT':None
-                  },
-            'D': {
-                'DDR':None,
-                'PIN':None,
-                'PORT':None,
-                'Dec_PORT':None
-                  }
-        }
-        """
         self.AvrMap = {
             'B': {
                 'DDR':None,
@@ -70,13 +48,13 @@ class deviceMap():
         }
         self.deviceMap['DDRMap'] = {
             'B':'16', # hex 10
-            'C':'32',
-            'D':'48'                          
+            'C':'32', # hex 20
+            'D':'48'  # hex 30                        
         }
         self.deviceMap['PORTMap'] = {
-            'B':'17',
-            'C':'33',
-            'D':'49'                          
+            'B':'17', # hex 11
+            'C':'33', # hex 21
+            'D':'49'  # hex 31                        
         }
         
         self.deviceMap['IOMap'] = {
