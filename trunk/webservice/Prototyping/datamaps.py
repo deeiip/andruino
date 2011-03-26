@@ -128,7 +128,7 @@ class deviceMap():
        '''
            Update deviceMap dictionary
        '''
-       
+       print "[Update Map] AVR status = %s" % (data)
        toPort = {'1':'B', '2':'C', '3':'D'}
        toReg = {'0':'DDR', '1':'PORT', '2':'PIN'}
         
@@ -155,10 +155,11 @@ class deviceMap():
                    Convert Hex data to binary
                    binData - convert hex address into binary string
                '''
-               binData = bin(int(portRegData[1], 16))[2:]
+               #binData = bin(int(portRegData[1], 16))[2:]
+               decData = int(portRegData[1], 16)
                
                ''' Store data values in data dictionary '''
-               self.AvrMap[ toPort[ portRegData[0][0] ] ][ toReg[ portRegData[0][1] ] ] = binData
+               self.AvrMap[ toPort[ portRegData[0][0] ] ][ toReg[ portRegData[0][1] ] ] = decData
                ''' Save PORT information is decimal format '''
                #print "Low Nibble is what %s " % (portRegData[0][1])
                """
@@ -189,12 +190,18 @@ class deviceMap():
         '''
         
         PortAddr = self.deviceMap['IOMap'][int(data[0])]
-        PortBinVal = self.AvrMap[PortAddr]['PORT']
+        
+        ''' Get the binary value from the register'''
+        if AvrReq['TYPE'] == 'WRITE':
+            RegDecVal = self.AvrMap[PortAddr]['PORT']
+        elif AvrReq['TYPE'] == 'CFG':   
+            RegDecVal = self.AvrMap[PortAddr]['DDR']
+        
+        ''' Covert pin number into integer value based on AddrMappiong'''
         ReqVal = self.deviceMap['AddrMap'][int(data[0])]
         
-        PortDecVal = int(portRegData[1], 16)
         
-        print "Current BIN= %s :: DEC= %s :: REQ_VAL %s" % (PortBinVal, ReqVal) 
+        print "Current DEC= %s :: REQ_VAL %s" % (RegDecVal, ReqVal) 
         
         
         '''
@@ -205,7 +212,7 @@ class deviceMap():
                 Add value
             '''
             print "OPERATION = ADD"
-            NewVal = PortVal + ReqVal
+            NewVal = RegDecVal + ReqVal
              
             
         else: 
@@ -213,13 +220,13 @@ class deviceMap():
                 Subtract value
             '''
             print "OPERATION = SUBTRACT"
-            if PortVal > ReqVal:
+            if RegDecVal > ReqVal:
                 '''
                     Prevent writing negative value to register
                 '''
-                NewVal = PortVal - ReqVal
+                NewVal = RegDecVal - ReqVal
             else:
-                NewVal = PortVal 
+                NewVal = RegDecVal 
         
         
         print "New Value = %s" % (NewVal)
@@ -239,3 +246,8 @@ class deviceMap():
             convert = {'ADDR': self.deviceMap['DDRMap'][PortAddr], 'VALUE': NewVal }
             return convert
     
+    
+    def getRegVal(self ):
+        '''
+            Translate options
+        '''

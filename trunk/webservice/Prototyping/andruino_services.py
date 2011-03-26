@@ -115,7 +115,7 @@ class AndrSerial(threading.Thread):
             verify data is correct
             read message request, determine what operation to perform
         '''
-        print "Parsing message %s" % (msgData)
+        #print "Parsing message %s" % (msgData)
         if (msgData['TYPE'] == 'READ'):
             '''
                 Read request operation
@@ -127,9 +127,9 @@ class AndrSerial(threading.Thread):
                 All other operations
             '''
             avrWrite = self.map.pinToMap(msgData)
-            #self.map.pinToMap(msgData['DATA'])
             self.writeAvr(avrWrite['ADDR'], avrWrite['VALUE'])
-            time.sleep(5)
+            ''' Sleep longer than the timeout'''
+            time.sleep(0.5)
             self.readAvr()
             
             
@@ -151,16 +151,17 @@ class AndrSerial(threading.Thread):
         '''
             Read data from arduino
         '''
-        print "-----Reading Avr ----- "
+        
         self.ser.write('r')
-        data = self.ser.readline()
+        dataSet = self.ser.readlines()
         '''
             Remove trailing line feed carriage return 
         '''
-        data = data.strip()
-        self.map.updateMap(data)
-        self.printMap()
-        print "AVR status = %s" % (data)
+        for data in dataSet: 
+            data = data.strip()
+            self.map.updateMap(data)
+            #self.printMap()
+        
         
     
     
@@ -177,6 +178,7 @@ class AndrSerial(threading.Thread):
         print "---Sending this to the AVR %s" % (ThisReq)
         try:
             self.ser.write('\x77%s%s' % (HexAddr, HexData))
+            time.sleep(2)
         except SerialException:
             return None
         
