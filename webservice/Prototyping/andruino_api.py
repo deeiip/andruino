@@ -110,6 +110,7 @@ if __name__ == '__main__':
     foo.startSerial()
     #print "API sleeping 10 seconds"
     #time.sleep(10)
+    
     print "Configure 10,and 11 as Outputs"
     foo.setConfig(11, 1)
     print "\n\n"
@@ -140,5 +141,6 @@ if __name__ == '__main__':
         time.sleep(1.25)
     foo.setOutput(7, 1)
     foo.setOutput(10, 0)
-        
-    foo.stopSerial()
+      
+    
+    #foo.stopSerial()
