@@ -48,3 +48,10 @@ CREATE TABLE "statusreg" (
 "device_id" integer not null references "devices" ("id"), 
 "ts_value" datetime default current_timestamp
 );
+
+
+
+CREATE TABLE "rules" (
+"device_id" integer not null references "devices" ("id"), 
+"value" integer not null
+);
