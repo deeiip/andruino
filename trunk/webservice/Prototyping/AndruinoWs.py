@@ -73,7 +73,7 @@ class Stop:
     
 if __name__ == '__main__':
     # Run this code
-    root = Root(/web)
+    root = Root()
     root.read = Read()
     root.start = Start()
     root.stop = Stop()
