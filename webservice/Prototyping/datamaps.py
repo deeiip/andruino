@@ -190,7 +190,12 @@ class deviceMap():
                 Add value
             '''
             print "OPERATION = ADD"
-            NewVal = RegDecVal + ReqVal
+            
+	    if (RegDecVal > 255 ):
+		NewVal = RegDecVal
+	    else: 
+
+		NewVal = RegDecVal + ReqVal
              
             
         else: 
@@ -198,7 +203,7 @@ class deviceMap():
                 Subtract value
             '''
             print "OPERATION = SUBTRACT"
-            if RegDecVal > ReqVal:
+            if RegDecVal >= ReqVal:
                 '''
                     Prevent writing negative value to register
                 '''
