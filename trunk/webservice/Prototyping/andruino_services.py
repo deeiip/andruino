@@ -101,7 +101,7 @@ class AndrSerial(threading.Thread):
         '''
             Return IO map
         '''
-        return self.deviceMap
+        return self.map.getMap()
     
     def printMap(self):
         thisMap = self.map.getMap()

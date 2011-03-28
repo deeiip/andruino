@@ -2,9 +2,12 @@ import cherrypy
 import sys, os
 import datetime
 from struct import *
-import andruino_api
+from andruino_api import *
 
 
+
+# get the reference to the thread manager
+ws_api = AndruinoApi()
 
 '''
 class SerialMgr:
@@ -30,41 +33,42 @@ class Read:
     # Read from arduinp
     @cherrypy.expose
     def index(self):
-        ser.write('r')
-        result = ser.readlines()
-        return "Command Map -> %s " % (result)
+	result = ws_api.getMap()
+        return "AVR Status -> %s " % (result)
         
 class Config:
     @cherrypy.expose
-    def index(self,addr,mask):
-        #return '\x77\%s\%s' % (addr, mask)
-        #ser.write('\x77\%s\%s' % (addr, mask))
-	Haddr = pack('B1' , int(addr))
-	Hmask = pack('B1', int(mask))
-	
-	ser.write('\x77%s%s' % (Haddr, Hmask))
-        result = ser.readlines()
-        return "Application Responded with %s " % (result)
+    def index(self,addr,state):
+	ws_api.setConfig(addr, state )
+        return "Configured Pin %s to Output state of %s " % (addr, state)
     
 class Write:
     @cherrypy.expose
     def index(self,addr,state):
-        #return '\x77\%s\%s' % (addr, state)
-	Haddr = pack('B1' , int(addr))
-	Hstate = pack('B1', int(state))
-        ser.write('\x77%s%s' % (Haddr, Hstate))
-        result = ser.readlines()
-        return "Application Responded with %s " % (result)
+	ws_api.setOutput(addr, state)
+        return "Set Pin %s to Output state of %s " % (addr, state)
         
 
 
 class Start:
     @cherrypy.expose
     def index(self):
-        ser.write('#')
-        result = ser.readlines()
-        return "Application Responded with %s " % (result)
+	'''
+	Start the serial interface thread
+	'''
+	ws_api.startSerial()
+        return "Thread start request Issued..." 
      
+class Stop:
+    @cherrypy.expose
+    def index(self):
+	'''
+	Start the serial interface thread
+	'''
+	ws_api.stopSerial()
+        return "Thread start request Issued..." 
+     
+        
         
     
 if __name__ == '__main__':
@@ -72,6 +76,7 @@ if __name__ == '__main__':
     root = Root()
     root.read = Read()
     root.start = Start()
+    root.stop = Stop()
     root.config = Config()
     root.write = Write()
 
