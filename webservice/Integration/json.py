@@ -111,12 +111,22 @@ class write:
 		try: session.username
 		except AttributeError: '[{"command":"write","response":"auth"}]'
 		myvar = web.input()
+
+		dbQuery = "SELECT pin FROM details WHERE id='"+myvar['did']+"'"
+		pin = db.query(dbQuery)
+
 		dbQuery = "UPDATE details SET value = '"+myvar['value']+"', last_value = '"+myvar['value']+"', ts_value=datetime('now'), ts_output=datetime('now') WHERE id = '"+myvar['did']+"'"
 		result = db.query(dbQuery)
+
+		ws_api.setOutput(pin, myvar['value'])
+
+
 		if result:
-			return '[{"command":"write","response":"done"}]'
+			#return '[{"command":"write","response":"done"}]'
+			return '[{"command":"write","response":"'+pin+'"}]'
 		else:
-			return '[{"command":"write","response":"fail"}]'
+			#return '[{"command":"write","response":"fail"}]'
+			return '[{"command":"write","response":"'+pin+'"}]'
 
 class adddevice:
 	def GET(self):
