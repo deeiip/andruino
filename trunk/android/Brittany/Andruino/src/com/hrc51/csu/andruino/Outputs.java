@@ -1,7 +1,6 @@
 package com.hrc51.csu.andruino;
 
 import java.util.ArrayList;
-
 import android.app.ListActivity;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -13,7 +12,7 @@ import android.view.MenuItem;
 import android.widget.Toast;
 
 public class Outputs extends ListActivity {
-	private ArrayList<AndruinoObj> controls = null;
+	private ArrayList<AndruinoObj> outputs = null;
 	private IOAdapter ctrl_adapter; 
     private SharedPreferences settings;
 	private Webduino wc;
@@ -25,9 +24,9 @@ public class Outputs extends ListActivity {
         setContentView(R.layout.outputs);
         settings = PreferenceManager.getDefaultSharedPreferences(this);
 		wc = new Webduino(settings);
-        controls = wc.read();
+        outputs = filterControls(wc.read());
         
-        ctrl_adapter = new IOAdapter(this, R.layout.output_row, controls);
+        ctrl_adapter = new IOAdapter(this, R.layout.output_row, outputs);
         setListAdapter(ctrl_adapter);
     }
     
@@ -59,5 +58,16 @@ public class Outputs extends ListActivity {
 		}
 
 		return true;
+	}
+	
+	public ArrayList<AndruinoObj> filterControls(ArrayList<AndruinoObj> controls) {
+		ArrayList<AndruinoObj> outputs = new ArrayList<AndruinoObj>();
+		
+		for(AndruinoObj obj : controls)
+		{
+			if(obj.getDdr() == 0)
+				outputs.add(obj);
+		}
+		return outputs;
 	}
 }
