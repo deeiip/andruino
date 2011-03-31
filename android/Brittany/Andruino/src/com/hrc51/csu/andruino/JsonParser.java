@@ -48,16 +48,18 @@ public class JsonParser {
 		ArrayList<AndruinoObj> detailList = new ArrayList<AndruinoObj>();
 		try {
 			for (int i = 0; i < Integer.parseInt(response); i++) {
-				int did = Integer.parseInt(detailArray.getJSONObject(i).getString("did").toString());
-				int id = Integer.parseInt(detailArray.getJSONObject(i).getString("id").toString());
-				String label = detailArray.getJSONObject(i).getString("label").toString();
-				int ddr = Integer.parseInt(detailArray.getJSONObject(i).getString("ddr").toString());
-				int pin = Integer.parseInt(detailArray.getJSONObject(i).getString("pin").toString());
-				int value = Integer.parseInt(detailArray.getJSONObject(i).getString("value").toString());
-				String ts_value = detailArray.getJSONObject(i).getString("ts_value").toString();
+				int did = Integer.parseInt(detailArray.getJSONObject(i).getString("did"));
+				int id = Integer.parseInt(detailArray.getJSONObject(i).getString("id"));
+				String label = detailArray.getJSONObject(i).getString("label");
+				int ddr = Integer.parseInt(detailArray.getJSONObject(i).getString("ddr"));
+				int pin = Integer.parseInt(detailArray.getJSONObject(i).getString("pin"));
+				int value = Integer.parseInt(detailArray.getJSONObject(i).getString("value"));
+				String ts_value = detailArray.getJSONObject(i).getString("ts_value");
+//				boolean notify = detailArray.getJSONObject(i).getString("notify").equals("1") ? true : false;
+				
 				
 				//System.out.println("did: " + did + " id: " + id + " label: " + label);
-				AndruinoObj controlElt = new AndruinoObj(did, id, label, ddr, pin, value, ts_value);
+				AndruinoObj controlElt = new AndruinoObj(did, id, label, ddr, pin, value, ts_value/*, notify */);
 				detailList.add(controlElt);
 			}
 		}
