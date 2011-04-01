@@ -4,16 +4,19 @@ public class AndruinoObj {
 	private int did;
 	private int id;
 	private String label;
+	private String device;
 	private int ddr;
 	private int pin;
 	private int value;
 	private String ts_value;
+//	private boolean notify;
 	
-	public AndruinoObj(int did, int id, String label, int ddr, int pin, int value, String ts_value)
+	public AndruinoObj(int did, int id, String label, String device, int ddr, int pin, int value, String ts_value/*, boolean notify */)
 	{
 		this.did = did;
 		this.id = id;
 		this.label = label;
+		this.device = device;
 		this.ddr = ddr;
 		this.pin = pin;
 		this.value = value;
@@ -44,6 +47,14 @@ public class AndruinoObj {
 		this.label = label;
 	}
 
+	public String getDevice() {
+		return device;
+	}
+
+	public void setDevice(String device) {
+		this.device = device;
+	}
+	
 	public int getDdr() {
 		return ddr;
 	}
@@ -75,6 +86,15 @@ public class AndruinoObj {
 	public void setTs_value(String ts_value) {
 		this.ts_value = ts_value;
 	}
+	
+//	public boolean isNotify() {
+//		return notify;
+//	}
+//
+//	public void setNotify(boolean notify) {
+//		this.notify = notify;
+//	}
+
 	
 }
 
