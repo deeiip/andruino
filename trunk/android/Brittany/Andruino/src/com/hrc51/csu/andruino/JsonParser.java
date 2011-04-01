@@ -50,16 +50,17 @@ public class JsonParser {
 			for (int i = 0; i < Integer.parseInt(response); i++) {
 				int did = Integer.parseInt(detailArray.getJSONObject(i).getString("did"));
 				int id = Integer.parseInt(detailArray.getJSONObject(i).getString("id"));
-				String label = detailArray.getJSONObject(i).getString("label");
+				String label = detailArray.getJSONObject(i).getString("label").trim();
+				String device = detailArray.getJSONObject(i).getString("device").trim();;
 				int ddr = Integer.parseInt(detailArray.getJSONObject(i).getString("ddr"));
 				int pin = Integer.parseInt(detailArray.getJSONObject(i).getString("pin"));
 				int value = Integer.parseInt(detailArray.getJSONObject(i).getString("value"));
-				String ts_value = detailArray.getJSONObject(i).getString("ts_value");
+				String ts_value = detailArray.getJSONObject(i).getString("ts_value").trim();
 //				boolean notify = detailArray.getJSONObject(i).getString("notify").equals("1") ? true : false;
 				
 				
 				//System.out.println("did: " + did + " id: " + id + " label: " + label);
-				AndruinoObj controlElt = new AndruinoObj(did, id, label, ddr, pin, value, ts_value/*, notify */);
+				AndruinoObj controlElt = new AndruinoObj(did, id, label, device, ddr, pin, value, ts_value/*, notify */);
 				detailList.add(controlElt);
 			}
 		}
