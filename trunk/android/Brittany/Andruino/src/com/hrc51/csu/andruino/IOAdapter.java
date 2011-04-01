@@ -44,7 +44,7 @@ public class IOAdapter extends ArrayAdapter<AndruinoObj> {
                     if (indicatorName != null) 
                           indicatorName.setText(andrObj.getLabel());                            
                     if(deviceName != null)
-                          deviceName.setText("Device ID: " + andrObj.getId());
+                          deviceName.setText("Device: " + andrObj.getDevice());
                     if(notify != null)
                     	//notify.setChecked(andrObj.isNotify());
                     	notify.setChecked(true);
@@ -59,7 +59,7 @@ public class IOAdapter extends ArrayAdapter<AndruinoObj> {
                     if (outputName != null) 
                           outputName.setText(andrObj.getLabel());                            
                     if(deviceName != null){
-                          deviceName.setText("Device ID: " + andrObj.getId());
+                          deviceName.setText("Device: " + andrObj.getDevice());
                     }
                     if(tb != null){
                     	tb.setChecked(andrObj.getValue() == 1 ? true : false);
