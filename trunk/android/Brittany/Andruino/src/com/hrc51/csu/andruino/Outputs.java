@@ -9,13 +9,15 @@ import android.preference.PreferenceManager;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.widget.Toast;
 
 public class Outputs extends ListActivity {
-	private ArrayList<AndruinoObj> outputs = null;
+	private ArrayList<AndruinoObj> outputs;
 	private IOAdapter ctrl_adapter; 
     private SharedPreferences settings;
 	private Webduino wc;
+	private float initialX, deltaX;
 	
 	/** Called when the activity is first created. */
     @Override
@@ -60,10 +62,34 @@ public class Outputs extends ListActivity {
 		return true;
 	}
 	
+	public boolean onTouchEvent(MotionEvent event) {
+        synchronized (event)  
+        {   
+        	//when user touches the screen  
+            if(event.getAction() == MotionEvent.ACTION_DOWN)  
+            {  
+            	deltaX = 0;  
+                initialX = event.getRawX();  
+            }  
+  
+            //when screen is released  
+            if(event.getAction() == MotionEvent.ACTION_UP)  
+            {  
+            	deltaX = event.getRawX() - initialX;  
+  
+            	//swiped from right to left
+            	if(deltaX > 0)  
+            		startActivity(new Intent(this, Indicators.class));  
+            	return true;  
+            }      
+        }  
+		return true;
+	}
+	
 	public ArrayList<AndruinoObj> filterControls(ArrayList<AndruinoObj> controls) {
 		ArrayList<AndruinoObj> outputs = new ArrayList<AndruinoObj>();
 		
-		for(AndruinoObj obj : controls)
+		for(AndruinoObj obj : controls)  /* app is crashing here */
 		{
 			if(obj.getDdr() == 0)
 				outputs.add(obj);
