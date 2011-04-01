@@ -24,11 +24,14 @@ public class Webduino {
 
 	       try {
 	    	   if (serverSettings.getBoolean("usessl", false))
-	        	   url = new URL("https://"+serverSettings.getString("serverurl", "n/a")+":"+serverSettings.getString("serverport", "n/a")+"/");
+	        	   //url = new URL("https://"+serverSettings.getString("serverurl", "n/a")+":"+serverSettings.getString("serverport", "n/a")+"/");
+	    		   url = new URL("https://csu.hrc51.com:8080/read");
+
 	    	   else
-	    		   url = new URL("http://"+serverSettings.getString("serverurl", "n/a")+":"+serverSettings.getString("serverport", "n/a")+"/");
+	    		   //url = new URL("http://"+serverSettings.getString("serverurl", "n/a")+":"+serverSettings.getString("serverport", "n/a")+"/");
+	    		   url = new URL("http://csu.hrc51.com:8080/read");
+
 	    	   urlConnection = (HttpURLConnection) url.openConnection();
-	    	   //BufferedReader in = new BufferedReader(new InputStreamReader(url.openStream()));
 	    	   BufferedReader in = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
 	    	   String inputLine;
 	    	   inputLine = in.readLine();
@@ -61,7 +64,6 @@ public class Webduino {
 	    		   url = new URL("http://csu.hrc51.com:8080/read");
 
 	    	   urlConnection = (HttpURLConnection) url.openConnection();
-	    	   //BufferedReader in = new BufferedReader(new InputStreamReader(url.openStream()));
 	    	   BufferedReader in = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
 	    	   String inputLine;
 	    	   inputLine = in.readLine();
