@@ -10,7 +10,8 @@ class AndruinoDb():
         '''
             Connect to the database
         '''
-        self.db = web.database(dbn='sqlite', db='andruino.db')
+        self.db_file = 'andruino.db'
+        self.db = sqlite3.connect(self.db_file)
         
         
     def getDeviceById(self, DeviceId):
@@ -19,5 +20,6 @@ class AndruinoDb():
         '''
         
         sql = "SELECT * from devices WHERE id = '%s'"
-        
+        # get a db cursor
+        self.db.cusor()
         
