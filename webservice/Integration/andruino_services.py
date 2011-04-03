@@ -16,7 +16,7 @@ from datamaps import *
 
 class AndrSerial(threading.Thread):
     
-    def __init__(self, SerialInterfaceQueue, deviceType='arduino'):
+    def __init__(self, SerialInterfaceQueue, device_id, deviceType='arduino'):
         ''' 
             Setup serial interface
             
@@ -40,6 +40,8 @@ class AndrSerial(threading.Thread):
         self.ThreadRunStatus = False
         threading.Thread.__init__(self)
         self.StopMe = threading.Event()
+        
+        
         
         # setup the serial port
         self.ser = serial.Serial('/dev/ttyUSB0', 115200, timeout=0.25)
