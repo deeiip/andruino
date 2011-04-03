@@ -23,3 +23,18 @@ class AndruinoDb():
         # get a db cursor
         self.db.cusor()
         
+   
+    def login(self, username, password):
+	'''
+	    Check Login Credentials
+	'''
+
+	pwdhash = hashlib.md5(password).hexdigest()
+	check = db.query("SELECT username FROM users WHERE username='"+username+"' AND passwor
+d='"+pwdhash+"';")
+
+	try:
+		return true
+	except:
+		return false
+
