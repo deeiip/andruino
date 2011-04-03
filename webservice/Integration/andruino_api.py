@@ -17,7 +17,7 @@ import time
 
 
 
-sql = sqlite3.connect('Arduino.db')
+sql = sqlite3.connect('andruino.db')
 
 
 

@@ -1,6 +1,6 @@
 #import the web py module import web
 import hashlib
-from web import form
+import web
 import sqlite3
 import datetime
 from andruino_api import *
