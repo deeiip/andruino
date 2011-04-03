@@ -1,6 +1,6 @@
 
-
 import sqlite3
+import hashlib
 import datetime
 import time, sys
 
@@ -30,21 +30,26 @@ class AndruinoDb():
 	'''
 
 	pwdhash = hashlib.md5(password).hexdigest()
-	check = db.query("SELECT username FROM users WHERE username='"
-		+username+"' AND password='"+pwdhash+"';")
 
+	sql = "SELECT username FROM users WHERE username='"\
+		+username+"' AND password='"+pwdhash+"';"
+
+	dbc = self.db.cursor()
+	check = dbc.execute(sql)
 	try:
-		return true
+		return True
 	except:
-		return false
-
+		return False
 
     def getEmail(self, username):
 	'''
 	    Check Login Credentials
 	'''
 
-	check = db.query("SELECT email FROM users WHERE username='"+wi.username+"';")
+	sql = "SELECT email FROM users WHERE username='"+wi.username+"';"
+
+	dbc = self.db.cursor()
+	check = dbc.execute(sql)
 
        	try:
        		return check[0].email
