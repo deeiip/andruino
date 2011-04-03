@@ -6,7 +6,7 @@ drop table if exists "rules";
 drop table if exists "statusreg";
 
 CREATE TABLE "devices" (
-"id" integer not null primary key, 
+"id" integer primary key autoincrement, 
 "name" varchar(100) not null, 
 "port" varchar(100) not null, 
 "type" integer not null, 
@@ -17,7 +17,7 @@ CREATE TABLE "devices" (
 );
 
 CREATE TABLE "details" (
-"id" integer not null primary key, 
+"id" integer primary key autoincrement, 
 "device_id" integer not null references "devices" ("id"), 
 "label" varchar(100) not null, 
 "ddr" integer not null, 
@@ -32,7 +32,7 @@ CREATE TABLE "details" (
 
 CREATE TABLE "sessions" (
     "session_id" char(128) UNIQUE NOT NULL,
-    "atime timestamp" NOT NULL default current_timestamp,
+    "atime" NOT NULL default current_timestamp,
     "data" text
 );
 
@@ -54,5 +54,6 @@ CREATE TABLE "rules" (
 "value" integer not null
 );
 
-INSERT INTO "users" VALUES (NULL,"defaultuser","defaultpass","broken@email.addr");
+INSERT INTO "users" VALUES (NULL,"default","5f4dcc3b5aa765d61d8327deb882cf99","broken@email.addr");
+INSERT INTO "users" VALUES (NULL,"matt","5f4dcc3b5aa765d61d8327deb882cf99","matt@email.addr");
 
