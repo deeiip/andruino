@@ -30,11 +30,24 @@ class AndruinoDb():
 	'''
 
 	pwdhash = hashlib.md5(password).hexdigest()
-	check = db.query("SELECT username FROM users WHERE username='"+username+"' AND passwor
-d='"+pwdhash+"';")
+	check = db.query("SELECT username FROM users WHERE username='"
+		+username+"' AND password='"+pwdhash+"';")
 
 	try:
 		return true
 	except:
 		return false
 
+
+    def getEmail(self, username):
+	'''
+	    Check Login Credentials
+	'''
+
+	check = db.query("SELECT email FROM users WHERE username='"+wi.username+"';")
+
+       	try:
+       		return check[0].email
+       	except:
+       		return "ERROR"
+	
