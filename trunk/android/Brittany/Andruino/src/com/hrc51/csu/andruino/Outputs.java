@@ -13,7 +13,8 @@ import android.view.MotionEvent;
 import android.widget.Toast;
 
 public class Outputs extends ListActivity {
-	private ArrayList<AndruinoObj> outputs;
+	private ArrayList<AndruinoObj> allControls;
+	private ArrayList<AndruinoObj> deviceOutputs;
 	private IOAdapter ctrl_adapter; 
     private SharedPreferences settings;
 	private Webduino wc;
@@ -26,9 +27,10 @@ public class Outputs extends ListActivity {
         setContentView(R.layout.outputs);
         settings = PreferenceManager.getDefaultSharedPreferences(this);
 		wc = new Webduino(settings);
-        outputs = filterControls(wc.read());
+        allControls = wc.read();
+		deviceOutputs = filterControls(allControls);
         
-        ctrl_adapter = new IOAdapter(this, R.layout.output_row, outputs);
+        ctrl_adapter = new IOAdapter(this, R.layout.output_row, deviceOutputs);
         setListAdapter(ctrl_adapter);
     }
     
@@ -87,13 +89,14 @@ public class Outputs extends ListActivity {
 	}
 	
 	public ArrayList<AndruinoObj> filterControls(ArrayList<AndruinoObj> controls) {
-		ArrayList<AndruinoObj> outputs = new ArrayList<AndruinoObj>();
+		ArrayList<AndruinoObj> deviceOutputs = new ArrayList<AndruinoObj>();
 		
-		for(AndruinoObj obj : controls)  /* app is crashing here */
+		for(int i = 0; i < controls.size(); i++)
 		{
+			AndruinoObj obj = controls.get(i);
 			if(obj.getDdr() == 0)
-				outputs.add(obj);
+				deviceOutputs.add(obj);
 		}
-		return outputs;
+		return deviceOutputs;
 	}
 }

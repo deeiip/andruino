@@ -121,10 +121,11 @@ public class Indicators extends ListActivity {
 	public ArrayList<AndruinoObj> filterControls(ArrayList<AndruinoObj> controls, String selectedDevice) {
 		ArrayList<AndruinoObj> deviceIndicators = new ArrayList<AndruinoObj>();
 		
-		for(AndruinoObj obj : controls)
+		for(int i = 0; i < controls.size(); i++)
 		{
-			if(obj.getDdr() == 1)
-				deviceIndicators.add(obj);         
+			AndruinoObj obj = controls.get(i);
+			if(obj.getDdr() == 1 /*&& obj.getDevice().equals(selectedDevice)*/)
+				deviceIndicators.add(obj);
 		}
 		return deviceIndicators;
 	}
@@ -132,11 +133,12 @@ public class Indicators extends ListActivity {
 	public ArrayList<String> getDeviceNames(ArrayList<AndruinoObj> allControls) {
 		ArrayList<String> deviceNames = new ArrayList<String>();
 		
-		for(AndruinoObj obj: allControls) /* app is crashing here */
+		for(int i = 0; i < allControls.size(); i++)
 		{
+			AndruinoObj obj = allControls.get(i);
 			String device = obj.getDevice();
 			if(!deviceNames.contains(device))
-				deviceNames.add(obj.getDevice());
+				deviceNames.add(device);
 		}
 		return deviceNames;
 	}
