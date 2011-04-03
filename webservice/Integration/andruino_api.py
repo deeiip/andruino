@@ -16,11 +16,6 @@ from andruino_services import *
 import time
 
 
-
-sql = sqlite3.connect('andruino.db')
-
-
-
 class AndruinoApi():
     def __init__(self):
         '''
@@ -38,6 +33,9 @@ class AndruinoApi():
             Map must be maintained at this level for multiple device support.
         '''       
     def startSerial(self):
+        '''
+            Start the serial thread for this device
+        '''
         self.serialThread = AndrSerial(self.serialQueue)
         self.serialThread.start()
         
