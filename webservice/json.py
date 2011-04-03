@@ -1,15 +1,16 @@
 #import the web py module import web
 import hashlib
-from web import form
+import web
+#from web import form
 import sqlite3
 import datetime
 
 #import the CherryPy server with ssl support
-from web.wsgiserver import CherryPyWSGIServer
+#from web.wsgiserver import CherryPyWSGIServer
 
 #define the ssl cert and key, yes these are self signed
-CherryPyWSGIServer.ssl_certificate = "ssl.key/csu_hrc51_com.crt"
-CherryPyWSGIServer.ssl_private_key = "ssl.key/csu_hrc51_com.key"
+#CherryPyWSGIServer.ssl_certificate = "ssl.key/csu_hrc51_com.crt"
+#CherryPyWSGIServer.ssl_private_key = "ssl.key/csu_hrc51_com.key"
 
 #define database stuff
 db = web.database(dbn='sqlite', db='andruino.db')
@@ -38,7 +39,7 @@ else:
 
 class index:
 	def GET(self):
-		return '[{"command":"index","response":"Hello, World!"}]'
+		return '{"command":"index","response":"Hello, World!"}'
 
 class login:
 	def POST(self):
@@ -51,42 +52,42 @@ class login:
 			session.username = wi.username
 			session.email = check[0].email
 			session.loggedin = True
-			return '[{"command":"login","response":"pass"}]'
+			return '{"command":"login","response":"pass"}'
 		except:
 			session.loggedin = False
-			return '[{"command":"login","response":"fail"}]'
+			return '{"command":"login","response":"fail"}'
 
 class logout:
 	def GET(self):
 		session.kill()
-		return '[{"command":"logout","response":"bye!"}]'
+		return '{"command":"logout","response":"bye!"}'
 
 class sqlts:
 	def GET(self):
 		dbQuery = "SELECT DATETIME('now') AS now;"
 		dbts = db.query(dbQuery)
-		return '[{"command":"sqlts","response":"'+dbts[0].now+'"}]'
+		return '{"command":"sqlts","response":"'+dbts[0].now+'"}'
 
 class config:
 	def GET(self):
 		try: session.username
-		except AttributeError: '[{"command":"write","response":"auth"}]'
+		except AttributeError: '{"command":"write","response":"auth"}'
 		deviceList = db.select('devices')
 		return render.devices("Device List", deviceList)
 
 class devdetails:
 	def GET(self):
 		try: session.username
-		except AttributeError: '[{"command":"write","response":"auth"}]'
+		except AttributeError: '{"command":"write","response":"auth"}'
 		myvar = web.input()
 		detailList = db.select('details', myvar, where="device_id = $device_id")
 		return render.details("Device Details", detailList)
 
 class read:
 	def GET(self):
-		try: session.username
-		except AttributeError: '[{"command":"write","response":"auth"}]'
-		dbQuery = 'SELECT dev.id as did, det.id, det.label, det.ddr,\
+		#try: session.username
+		#except AttributeError: '[{"command":"write","response":"auth"}]'
+		dbQuery = 'SELECT dev.id as did, det.id, det.label, dev.name, det.ddr,\
 		 det.pin, det.value, det.ts_value FROM devices dev, details det\
 		 WHERE dev.id=det.device_id AND dev.enabled=1 AND det.enabled=1;'
 		statuses = db.query(dbQuery)
@@ -96,12 +97,13 @@ class read:
 			response = '{"did":"'+str(status['did'])+'",'
 			response += '"id":"'+str(status['id'])+'",'
 			response += '"label":"'+str(status['label'])+'",'
+			response += '"device":"'+str(status['name'])+'",'
 			response += '"ddr":"'+str(status['ddr'])+'",'
 			response += '"pin":"'+str(status['pin'])+'",'
 			response += '"value":"'+str(status['value'])+'",'
 			response += '"ts_value":"'+str(status['ts_value'])+'"}'
 			responseList.append(response)
-		return '[{"command":"read","response":"'+str(len(responseList))+'"},'+",".join(responseList)+']'
+		return '{"command":"read","response":"'+str(len(responseList))+'","details":['+",".join(responseList)+']}'
 
 class write:
 	def GET(self):
