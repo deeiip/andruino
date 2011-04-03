@@ -90,6 +90,17 @@ class AndruinoApi():
         }
         self.serialQueue.put(msg)
 
+
+    def writeConfig(self, PinId=None):
+        '''
+            Write the pin config data to the database.
+            One Parameter
+            PinId - Represents the Pin stored as id in the details table.
+            if the parameter is set to none then all devices 
+            
+            
+            
+        '''
    
 
     def getAvrMap(self):
