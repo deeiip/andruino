@@ -166,4 +166,5 @@ class adddetails:
 			raise web.seeother('/adddetails?device_id='+myvar['device_id'])
 
 if __name__ == "__main__":
+	ws_api.startSerial()
 	app.run()
