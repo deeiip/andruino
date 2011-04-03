@@ -9,7 +9,7 @@ Arduino Pin Map
 
 
 '''
-import sqlite3
+
 import datetime
 from Queue import Queue
 from andruino_services import *
@@ -140,6 +140,8 @@ class AndruinoApi():
             returns dictionary of ports and OI states
         '''
         return serialThread.getMap()
+
+
 
 
 if __name__ == '__main__':
