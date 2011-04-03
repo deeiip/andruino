@@ -5,7 +5,6 @@ drop table "users";
 drop table "statusreg";
 
 
-
 CREATE TABLE "devices" (
 "id" integer not null primary key, 
 "name" varchar(100) not null, 
