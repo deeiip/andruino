@@ -1,9 +1,9 @@
-drop table "devices";
-drop table "details";
-drop table "sessions";
-drop table "users";
-drop table "statusreg";
-
+drop table if exists "devices";
+drop table if exists "details";
+drop table if exists "sessions";
+drop table if exists "users";
+drop table if exists "rules";
+drop table if exists "statusreg";
 
 CREATE TABLE "devices" (
 "id" integer not null primary key, 
@@ -37,7 +37,7 @@ CREATE TABLE "sessions" (
 );
 
 CREATE TABLE "users" (
-"id" interger not null primary key,
+"id" integer primary key autoincrement,
 "username" varchar(32) not null,
 "password" varchar(32) not null,
 "email" varchar(64) not null
@@ -53,3 +53,6 @@ CREATE TABLE "rules" (
 "device_id" integer not null references "devices" ("id"), 
 "value" integer not null
 );
+
+INSERT INTO "users" VALUES (NULL,"defaultuser","defaultpass","broken@email.addr");
+
