@@ -13,13 +13,27 @@ import sqlite3
 import datetime
 from Queue import Queue
 from andruino_services import *
-import time
+import time, sys
 
 
 class AndruinoApi():
-    def __init__(self):
+    def __init__(self, DeviceId=None ):
         '''
             Queue interfaces for messaging
+        '''
+        
+        if not DeviceId:
+            print "[API] DeviceId required. Please set device ID "
+            sys.exit()
+        else:
+            '''
+                Set Device ID for this implementation of the API
+            '''
+            self.device_id=DeviceId
+        
+        
+        '''
+            Create messaging queues for interacting with the threads.
         '''
         self.serialQueue = Queue(0)
         self.emailQueue = Queue(0)
@@ -31,13 +45,22 @@ class AndruinoApi():
         '''
             Map Pins to Port Interfaces
             Map must be maintained at this level for multiple device support.
-        '''       
+        ''' 
+        
+              
     def startSerial(self):
         '''
             Start the serial thread for this device
+            thread will be bound to the serial interface defined within the devices table
+            All calls to the thread interfaces will be bound to a unique device 
         '''
-        self.serialThread = AndrSerial(self.serialQueue)
+        self.serialThread = AndrSerial(self.serialQueue, self.device_id)
         self.serialThread.start()
+        # TODO 
+        '''
+            Add interface for starting email thread...
+        '''
+        
         
     def stopSerial(self):
         self.serialThread.stop()
@@ -91,17 +114,25 @@ class AndruinoApi():
         self.serialQueue.put(msg)
 
 
-    def writeConfig(self, PinId=None):
+    def writeConfig(self, DetailId=None):
         '''
             Write the pin config data to the database.
+            
             One Parameter
-            PinId - Represents the Pin stored as id in the details table.
-            if the parameter is set to none then all devices 
+            DetailId - Represents the Pin stored as id in the details table.
+            When DetailId is set only that device will be written to the serial interface
             
-            
+            if the parameter DetailId is not passed in, value defaults to None.
+            In this condition, all devices within self.DeviceId will be initialized. 
             
         '''
-   
+        
+        if not DetailId:
+            '''
+                DetailId not set
+                Execute default
+            '''
+            
 
     def getAvrMap(self):
         '''
