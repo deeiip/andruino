@@ -57,31 +57,43 @@ class AndruinoDb():
                 Return an array of rows indexed as a dictionary 
                 based on the listing provided by Columns
             '''
-            rows_dict = dict(zip(Columns, rows))
+            if not GetOne:
+                '''
+                    Return array
+                '''
+                rows_dict = [dict(zip(Columns, row)) for row in rows]
+                
+            else:
+                '''
+                    Return single dictionary
+                '''
+                rows_dict = dict(zip(Columns, rows))
+        
             return rows_dict
-        
-        
     
         
-    def _exec_sql(self):
+    def _exec_sql(self, sql):
         '''
             Perform inserts updates and deletes
             ACTIONS that do no require a return field
             
             ~Post Conditions~
-                calls commit on database.
+                call commit on database.
         '''
-        
+        cursor = self.db.cusor()
+        cursor.execute(sql)
+        self.db.commit()
         
     def getDeviceById(self, DeviceId):
         '''
             Get device information using id 
         '''
         
-        sql = "SELECT * from devices WHERE id = '%s'" 
-        # get a db cursor
-        cursor = self.db.cusor()
-        cursor.execute(sql % DeviceId)
+        sql = "SELECT * from devices WHERE id = '%s'"  % (DeviceId)
+        columns = ['id', 'name', 'port', 'type', 'ts_added', 'ts_updated', 'enabled', 'submit']
+        # Not tested 
+        result = self._query(sql, columns, True)
+        
         
    
    
