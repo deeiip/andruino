@@ -4,6 +4,7 @@ import hashlib
 import datetime
 import time, sys
 import hashlib
+from datetime import datetime
 
 class AndruinoDb():
     def __init__(self):
@@ -12,67 +13,128 @@ class AndruinoDb():
         '''
         self.db_file = 'andruino.db'
         self.db = sqlite3.connect(self.db_file)
+        
+        '''
+            Set the database API to return dictionary of column names to data rows
+        '''
+        self.db.row_factory = sqlite3.Row
         '''
         self.sql = None
         self.columns = None
         '''
+        self.pl = {'name':'NewDevice_001', 'port':'/dev/ttyNewDev_001', 'type':'arduino','enabled':'1', 'submit':'This is Submit'} 
         
-        
-    def _query(self, sql, Columns=None, GetOne=None):
-        '''
-            Execute the query and return the result set
-            
-            ~Pre-Conditions~:
-                
-            Columns set:
-                return a dictionary of data
-                Otherwise return an array
-            GetOne set:
-                Return a single row regardless of sql restriction     
-        '''
-        cursor = self.db.cusor()
-        cursor.execute(sql)
-        
-        if not GetOne:
-            '''
-                Return all row
-            '''
-            rows = cursor.fetchall()
-            
-            
-        else:
-            '''
-                return Single row
-            '''
-            rows = cursor.fetchone()
-        
-        if not Columns:
-            '''
-                return array of results
-            '''
-            return rows
-                
-        else: 
-            '''
-                Return an array of rows indexed as a dictionary 
-                based on the listing provided by Columns
-            '''
-            if not GetOne:
-                '''
-                    Return array
-                '''
-                rows_dict = [dict(zip(Columns, row)) for row in rows]
-                
-            else:
-                '''
-                    Return single dictionary
-                '''
-                rows_dict = dict(zip(Columns, rows))
-        
-            return rows_dict
     
+    def initDB(self):
+        '''
+            Execute SQL to inintialize DB
+        '''
+        sql = []
+        sql.append("""
+        CREATE TABLE "devices" (
+        "id" integer primary key autoincrement, 
+        "name" varchar(100) not null, 
+        "port" varchar(100) not null, 
+        "type" integer not null, 
+        "ts_added" datetime default current_timestamp, 
+        "ts_updated" datetime default current_timestamp, 
+        "enabled" integer not null
+        );
+        """)
+        sql.append( """
+        CREATE TABLE "details" (
+        "id" integer primary key autoincrement, 
+        "device_id" integer not null references "devices" ("id"), 
+        "label" varchar(100) not null, 
+        "config" integer not null, 
+        "pin" integer not null, 
+        "value" integer not null, 
+        "ts_value" datetime default current_timestamp,  
+        "ts_output" datetime default current_timestamp, 
+        "enabled" integer not null
+        );
+        """)
+        sql.append( """
+        CREATE TABLE "sessions" (
+            "session_id" char(128) UNIQUE NOT NULL,
+            "atime" NOT NULL default current_timestamp,
+            "data" text
+        );
+        """)
+        sql.append( """
+        CREATE TABLE "users" (
+        "id" integer primary key autoincrement,
+        "username" varchar(32) not null,
+        "password" varchar(32) not null,
+        "email" varchar(64) not null
+        );
+        """)
+        sql.append("""
+        CREATE TABLE "statusreg" (
+        "device_id" integer not null references "devices" ("id"), 
+        "ts_value" datetime default current_timestamp
+        );
+        """)
+        sql.append("""
+        CREATE TABLE "rules" (
+        "device_id" integer not null references "devices" ("id"), 
+        "value" integer not null
+        );
+        """)
         
-    def _exec_sql(self, sql):
+        
+        sql.append("""
+        INSERT INTO "users" VALUES (NULL,"default","5f4dcc3b5aa765d61d8327deb882cf99","broken@email.addr");
+        """)
+                
+        sql.append("""
+         INSERT INTO "users" VALUES (NULL,"matt","5f4dcc3b5aa765d61d8327deb882cf99","matt@email.addr");
+        """)
+        for stmt in sql:
+            self._exec_sql(stmt)
+        
+    def reinitDB(self):
+        '''
+            Drop all tables and re-initialize DB
+        '''
+        sql = []
+        sql.append("""
+        drop table if exists "devices";
+        """)
+        sql.append("""
+        drop table if exists "details";
+        """)
+        sql.append("""
+        drop table if exists "sessions";
+        """)
+        sql.append("""
+        drop table if exists "users";
+        """)
+        sql.append("""
+        drop table if exists "rules";
+        """)
+        sql.append("""
+        drop table if exists "statusreg";
+        """)
+        for stmt in sql:
+            self._exec_sql(stmt)
+        '''
+            Call the database creation function
+        '''
+        self.initDB()
+        
+    
+    def query(self, sql):
+        '''
+            
+        '''
+        cursor = self.db.cursor()
+        result = cursor.execute(sql)
+        return result
+    
+    
+    
+    def exec_sql(self, sql):
         '''
             Perform inserts updates and deletes
             ACTIONS that do no require a return field
@@ -80,7 +142,7 @@ class AndruinoDb():
             ~Post Conditions~
                 call commit on database.
         '''
-        cursor = self.db.cusor()
+        cursor = self.db.cursor()
         cursor.execute(sql)
         self.db.commit()
         
@@ -90,12 +152,21 @@ class AndruinoDb():
         '''
         
         sql = "SELECT * from devices WHERE id = '%s'"  % (DeviceId)
-        columns = ['id', 'name', 'port', 'type', 'ts_added', 'ts_updated', 'enabled', 'submit']
         # Not tested 
-        result = self._query(sql, columns, True)
+        result = self.query(sql)
+        
+        return result
         
         
-   
+    def setDevice(self, dataset):
+        '''
+            Dataset is a dictionary of data elements device table
+        '''
+        sql = """INSERT INTO devices 
+        (name, port, type, enabled, submit) 
+        VALUES 
+        ('%s', '%s', '%s', '%s', '%s')""" % (dataset['name'], dataset['port'], dataset['type'], dataset['enabled'], dataset['submit'])
+        self.exec_sql(sql)
    
     def getlogin(self, username, password):
     	'''
@@ -123,3 +194,5 @@ class AndruinoDb():
         
         
 
+
+        
