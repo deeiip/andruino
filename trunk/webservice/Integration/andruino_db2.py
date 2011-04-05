@@ -11,7 +11,7 @@ class AndruinoDb():
             Connect to the database
         '''
         self.db_file = 'andruino.db'
-        self.db = sqlite3.connect(self.db_file)
+        self.db = sqlite3.connect(self.db_file, check_same_thread = False)
         
         '''
             Set the database API to return dictionary of column names to data rows
@@ -31,7 +31,7 @@ class AndruinoDb():
         sql = []
         sql.append("""
         CREATE TABLE "devices" (
-        "id" integer primary key autoincrement, 
+        "id" integer primary key, 
         "name" varchar(100) not null, 
         "port" varchar(100) not null, 
         "type" integer not null, 
@@ -42,7 +42,7 @@ class AndruinoDb():
         """)
         sql.append( """
         CREATE TABLE "details" (
-        "id" integer primary key autoincrement, 
+        "id" integer primary key, 
         "device_id" integer not null references "devices" ("id"), 
         "label" varchar(100) not null, 
         "config" integer not null, 
@@ -167,33 +167,46 @@ class AndruinoDb():
         ('%s', '%s', '%s', '%s', '%s')""" % (dataset['name'], dataset['port'], dataset['type'], dataset['enabled'], dataset['submit'])
         self.exec_sql(sql)
    
+
     def getlogin(self, username, password):
-    	'''
-    	    Check Login Credentials
-    	'''
+        ''' 
+            Check Login Credentials
+        '''
         pwdhash = hashlib.md5(password).hexdigest()
-        sql = """SELECT COUNT(1) AS exists
-        FROM users
-        WHERE
+        sql = """SELECT COUNT(username) AS count
+        FROM users 
+        WHERE 
         username='%s'
         AND
         password='%s'
         """ % (username, pwdhash)
-
-        '''
+    
+        ''' 
             Test to see if the database contains this record
             In this case a data dictionary is not requierd.
             So only test for a valid row returned from the database.
         '''
         result = self.query(sql)
-        return result
-        #if (result.fetchone()[0] == 1)
-        
+        ''' 
+           Get a single row from the database 
+           Pass back a dictionary object for the row
+        '''
+        login = result.next()
+    
+        if login['count'] == 1:
+            return True
+        else:
+            return False
+
     def read(self):
-	sql = 'SELECT dev.id as did, det.id, det.label, det.ddr,\
-              det.pin, det.value, det.ts_value FROM devices dev, details det\
-              WHERE dev.id=det.device_id AND dev.enabled=1 AND det.enabled=1;'
+        sql = """SELECT dev.id as did, det.id, det.label, det.config,
+			det.pin, det.value, det.ts_value
+		 FROM devices dev, details det
+		 WHERE dev.id=det.device_id
+		   AND dev.enabled=1
+		   AND det.enabled=1;
+        """
+        result = self.query(sql)
+	return result
+    
 
-
-
-        
