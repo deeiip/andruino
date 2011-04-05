@@ -1,4 +1,3 @@
-
 import sqlite3
 import hashlib
 import datetime
@@ -12,7 +11,7 @@ class AndruinoDb():
             Connect to the database
         '''
         self.db_file = 'andruino.db'
-        self.db = sqlite3.connect(self.db_file)
+        self.db = sqlite3.connect(self.db_file, check_same_thread = False)
         
         '''
             Set the database API to return dictionary of column names to data rows
@@ -175,43 +174,115 @@ class AndruinoDb():
         ('%s', '%s', '%s', '%s')""" % (dataset['name'], dataset['port'], dataset['type'], dataset['enabled'])
         self.exec_sql(sql)
    
-    def getlogin(self, username, password):
-    	'''
-    	    Check Login Credentials
-    	'''
+
+# BEGIN JSON/HTML BACKEND SUPPORT
+
+    def getLogin(self, username, password):
+        ''' 
+            Check Login Credentials
+        '''
         pwdhash = hashlib.md5(password).hexdigest()
-        sql = """SELECT count(*) as cnt
+        sql = """SELECT COUNT(username) AS count
         FROM users 
         WHERE 
         username='%s'
         AND
         password='%s'
         """ % (username, pwdhash)
-        
-        '''
+    
+        ''' 
             Test to see if the database contains this record
-            In this case a data dictionary is not required.
+            In this case a data dictionary is not requierd.
             So only test for a valid row returned from the database.
-            
-            
         '''
         result = self.query(sql)
-        '''
+        ''' 
            Get a single row from the database 
            Pass back a dictionary object for the row
         '''
         login = result.next()
-        
-        if login['cnt'] == 1:
+    
+        if login['count'] == 1:
             return True
         else:
             return False
-        
-        
-        
-        
-        
-        
+
+    def getEmail(self, username):
+        ''' 
+            Get Email Address from Username
+        '''
+        sql = """SELECT email
+        FROM users 
+        WHERE 
+        username='%s';
+        """ % (username)
+    
+        result = self.query(sql)
+        userinfo = result.next()
+    
+        return userinfo['email']
 
 
-        
+    def read(self):
+	'''
+		Retreive the current status of all enabled pins
+	'''
+        sql = """SELECT dev.id as did, det.id, det.label, det.config,
+			det.pin, det.value, det.ts_value
+		 FROM devices dev, details det
+		 WHERE dev.id=det.device_id
+		   AND dev.enabled=1
+		   AND det.enabled=1;
+        """
+        result = self.query(sql)
+	return result
+
+    
+    def write(self, did, value):
+	'''
+		Set a pins output to the value provided
+	'''
+        setsql = """UPDATE details 
+		 SET value=%s, ts_output=datetime('now')
+		 WHERE id=%s;
+        """ % (value, did)
+
+        self.exec_sql(setsql)
+
+        sql = """SELECT value
+		 FROM details
+		 WHERE id=%s;
+        """ % (did)
+
+        result = self.query(sql)
+        current = result.next()
+
+        if str(current['value']) == str(value):
+            return True
+        else:
+            return False
+
+    def config(self, did, value):
+	'''
+		Set a pins configuration to the value provided
+	'''
+        setsql = """UPDATE details 
+		 SET config=%s, ts_output=datetime('now')
+		 WHERE id=%s;
+        """ % (value, did)
+
+        self.exec_sql(setsql)
+
+        sql = """SELECT config
+		 FROM details
+		 WHERE id=%s;
+        """ % (did)
+
+        result = self.query(sql)
+        current = result.next()
+
+        if str(current['config']) == str(value):
+            return True
+        else:
+            return False
+
