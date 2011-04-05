@@ -29,6 +29,23 @@ class deviceMap():
         '''
             Defines data dictionary for storing AVR config data
         '''
+        self.AvrBinMap = {
+            'B': {
+                'DDR':None,
+                'PIN':None,
+                'PORT':None,
+            },
+            'C': {
+                'DDR':None,
+                'PIN':None,
+                'PORT':None,
+            },
+            'D': {
+                'DDR':None,
+                'PIN':None,
+                'PORT':None,
+            }
+        }
         self.AvrMap = {
             'B': {
                 'DDR':None,
@@ -93,7 +110,9 @@ class deviceMap():
             12:16,
             13:32
         }
-    
+
+
+
     
     def getMap(self):
         ''' 
@@ -136,11 +155,12 @@ class deviceMap():
                    Convert Hex data to binary
                    binData - convert hex address into binary string
                '''
-               #binData = bin(int(portRegData[1], 16))[2:]
+               binData = bin(int(portRegData[1], 16))[2:]
                decData = int(portRegData[1], 16)
                
                ''' Store data values in data dictionary '''
                self.AvrMap[ toPort[ portRegData[0][0] ] ][ toReg[ portRegData[0][1] ] ] = decData
+               self.AvrBinMap[ toPort[ portRegData[0][0] ] ][ toReg[ portRegData[0][1] ] ] = binData
                ''' Save PORT information is decimal format '''
                #print "Low Nibble is what %s " % (portRegData[0][1])
                """
@@ -151,6 +171,7 @@ class deviceMap():
                    decData = int(portRegData[1], 16)
                    self.AvrMap[ toPort[ portRegData[0][0] ] ][ 'Dec_PORT' ] = decData
                """
+           #print "BinMap %s" % self.AvrBinMap
        else:
            print "Malformed response from controller"
            return None
@@ -194,11 +215,10 @@ class deviceMap():
             '''
             print "OPERATION = ADD"
             
-	    if (RegDecVal > 255 ):
-		NewVal = RegDecVal
-	    else: 
-
-		NewVal = RegDecVal + ReqVal
+    	    if (RegDecVal > 255 ):
+                NewVal = RegDecVal
+    	    else: 
+                NewVal = RegDecVal + ReqVal
              
             
         else: 
