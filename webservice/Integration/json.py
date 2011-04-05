@@ -15,7 +15,9 @@ ws_api = AndruinoApi()
 #CherryPyWSGIServer.ssl_private_key = "ssl.key/csu_hrc51_com.key"
 
 #define database stuff
-db = web.database(dbn='sqlite', db='andruino.db')
+#db = web.database(dbn='sqlite', db='andruino.db')
+
+AnDB = AndruinoDb()
 
 urls  = ("/", "index")
 urls += ("/login", "login")
