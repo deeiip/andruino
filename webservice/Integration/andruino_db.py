@@ -180,14 +180,13 @@ class AndruinoDb():
     	    Check Login Credentials
     	'''
         pwdhash = hashlib.md5(password).hexdigest()
-        sql = """SELECT username 
+        sql = """SELECT count(*) as cnt
         FROM users 
         WHERE 
         username='%s'
         AND
         password='%s'
         """ % (username, pwdhash)
-        columns=['username']
         
         '''
             Test to see if the database contains this record
@@ -196,7 +195,20 @@ class AndruinoDb():
             
             
         '''
-        result = self._query(sql)
+        result = self.query(sql)
+        '''
+           Get a single row from the database 
+           Pass back a dictionary object for the row
+        '''
+        login = result.next()
+        
+        if login['cnt'] == 1:
+            return True
+        else:
+            return False
+        
+        
+        
         
         
         
