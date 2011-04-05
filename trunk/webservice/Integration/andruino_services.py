@@ -11,6 +11,7 @@ import time
 import math
 from struct import *
 from datamaps import *
+from andruino_db import AndruinoDb
 
 
 
@@ -29,22 +30,24 @@ class AndrSerial(threading.Thread):
                             on the serialInterfaceQueue...    
         '''
         self.map = deviceMap(deviceType)
-        
+        self.dbi = AndruinoDb()
         self.ReadSleepTime = 10
         self.QueuePollInterval = 0.5
         self.serialQueue = SerialInterfaceQueue
         '''
             Initialize this thread
         '''
+        
+        
         self.ThreadRunState = 0
         self.ThreadRunStatus = False
         threading.Thread.__init__(self)
         self.StopMe = threading.Event()
         
-        
-        
+        device_port = self.dbi.getDeviceById(device_id)
+        print "Device Port -> %s" %(device_port)
         # setup the serial port
-        self.ser = serial.Serial('/dev/ttyUSB0', 115200, timeout=0.25)
+        self.ser = serial.Serial(device_port['port'], 115200, timeout=0.25)
         # Wait for the serial post to initialize
         print "Thread is sleeping before starting..."
         time.sleep(15)
@@ -73,8 +76,11 @@ class AndrSerial(threading.Thread):
                 do this alot
             '''
             self.ThreadRunStatus = True
+            '''
+                Read data from the AVR
+            '''
             self.readAvr()
-            #self.printMap()
+            self.printMap()
             
             
             '''
@@ -131,10 +137,6 @@ class AndrSerial(threading.Thread):
             ''' Sleep longer than the timeout'''
             time.sleep(0.5)
             self.readAvr()
-            
-            
-            
-    
        
         
     def initAvr(self):
@@ -158,9 +160,15 @@ class AndrSerial(threading.Thread):
             Remove trailing line feed carriage return 
         '''
         for data in dataSet: 
+            '''
+                Get Raw data
+            '''
             data = data.strip()
+            '''
+                Update the data map
+            '''
             self.map.updateMap(data)
-            #self.printMap()
+
         
         
     

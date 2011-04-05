@@ -98,6 +98,9 @@ class deviceMap():
     def getMap(self):
         ''' 
             Return avr dictionary map
+            result set is a listing of ports with integer values for pins
+            Values indicate what pins are active based on binary mapping. 
+            Map: {'C': {'DDR': 0, 'PORT': 0, 'PIN': 0}, 'B': {'DDR': 32, 'PORT': 0, 'PIN': 0}, 'D': {'DDR': 0, 'PORT': 1, 'PIN': 3}} 
         '''
         return self.AvrMap
     

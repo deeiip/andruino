@@ -22,7 +22,7 @@ class AndruinoDb():
         self.sql = None
         self.columns = None
         '''
-        self.pl = {'name':'NewDevice_001', 'port':'/dev/ttyNewDev_001', 'type':'arduino','enabled':'1', 'submit':'This is Submit'} 
+        self.pl = {'name':'Boarduino', 'port':'/dev/ttyAvr', 'type':'arduino', 'enabled':'1'} 
         
     
     def initDB(self):
@@ -91,7 +91,7 @@ class AndruinoDb():
          INSERT INTO "users" VALUES (NULL,"matt","5f4dcc3b5aa765d61d8327deb882cf99","matt@email.addr");
         """)
         for stmt in sql:
-            self._exec_sql(stmt)
+            self.exec_sql(stmt)
         
     def reinitDB(self):
         '''
@@ -117,7 +117,7 @@ class AndruinoDb():
         drop table if exists "statusreg";
         """)
         for stmt in sql:
-            self._exec_sql(stmt)
+            self.exec_sql(stmt)
         '''
             Call the database creation function
         '''
@@ -152,10 +152,17 @@ class AndruinoDb():
         '''
         
         sql = "SELECT * from devices WHERE id = '%s'"  % (DeviceId)
-        # Not tested 
+        '''
+            Get the result from the database
+        '''
         result = self.query(sql)
+        '''
+            Pass database row back to calling application
+        '''
+        row = result.next()
+        return row
+            
         
-        return result
         
         
     def setDevice(self, dataset):
@@ -163,9 +170,9 @@ class AndruinoDb():
             Dataset is a dictionary of data elements device table
         '''
         sql = """INSERT INTO devices 
-        (name, port, type, enabled, submit) 
+        (name, port, type, enabled) 
         VALUES 
-        ('%s', '%s', '%s', '%s', '%s')""" % (dataset['name'], dataset['port'], dataset['type'], dataset['enabled'], dataset['submit'])
+        ('%s', '%s', '%s', '%s')""" % (dataset['name'], dataset['port'], dataset['type'], dataset['enabled'])
         self.exec_sql(sql)
    
     def getlogin(self, username, password):

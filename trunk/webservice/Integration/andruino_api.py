@@ -145,6 +145,14 @@ class AndruinoApi():
 
 
 if __name__ == '__main__':
+
+    '''
+        Updated with database models
+    '''
+    api = AndruinoApi(DeviceId=1)
+    api.startSerial()
+    
+    """
     '''
         seed the database
     '''
@@ -186,3 +194,4 @@ if __name__ == '__main__':
       
     
     #foo.stopSerial()
+    """
