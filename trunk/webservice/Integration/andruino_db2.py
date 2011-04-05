@@ -1,4 +1,3 @@
-
 import sqlite3
 import hashlib
 import datetime
@@ -91,7 +90,7 @@ class AndruinoDb():
          INSERT INTO "users" VALUES (NULL,"matt","5f4dcc3b5aa765d61d8327deb882cf99","matt@email.addr");
         """)
         for stmt in sql:
-            self._exec_sql(stmt)
+            self.exec_sql(stmt)
         
     def reinitDB(self):
         '''
@@ -117,7 +116,7 @@ class AndruinoDb():
         drop table if exists "statusreg";
         """)
         for stmt in sql:
-            self._exec_sql(stmt)
+            self.exec_sql(stmt)
         '''
             Call the database creation function
         '''
@@ -173,26 +172,28 @@ class AndruinoDb():
     	    Check Login Credentials
     	'''
         pwdhash = hashlib.md5(password).hexdigest()
-        sql = """SELECT username 
-        FROM users 
-        WHERE 
+        sql = """SELECT COUNT(1) AS exists
+        FROM users
+        WHERE
         username='%s'
         AND
         password='%s'
         """ % (username, pwdhash)
-        columns=['username']
-        
+
         '''
             Test to see if the database contains this record
             In this case a data dictionary is not requierd.
             So only test for a valid row returned from the database.
-            
-            
         '''
-        result = self._query(sql)
+        result = self.query(sql)
+        return result
+        #if (result.fetchone()[0] == 1)
         
-        
-        
+    def read(self):
+	sql = 'SELECT dev.id as did, det.id, det.label, det.ddr,\
+              det.pin, det.value, det.ts_value FROM devices dev, details det\
+              WHERE dev.id=det.device_id AND dev.enabled=1 AND det.enabled=1;'
+
 
 
         
