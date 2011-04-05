@@ -190,7 +190,7 @@ class AndruinoDb():
         
         '''
             Test to see if the database contains this record
-            In this case a data dictionary is not requierd.
+            In this case a data dictionary is not required.
             So only test for a valid row returned from the database.
             
             
