@@ -69,9 +69,10 @@ public class IOAdapter extends ArrayAdapter<AndruinoObj> {
                     	tb.setChecked(andrObj.getValue() == 1 ? true : false);
                     	tb.setOnClickListener(new OnClickListener() {
                     	    public void onClick(View v) {
-                    	        wc.write(andrObj.getId(), andrObj.getValue() == 1 ? 0 : 1);
+                    	    	andrObj.setValue(andrObj.getValue()== 1 ? 0 : 1);
+                    	        wc.write(andrObj.getId(), andrObj.getValue());
                     	        Toast.makeText(context, "You have changed the state of "+andrObj.getLabel()+ " to "+
-                    	        		(andrObj.getValue() == 1 ? 0 : 1), Toast.LENGTH_SHORT).show();
+                    	        		(andrObj.getValue()), Toast.LENGTH_SHORT).show();
                     	    }
                     	});
                     }
