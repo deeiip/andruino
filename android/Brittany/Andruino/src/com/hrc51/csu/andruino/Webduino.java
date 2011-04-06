@@ -24,12 +24,12 @@ public class Webduino {
 
 	       try {
 	    	   if (serverSettings.getBoolean("usessl", false))
-	        	   //url = new URL("https://"+serverSettings.getString("serverurl", "n/a")+":"+serverSettings.getString("serverport", "n/a")+"/");
-	    		   url = new URL("https://csu.hrc51.com:8080/read");
+	        	   //url = new URL("https://"+serverSettings.getString("serverurl", "csu.hrc51.com")+":"+serverSettings.getString("serverport", "8080")+"/");
+	    		   url = new URL("https://csu.hrc51.com:8080/");
 
 	    	   else
-	    		   //url = new URL("http://"+serverSettings.getString("serverurl", "n/a")+":"+serverSettings.getString("serverport", "n/a")+"/");
-	    		   url = new URL("http://csu.hrc51.com:8080/read");
+	    		   //url = new URL("http://"+serverSettings.getString("serverurl", "csu.hrc51.com")+":"+serverSettings.getString("serverport", "8080")+"/");
+	    		   url = new URL("https://csu.hrc51.com:8080/");
 
 	    	   urlConnection = (HttpURLConnection) url.openConnection();
 	    	   BufferedReader in = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
@@ -56,15 +56,17 @@ public class Webduino {
 
 	       try {
 	    	   if (serverSettings.getBoolean("usessl", false))
-	        	   //url = new URL("https://"+serverSettings.getString("serverurl", "n/a")+":"+serverSettings.getString("serverport", "n/a")+"/read");
+	        	   //url = new URL("https://"+serverSettings.getString("serverurl", "csu.hrc51.com")+":"+serverSettings.getString("serverport", "8080")+"/read");
 	    		   url = new URL("https://csu.hrc51.com:8080/read");
-
+	    		   
 	    	   else
-	    		   //url = new URL("http://"+serverSettings.getString("serverurl", "n/a")+":"+serverSettings.getString("serverport", "n/a")+"/read");
+	    		   //url = new URL("http://"+serverSettings.getString("serverurl", "csu.hrc51.com")+":"+serverSettings.getString("serverport", "8080")+"/read");
 	    		   url = new URL("http://csu.hrc51.com:8080/read");
 
 	    	   urlConnection = (HttpURLConnection) url.openConnection();
-	    	   BufferedReader in = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
+	    	   BufferedReader in = new BufferedReader(new InputStreamReader(urlConnection.openStream()));
+
+	    	   //BufferedReader in = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
 	    	   String inputLine;
 	    	   inputLine = in.readLine();
 	    	   jp = new JsonParser(inputLine);
