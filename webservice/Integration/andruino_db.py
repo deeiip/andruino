@@ -11,7 +11,9 @@ class AndruinoDb():
             Connect to the database
         '''
         self.db_file = 'andruino.db'
-        self.db = sqlite3.connect(self.db_file, check_same_thread = False)
+        
+        self.db = sqlite3.connect(self.db_file)
+        #self.db = sqlite3.connect(self.db_file, check_same_thread = False)
         
         '''
             Set the database API to return dictionary of column names to data rows
@@ -156,7 +158,7 @@ class AndruinoDb():
                 (device_id, label, config, pin, value, enabled)
                 VALUES
                 ('%s','%s','%s','%s','%s','%s')
-                """ % (row['id'], 'default', 0, pin, 0, 0 )
+                """ % (row['id'], 'default_'+pin, 0, pin, 0, 0 )
                 self.exec_sql(sql)
         
         '''
