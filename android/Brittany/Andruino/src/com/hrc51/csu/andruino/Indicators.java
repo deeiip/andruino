@@ -40,10 +40,10 @@ public class Indicators extends ListActivity {
         settings = PreferenceManager.getDefaultSharedPreferences(this);
 		wc = new Webduino(settings);
 		allControls = wc.read();
-		//deviceNames = getDeviceNames(allControls);
+		deviceNames = getDeviceNames(allControls);
 		
         selectDevice = (Spinner)findViewById(R.id.selectDevice);
-        //selectDevice.setAdapter(new ArrayAdapter<String>(this,android.R.layout.simple_spinner_item, deviceNames));
+        selectDevice.setAdapter(new ArrayAdapter<String>(this,android.R.layout.simple_spinner_item, deviceNames));
         selectDevice.setOnItemSelectedListener(new OnItemSelectedListener()
         {
             public void onItemSelected(AdapterView<?> arg0, 
@@ -87,6 +87,10 @@ public class Indicators extends ListActivity {
 			break;
 			
 		case R.id.refresh:
+	        deviceIndicators = filterControls(allControls, selectedDevice);
+	        ctrl_adapter = new IOAdapter(this, R.layout.indicator_row, deviceIndicators);
+	        setListAdapter(ctrl_adapter);
+	        registerForContextMenu(this.getListView());
 			break;
 			
 		case R.id.help:
@@ -142,22 +146,22 @@ public class Indicators extends ListActivity {
 		for(int i = 0; i < controls.size(); i++)
 		{
 			AndruinoObj obj = controls.get(i);
-			if(obj.getDdr() == 1 /*&& obj.getDevice().equals(selectedDevice)*/)
+			if(obj.getDdr() == 1 && obj.getDevice().equals(selectedDevice))
 				deviceIndicators.add(obj);
 		}
 		return deviceIndicators;
 	}
 	
-//	public ArrayList<String> getDeviceNames(ArrayList<AndruinoObj> allControls) {
-//		ArrayList<String> deviceNames = new ArrayList<String>();
-//		
-//		for(int i = 0; i < allControls.size(); i++)
-//		{
-//			AndruinoObj obj = allControls.get(i);
-//			String device = obj.getDevice();
-//			if(!deviceNames.contains(device))
-//				deviceNames.add(device);
-//		}
-//		return deviceNames;
-//	}
+	public ArrayList<String> getDeviceNames(ArrayList<AndruinoObj> allControls) {
+		ArrayList<String> deviceNames = new ArrayList<String>();
+		
+		for(int i = 0; i < allControls.size(); i++)
+		{
+			AndruinoObj obj = allControls.get(i);
+			String device = obj.getDevice();
+			if(!deviceNames.contains(device))
+				deviceNames.add(device);
+		}
+		return deviceNames;
+	}
 }
