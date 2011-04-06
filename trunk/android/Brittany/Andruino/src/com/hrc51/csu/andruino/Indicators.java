@@ -7,6 +7,8 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.view.ContextMenu;
+import android.view.ContextMenu.ContextMenuInfo;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -38,10 +40,10 @@ public class Indicators extends ListActivity {
         settings = PreferenceManager.getDefaultSharedPreferences(this);
 		wc = new Webduino(settings);
 		allControls = wc.read();
-		deviceNames = getDeviceNames(allControls);
+		//deviceNames = getDeviceNames(allControls);
 		
         selectDevice = (Spinner)findViewById(R.id.selectDevice);
-        selectDevice.setAdapter(new ArrayAdapter<String>(this,android.R.layout.simple_spinner_item, deviceNames));
+        //selectDevice.setAdapter(new ArrayAdapter<String>(this,android.R.layout.simple_spinner_item, deviceNames));
         selectDevice.setOnItemSelectedListener(new OnItemSelectedListener()
         {
             public void onItemSelected(AdapterView<?> arg0, 
@@ -61,36 +63,52 @@ public class Indicators extends ListActivity {
         deviceIndicators = filterControls(allControls, selectedDevice);
         ctrl_adapter = new IOAdapter(this, R.layout.indicator_row, deviceIndicators);
         setListAdapter(ctrl_adapter);
+        registerForContextMenu(this.getListView());
     }
     
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		MenuInflater inflater = getMenuInflater();
-		inflater.inflate(R.menu.menu, menu);
+		inflater.inflate(R.menu.options_menu, menu);
 		return true;
 	}
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		//Toast.makeText(this, "Just a test", Toast.LENGTH_SHORT).show();
 
 		switch (item.getItemId()) {
-		// We have only one menu option
 		case R.id.settings:
 			// Launch Preference activity
-			Intent i = new Intent(this, Settings.class);
-			startActivity(i);
+			startActivity(new Intent(this, Settings.class));
 			// Some feedback to the user
 			Toast.makeText(this,
 					"Here you can maintain your server settings and user credentials.",
 					Toast.LENGTH_LONG).show();
 			break;
+			
 		case R.id.refresh:
-
+			break;
+			
+		case R.id.help:
+			startActivity(new Intent(this, Help.class));
 			break;
 		}
 
 		return true;
+	}
+	
+	@Override
+	public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
+	  super.onCreateContextMenu(menu, v, menuInfo);
+	  MenuInflater inflater = getMenuInflater();
+	  inflater.inflate(R.menu.context_menu, menu);
+	}
+
+	@Override
+	public boolean onContextItemSelected(MenuItem item) {
+	  //AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
+	  
+	  return super.onContextItemSelected(item);
 	}
 	
 	public boolean onTouchEvent(MotionEvent event) {
@@ -130,16 +148,16 @@ public class Indicators extends ListActivity {
 		return deviceIndicators;
 	}
 	
-	public ArrayList<String> getDeviceNames(ArrayList<AndruinoObj> allControls) {
-		ArrayList<String> deviceNames = new ArrayList<String>();
-		
-		for(int i = 0; i < allControls.size(); i++)
-		{
-			AndruinoObj obj = allControls.get(i);
-			String device = obj.getDevice();
-			if(!deviceNames.contains(device))
-				deviceNames.add(device);
-		}
-		return deviceNames;
-	}
+//	public ArrayList<String> getDeviceNames(ArrayList<AndruinoObj> allControls) {
+//		ArrayList<String> deviceNames = new ArrayList<String>();
+//		
+//		for(int i = 0; i < allControls.size(); i++)
+//		{
+//			AndruinoObj obj = allControls.get(i);
+//			String device = obj.getDevice();
+//			if(!deviceNames.contains(device))
+//				deviceNames.add(device);
+//		}
+//		return deviceNames;
+//	}
 }
