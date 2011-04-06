@@ -150,7 +150,7 @@ class AndruinoDb():
             Get pin information using detail id 
         '''
         
-        sql = "SELECT pin FROM devices WHERE id = '%s'"  % (DetailId)
+        sql = "SELECT pin FROM details WHERE id = '%s'"  % (DetailId)
         '''
             Get the result from the database
         '''
