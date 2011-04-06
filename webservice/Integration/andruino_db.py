@@ -151,7 +151,7 @@ class AndruinoDb():
                     Add Pins for Arduino
                 '''
                 sql = """insert into  details 
-                (device_id, label, ddr, pin, value, enabled)
+                (device_id, label, config, pin, value, enabled)
                 VALUES
                 ('%s','%s','%s','%s','%s','%s')
                 """ % (row['id'], 'default', 0, pin, 0, 0 )
