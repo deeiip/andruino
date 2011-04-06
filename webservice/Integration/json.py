@@ -1,13 +1,6 @@
 import cherrypy
 from andruino_db import *
 from andruino_api import *
-#import os
-#from tempfile import gettempdir
-
-#import sys, os
-#import datetime
-#from struct import *
-#from andruino_api import *
 
 AnDB = AndruinoDb()
 '''
@@ -17,10 +10,7 @@ AnDB = AndruinoDb()
 	
 	For configuration purposes, Manually set DeviceId to reference database ID
 '''
-
 Api = AndruinoApi(DeviceId=1)
-
-
 
 def requireLogin(self): 
 		return '{"command":"login","response":"fail"}'
@@ -105,9 +95,8 @@ class Write:
 	@cherrypy.expose
 	def default(self,did,value):
 		if (AnDB.write(did,value)):
-			#Api.writeOutput(AnDB.getPinById(did))
-			pin = AnDB.getPinById(did)
-			return '{"command":"write","response":"%s-%s"}' % (did, value)
+			Api.writeOutput(AnDB.getPinByDid(did),value)
+			return '{"command":"write","response":"pass"}'
 		else:
 			return '{"command":"write","response":"fail"}'
 
@@ -120,6 +109,7 @@ class Config:
 	@cherrypy.expose
 	def default(self,did,value):
 		if (AnDB.config(did,value)):
+			Api.setOutput(AnDB.getPinByDid(did),value)
 			return '{"command":"config","response":"pass"}'
 		else:
 			return '{"command":"config","response":"fail"}'
