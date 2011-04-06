@@ -51,7 +51,14 @@ class AndrSerial(threading.Thread):
         device_port = self.dbi.getDeviceById(self.device_id)
         
         # setup the serial port
+        #try:
         self.ser = serial.Serial(device_port['port'], 115200, timeout=0.25)
+    
+        #except SerialException:
+        #    '''
+        #        If port can not be opened...
+        #    '''
+        #    print """Failed to open port [%s]\n Check your configuration and try again""" % device_port['port']
         # Wait for the serial post to initialize
         print "Thread is sleeping before starting..."
         time.sleep(ready_sleep_timeout)
@@ -178,7 +185,10 @@ class AndrSerial(threading.Thread):
             '''
             self.map.updateMap(data)
 
-        self.updateDb()
+        '''
+            Update the db
+        '''
+        #self.updateDb()
         
     def updateDb(self):
         '''
