@@ -202,7 +202,7 @@ class Admin:
 		'''
 			 Perform db operations using api
 		'''
-		devAttr = {'DevNane': devname, 'DevType': devtype, 'DevPort': devport}
+		devAttr = {'DevName': devname, 'DevType': devtype, 'DevPort': devport}
 		AnDB.initDevice(devAttr)
 	initDev.exposed = True
 		
