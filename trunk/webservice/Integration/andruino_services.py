@@ -65,7 +65,7 @@ class AndrSerial(threading.Thread):
         
     def run(self):
         '''
-            Start the thread
+            Start the Serial thread
         '''
         self.ThreadRunState = 1
         self.initAvr()
@@ -84,7 +84,11 @@ class AndrSerial(threading.Thread):
                 Read data from the AVR
             '''
             self.readAvr()
-            self.printMap()
+            
+            '''
+                UnComment to print debug map
+            '''
+            #self.printMap()
             
             
             '''
