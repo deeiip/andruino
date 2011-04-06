@@ -70,6 +70,7 @@ public class IOAdapter extends ArrayAdapter<AndruinoObj> {
                     	tb.setOnClickListener(new OnClickListener() {
                     	    public void onClick(View v) {
                     	    	andrObj.setValue(andrObj.getValue()== 1 ? 0 : 1);
+                    	    	wc.login();
                     	        wc.write(andrObj.getId(), andrObj.getValue());
                     	        Toast.makeText(context, "You have changed the state of "+andrObj.getLabel()+ " to "+
                     	        		(andrObj.getValue()), Toast.LENGTH_SHORT).show();
