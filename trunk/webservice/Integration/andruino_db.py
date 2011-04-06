@@ -145,6 +145,22 @@ class AndruinoDb():
         cursor.execute(sql)
         self.db.commit()
         
+    def getPinByDid(self, DetailId):
+        '''
+            Get pin information using detail id 
+        '''
+        
+        sql = "SELECT pin FROM devices WHERE id = '%s'"  % (DetailId)
+        '''
+            Get the result from the database
+        '''
+        result = self.query(sql)
+        '''
+            Pass database row back to calling application
+        '''
+        pin = result.fetchone()[0]
+        return pin
+
     def getDeviceById(self, DeviceId):
         '''
             Get device information using id 
