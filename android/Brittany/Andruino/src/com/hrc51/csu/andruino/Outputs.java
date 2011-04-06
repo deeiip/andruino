@@ -118,7 +118,7 @@ public class Outputs extends ListActivity {
 		for(int i = 0; i < controls.size(); i++)
 		{
 			AndruinoObj obj = controls.get(i);
-			if(obj.getDdr() == 0)
+			if (obj.getDdr() == 0) 
 				deviceOutputs.add(obj);
 		}
 		return deviceOutputs;
