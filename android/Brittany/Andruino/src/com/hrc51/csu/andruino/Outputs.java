@@ -62,6 +62,11 @@ public class Outputs extends ListActivity {
 			break;
 			
 		case R.id.refresh:
+	        allControls = wc.read();
+			deviceOutputs = filterControls(allControls);
+	        ctrl_adapter = new IOAdapter(this, R.layout.output_row, deviceOutputs);
+	        setListAdapter(ctrl_adapter);
+	        registerForContextMenu(this.getListView());
 			break;
 			
 		case R.id.help:
