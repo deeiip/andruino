@@ -145,8 +145,10 @@ class AndruinoDb():
             result = self.query(sql)
             row = result.next()
             
-            
-            for pin in range(3,13):
+            '''
+                Seed pins 2 - 13
+            '''
+            for pin in range(3,14): 
                 '''
                     Add Pins for Arduino
                 '''
