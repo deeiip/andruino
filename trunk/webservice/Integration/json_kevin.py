@@ -1,6 +1,7 @@
 import cherrypy
 from andruino_db import *
 from andruino_api import *
+import time
 #import os
 #from tempfile import gettempdir
 
@@ -162,6 +163,7 @@ class Admin:
 	<fieldset>
 	<legend>Database Setup</legend>
 	<a href=/admin?screen=seed>Device Setup</a><br>
+	<a href=/admin?screen=control>Device Control</a><br>
 	<br>
 	<input type='radio' name='dbcmd' value='initdb' /><label>Initialize Database</lable><br>
 	<input type='radio' name='dbcmd' value='reinitdb' /><label>Re-Initialize Database</lable><br>
@@ -180,6 +182,7 @@ class Admin:
 	<fieldset>
 	<legend>AVR Device Type</legend>
 	<a href=/admin>Database Init</a><br>
+	<a href=/admin?screen=control>Device Control</a><br>
 	<br>
 	<input type='radio' name='devtype' value='arduino' /><label>Arduino</lable><br>
 	<input type='radio' name='devtype' value='mega'  disabled='true'/><label>AVR Mega</lable><br>
@@ -193,6 +196,24 @@ class Admin:
 </form>
 </html>	
 """
+		elif screen == 'control':
+			return """
+<html>
+<form action="devCtrl" method="post">
+	<fieldset>
+	<legend>Database Setup</legend>
+	<a href=/admin>Database Init</a><br>
+	<a href=/admin?screen=seed>Device Setup</a><br>
+	<br>
+	<input type='radio' name='ctrl' value='start' /><label>Start Device</lable><br>
+	<input type='radio' name='ctrl' value='stop' /><label>Stop Device</lable><br>
+	<input type='submit'>
+	
+	</fieldset>	
+</form>
+</html>		
+"""
+
 						
 	def initDb(self, dbcmd=None):
 		'''
@@ -222,6 +243,25 @@ class Admin:
 		devAttr = {'DevName': devname, 'DevType': devtype, 'DevPort': devport}
 		AnDB.initDevice(devAttr)
 	initDev.exposed = True
+	
+	def devCtrl(self, ctrl=None):
+		'''
+			 
+		'''
+		if ctrl == 'start':
+			'''
+				Start the device thread
+			'''
+			Api.startSerial()
+			
+		elif ctrl == 'stop':
+			'''
+				Stop the device thread
+			'''
+			Api.stop()
+			
+		
+	devCtrl.exposed = True
 		
 
 if __name__ == '__main__':
@@ -240,6 +280,17 @@ if __name__ == '__main__':
 		
 	'''
 	#Api.startSerial()
+	#http://docs.cherrypy.org/dev/refman/process/plugins/index.html
+	
 	cherrypy.server.socket_host = '0.0.0.0'
 	cherrypy.config.update({'tools.sessions.on' : True})
 	cherrypy.quickstart(root)
+	print "------ STOP THREADS ---------"
+	'''
+		Stop any threads that have started...
+	'''
+	Api.stopSerial()
+	
+	
+		
+		
