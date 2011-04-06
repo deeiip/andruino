@@ -183,7 +183,11 @@ class AndrSerial(threading.Thread):
     def updateDb(self):
         '''
             Get the map and process changes.
+            This is the synchronous activity used 
+            to update the database with changes pulled 
+            from the device...
         '''
+        
         for RegGrp, State in self.getMap():
             '''
                 Get the map from the avr
@@ -195,6 +199,8 @@ class AndrSerial(threading.Thread):
                 Since the DDR register is managed by config
             '''
             
+            State['PORT']
+            State['PIN']
         
     
     
