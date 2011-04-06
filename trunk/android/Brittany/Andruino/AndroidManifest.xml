@@ -14,7 +14,7 @@
             </intent-filter>
         </activity>
         <activity android:name="Settings" android:label="Settings"></activity>
-        <activity android:name="Outputs" android:label="Indicators"></activity>
+        <activity android:name="Outputs" android:label="Outputs"></activity>
         <activity android:name="Help" android:label="Help"></activity>
     </application>
     
