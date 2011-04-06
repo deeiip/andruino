@@ -19,8 +19,8 @@ AnDB = AndruinoDb()
 	For configuration purposes, Manually set DeviceId to reference database ID
 '''
 
-Api = AndruinoApi(DeviceId=1)
 
+Api = AndruinoApi(DeviceId=1)
 
 
 def requireLogin(self): 
@@ -303,6 +303,13 @@ if __name__ == '__main__':
 	root.admin = Admin()
 	
 	root.config = Config()
+	
+	
+	
+	
+	
+	
+	
 	'''
 		Start the API
 		
