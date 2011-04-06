@@ -5,22 +5,26 @@ import java.util.ArrayList;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.ToggleButton;
 
 public class IOAdapter extends ArrayAdapter<AndruinoObj> {
     private ArrayList<AndruinoObj> controls;
     private Context context;
     private int textViewResourceId;
+    private Webduino wc;
 
-    public IOAdapter(Context context, int textViewResourceId, ArrayList<AndruinoObj> controls) {
+    public IOAdapter(Context context, int textViewResourceId, ArrayList<AndruinoObj> controls, Webduino wc) {
             super(context, textViewResourceId, controls);
             this.context = context;
             this.textViewResourceId = textViewResourceId;
             this.controls = controls;
+            this.wc = wc;
     }
     
     @Override
@@ -32,7 +36,7 @@ public class IOAdapter extends ArrayAdapter<AndruinoObj> {
                 v = vi.inflate(textViewResourceId, null);
             }
             
-            AndruinoObj andrObj = controls.get(position);
+            final AndruinoObj andrObj = controls.get(position);
            
             switch(textViewResourceId)
             {
@@ -63,6 +67,13 @@ public class IOAdapter extends ArrayAdapter<AndruinoObj> {
                     }
                     if(tb != null){
                     	tb.setChecked(andrObj.getValue() == 1 ? true : false);
+                    	tb.setOnClickListener(new OnClickListener() {
+                    	    public void onClick(View v) {
+                    	        wc.write(andrObj.getId(), andrObj.getValue() == 1 ? 0 : 1);
+                    	        Toast.makeText(context, "You have changed the state of "+andrObj.getLabel()+ " to "+
+                    	        		(andrObj.getValue() == 1 ? 0 : 1), Toast.LENGTH_SHORT).show();
+                    	    }
+                    	});
                     }
 	            }
             	break;
