@@ -15,11 +15,12 @@ AnDB = AndruinoDb()
 	support a single device...
 	Future releases will add Multiple device support
 	
-	For configuration purposes, Manually set DeviceId to reference database
+	For configuration purposes, Manually set DeviceId to reference database ID
 '''
+
 Api = AndruinoApi(DeviceId=1)
-# get the reference to the thread manager
-#ws_api = AndruinoApi()
+
+
 
 def requireLogin(self): 
 		return '{"command":"login","response":"fail"}'
