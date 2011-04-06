@@ -121,7 +121,48 @@ class AndruinoDb():
             Call the database creation function
         '''
         self.initDB()
+
+    def initDevice(self, attrs):
+        '''
+            Create a device and seed config profile
+        '''
+        if attrs['DevType'] == 'arduino':
+            sql = """INSERT INTO devices 
+            (name, port, type, enabled) 
+            VALUES 
+            ('%s', '%s', '%s', '%s' )
+            """ % (attrs['DevName'],attrs['DevPort'],attrs['DevType'], 1)
+            self.exec_sql(sql)
+            
+            '''
+                Get device ID by name
+                Name should be unique 
+                TODO: Add restriction for unique name with name check
+                    
+            '''
+            
+            sql = "select * from devices where name = '%s'" % attrs['DevName']
+            result = self.query(sql)
+            row = result.next()
+            
+            
+            for pin in range(3,13):
+                '''
+                    Add Pins for Arduino
+                '''
+                sql = """insert into  details 
+                (device_id, label, ddr, pin, value, enabled)
+                VALUES
+                ('%s','%s','%s','%s','%s','%s')
+                """ % (row['id'], 'default', 0, pin, 0, 0 )
+                self.exec_sql(sql)
         
+        '''
+        ADD NEW DEVICE SETUP HERE
+        #elif attrs['DevType'] == 'YOUR DEVICE TYPE':
+        '''
+        
+       
     
     def query(self, sql):
         '''

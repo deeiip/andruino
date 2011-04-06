@@ -123,6 +123,90 @@ class Config:
 			return '{"command":"config","response":"fail"}'
 
 
+class Admin:
+	'''
+	_cp_config = { 
+		'tools.session_auth.on': True, 
+		'tools.session_auth.login_screen' : requireLogin,
+	} 
+	'''
+	
+
+	
+	@cherrypy.expose
+	def index(self, screen=None):
+		if not screen:
+			'''
+				Display default form...
+			'''
+			return """
+<html>
+<form action="initDb" method="post">
+	<fieldset>
+	<legend>Database Setup</legend>
+	<a href=/admin?screen=seed>Device Setup</a><br>
+	<br>
+	<input type='radio' name='dbcmd' value='initdb' /><label>Initialize Database</lable><br>
+	<input type='radio' name='dbcmd' value='reinitdb' /><label>Re-Initialize Database</lable><br>
+	<input type='submit'>
+	
+	</fieldset>	
+</form>
+</html>		
+"""
+		elif screen == 'seed':
+			'''
+				Display the seeding ooptions
+			'''
+			return """
+<form action="initDev" method="post">
+	<fieldset>
+	<legend>AVR Device Type</legend>
+	<a href=/admin>Database Init</a><br>
+	<br>
+	<input type='radio' name='devtype' value='arduino' /><label>Arduino</lable><br>
+	<input type='radio' name='devtype' value='mega'  disabled='true'/><label>AVR Mega</lable><br>
+	<label>Device Name:</lable> <input type='text' name='devname' size='40'/><br>
+	<label>Port:</lable> <input type='text' name='devport' size='40'/><br>
+	
+	
+	<input type='submit'>
+	
+	</fieldset>	
+</form>
+</html>	
+"""
+						
+	def initDb(self, dbcmd=None):
+		'''
+			 Perform db operations using api
+		'''
+		
+		if dbcmd == 'initdb':
+			'''
+				Init db
+			'''
+			AnDB.initDB()
+			return """Initial Database created """
+		elif dbcmd == 'reinitdb':
+			'''
+				Reinit db
+			'''
+			AnDB.reinitDB()
+			return """Database Re-initialization Complete """
+			
+		
+	initDb.exposed = True
+	
+	def initDev(self, devtype=None, devname=None, devport=None):
+		'''
+			 Perform db operations using api
+		'''
+		devAttr = {'DevNane': devname, 'DevType': devtype, 'DevPort': devport}
+		AnDB.initDevice(devAttr)
+		
+		
+
 if __name__ == '__main__':
 
 	root = Root()
@@ -131,12 +215,14 @@ if __name__ == '__main__':
 	root.userinfo = UserInfo()
 	root.read = Read()
 	root.write = Write()
+	root.admin = Admin()
+	
 	root.config = Config()
 	'''
 		Start the API
 		
 	'''
-	Api.startSerial()
+	#Api.startSerial()
 	cherrypy.server.socket_host = '0.0.0.0'
 	cherrypy.config.update({'tools.sessions.on' : True})
 	cherrypy.quickstart(root)

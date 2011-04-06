@@ -163,12 +163,12 @@ if __name__ == '__main__':
     '''
         Updated with database models
     '''
-    api = AndruinoApi(DeviceId=1)
-    api.startSerial()
+    #api = AndruinoApi(DeviceId=1)
+    #api.startSerial()
     
     
-    time.sleep(25)
-    api.writeConfig()
+    #time.sleep(25)
+    #api.writeConfig()
     
     """
     '''
