@@ -45,10 +45,12 @@ class Login:
 			return '{"command":"login","response":"fail"}'
 
 class Logout:
+	'''
 	_cp_config = { 
 		'tools.session_auth.on': True, 
 		'tools.session_auth.login_screen' : requireLogin,
 	} 
+	'''
 	@cherrypy.expose
 	def default(self):
 		cherrypy.session['username'] = ""
@@ -58,10 +60,12 @@ class Logout:
 
 
 class UserInfo:
+	'''
 	_cp_config = { 
 		'tools.session_auth.on': True, 
 		'tools.session_auth.login_screen' : requireLogin,
 	} 
+	'''
 	@cherrypy.expose
 	def default(self):
 		if (cherrypy.session.get('loggedin')):
@@ -99,10 +103,12 @@ class Read:
 
 
 class Write:
+	'''
 	_cp_config = { 
 		'tools.session_auth.on': True, 
 		'tools.session_auth.login_screen' : requireLogin,
 	} 
+	'''
 	@cherrypy.expose
 	def default(self,did,value):
 		'''
@@ -119,13 +125,15 @@ class Write:
 		
 
 class Config:
+	'''
 	_cp_config = { 
 		'tools.session_auth.on': True, 
 		'tools.session_auth.login_screen' : requireLogin,
 	} 
+	'''
 	@cherrypy.expose
 	def default(self,did,value):
-
+		Api.writeConfig(did)
 		if (AnDB.config(did,value)):
 			return '{"command":"config","response":"pass"}'
 		else:
@@ -139,7 +147,8 @@ class Config:
 			Update will change to data lifecycle this is a 
 			short term fix for demonstration purposes 
 		'''
-		Api.writeConfig(did)
+		
+
 
 class Admin:
 	'''
@@ -207,6 +216,24 @@ class Admin:
 	<br>
 	<input type='radio' name='ctrl' value='start' /><label>Start Device</lable><br>
 	<input type='radio' name='ctrl' value='stop' /><label>Stop Device</lable><br>
+	<input type='submit'>
+	
+	</fieldset>	
+</form>
+</html>		
+"""
+		elif screen == 'config':
+			return """
+<html>
+<form action="devCfg" method="post">
+	<fieldset>
+	<legend>Database Setup</legend>
+	<a href=/admin>Database Init</a><br>
+	<a href=/admin?screen=seed>Device Setup</a><br>
+	<br>
+	<input type='radio' name='ctrl' value='0' /><label>Input</lable><br>
+	<input type='radio' name='ctrl' value='1' /><label>Output</lable><br>
+	<label>Pin:</lable> <input type='text' name='pin' size='4'/><br>
 	<input type='submit'>
 	
 	</fieldset>	
