@@ -61,7 +61,7 @@ public class Indicators extends ListActivity {
         
         
         deviceIndicators = filterControls(allControls, selectedDevice);
-        ctrl_adapter = new IOAdapter(this, R.layout.indicator_row, deviceIndicators);
+        ctrl_adapter = new IOAdapter(this, R.layout.indicator_row, deviceIndicators, wc);
         setListAdapter(ctrl_adapter);
         registerForContextMenu(this.getListView());
     }
@@ -88,7 +88,7 @@ public class Indicators extends ListActivity {
 			
 		case R.id.refresh:
 	        deviceIndicators = filterControls(allControls, selectedDevice);
-	        ctrl_adapter = new IOAdapter(this, R.layout.indicator_row, deviceIndicators);
+	        ctrl_adapter = new IOAdapter(this, R.layout.indicator_row, deviceIndicators, wc);
 	        setListAdapter(ctrl_adapter);
 	        registerForContextMenu(this.getListView());
 			break;
