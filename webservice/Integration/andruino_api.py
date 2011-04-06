@@ -14,14 +14,14 @@ import datetime
 from Queue import Queue
 from andruino_services import *
 import time, sys
-
+from andruino_db import AndruinoDb
 
 class AndruinoApi():
     def __init__(self, DeviceId=None ):
         '''
             Queue interfaces for messaging
         '''
-        
+        self.dbi = AndruinoDb()
         if not DeviceId:
             print "[API] DeviceId required. Please set device ID "
             sys.exit()
@@ -48,7 +48,7 @@ class AndruinoApi():
         ''' 
         
               
-    def startSerial(self):
+    def startSerial(self, ):
         '''
             Start the serial thread for this device
             thread will be bound to the serial interface defined within the devices table
@@ -113,6 +113,15 @@ class AndruinoApi():
         }
         self.serialQueue.put(msg)
 
+    def writeOutput(self, DetailId, Value):
+        '''
+            Requires DetailId...
+            Read state from the database 
+        '''
+        ConfigSettings = self.dbi.getConfig(DetailId)
+        intValue = int(Value)
+        for Setting in ConfigSettings:
+            self.setOutput(Setting['pin'], intValue)
 
     def writeConfig(self, DetailId=None):
         '''
@@ -126,20 +135,25 @@ class AndruinoApi():
             In this condition, all devices within self.DeviceId will be initialized. 
             
         '''
+        ConfigSettings = self.dbi.getConfig(DetailId)
+        for Setting in ConfigSettings:
+            '''
+                Process all rows returned from database
+                run config on each row. 
+                
+                If DetailId is set only one row will be returned
+            '''
+            self.setConfig(Settings['pin'], Settings['config'])
         
-        if not DetailId:
-            '''
-                DetailId not set
-                Execute default
-            '''
-            
+        
+        
 
     def getAvrMap(self):
         '''
             Get the IO map from the thread
             returns dictionary of ports and OI states
         '''
-        return serialThread.getMap()
+        return self.serialThread.getMap()
 
 
 
@@ -151,6 +165,10 @@ if __name__ == '__main__':
     '''
     api = AndruinoApi(DeviceId=1)
     api.startSerial()
+    
+    
+    time.sleep(25)
+    api.writeConfig()
     
     """
     '''

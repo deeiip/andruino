@@ -29,11 +29,15 @@ class AndrSerial(threading.Thread):
             QueuePollInterval - Amount of time tread will wait before checking for messages 
                             on the serialInterfaceQueue...    
         '''
+        ready_sleep_timeout = 20
         self.map = deviceMap(deviceType)
         self.dbi = AndruinoDb()
         self.ReadSleepTime = 10
+        
         self.QueuePollInterval = 0.5
         self.serialQueue = SerialInterfaceQueue
+        self.device_id = device_id
+        
         '''
             Initialize this thread
         '''
@@ -44,13 +48,13 @@ class AndrSerial(threading.Thread):
         threading.Thread.__init__(self)
         self.StopMe = threading.Event()
         
-        device_port = self.dbi.getDeviceById(device_id)
-        print "Device Port -> %s" %(device_port)
+        device_port = self.dbi.getDeviceById(self.device_id)
+        
         # setup the serial port
         self.ser = serial.Serial(device_port['port'], 115200, timeout=0.25)
         # Wait for the serial post to initialize
         print "Thread is sleeping before starting..."
-        time.sleep(15)
+        time.sleep(ready_sleep_timeout)
 
         self.serialMsg = {
             'ID':None,
@@ -110,6 +114,7 @@ class AndrSerial(threading.Thread):
             Return IO map
         '''
         return self.map.getMap()
+    
     
     def printMap(self):
         thisMap = self.map.getMap()
