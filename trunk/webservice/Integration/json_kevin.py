@@ -104,11 +104,18 @@ class Write:
 	} 
 	@cherrypy.expose
 	def default(self,did,value):
+		'''
+			Write to device 
+			TODO: This is a stop gap.
+			Update will change to data lifecycle this is a 
+			short term fix for demonstration purposes 
+		'''
+		Api.writeOutput(did,value)
 		if (AnDB.write(did,value)):
 			return '{"command":"write","response":"pass"}'
 		else:
 			return '{"command":"write","response":"fail"}'
-
+		
 
 class Config:
 	_cp_config = { 
@@ -117,11 +124,21 @@ class Config:
 	} 
 	@cherrypy.expose
 	def default(self,did,value):
+
 		if (AnDB.config(did,value)):
 			return '{"command":"config","response":"pass"}'
 		else:
 			return '{"command":"config","response":"fail"}'
-
+		'''
+			Write config to device
+			1) read config from database
+			2) set device
+			
+			TODO: This is a stop gap.
+			Update will change to data lifecycle this is a 
+			short term fix for demonstration purposes 
+		'''
+		Api.writeConfig(did)
 
 class Admin:
 	'''
