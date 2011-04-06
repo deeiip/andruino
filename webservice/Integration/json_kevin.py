@@ -204,7 +204,7 @@ class Admin:
 		'''
 		devAttr = {'DevNane': devname, 'DevType': devtype, 'DevPort': devport}
 		AnDB.initDevice(devAttr)
-		
+	initDev.exposed = True
 		
 
 if __name__ == '__main__':
