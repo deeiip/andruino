@@ -105,7 +105,9 @@ class Write:
 	@cherrypy.expose
 	def default(self,did,value):
 		if (AnDB.write(did,value)):
-			return '{"command":"write","response":"pass"}'
+			#Api.writeOutput(AnDB.getPinById(did))
+			pin = AnDB.getPinById(did)
+			return '{"command":"write","response":"%s-%s"}' % (did, value)
 		else:
 			return '{"command":"write","response":"fail"}'
 
