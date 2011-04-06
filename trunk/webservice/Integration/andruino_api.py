@@ -143,7 +143,8 @@ class AndruinoApi():
                 
                 If DetailId is set only one row will be returned
             '''
-            self.setConfig(Settings['pin'], Settings['config'])
+            print "Settings %s" % Setting
+            self.setConfig(Setting['pin'], Setting['config'])
         
         
         
