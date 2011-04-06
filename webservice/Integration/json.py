@@ -78,7 +78,7 @@ class Read:
 			response = '{"did":"'+str(status['did'])+'",'
 			response += '"id":"'+str(status['id'])+'",'
 			response += '"label":"'+str(status['label'])+'",'
-			response += '"device":"'+str(status['device'])+'",'
+			response += '"device":"'+str(status['name'])+'",'
 			response += '"ddr":"'+str(status['config'])+'",'
 			response += '"pin":"'+str(status['pin'])+'",'
 			response += '"value":"'+str(status['value'])+'",'
