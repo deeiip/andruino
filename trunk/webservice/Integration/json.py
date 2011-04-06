@@ -1,5 +1,6 @@
 import cherrypy
 from andruino_db import *
+from andruino_api import *
 #import os
 #from tempfile import gettempdir
 
@@ -9,7 +10,14 @@ from andruino_db import *
 #from andruino_api import *
 
 AnDB = AndruinoDb()
-
+'''
+	Initial version of the andruino application will only 
+	support a single device...
+	Future releases will add Multiple device support
+	
+	For configuration purposes, Manually set DeviceId to reference database
+'''
+Api = AndruinoApi(DeviceId=1)
 # get the reference to the thread manager
 #ws_api = AndruinoApi()
 
@@ -123,7 +131,11 @@ if __name__ == '__main__':
 	root.read = Read()
 	root.write = Write()
 	root.config = Config()
-
+	'''
+		Start the API
+		
+	'''
+	Api.startSerial()
 	cherrypy.server.socket_host = '0.0.0.0'
 	cherrypy.config.update({'tools.sessions.on' : True})
 	cherrypy.quickstart(root)

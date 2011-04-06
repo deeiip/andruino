@@ -162,7 +162,20 @@ class AndruinoDb():
         return row
             
         
+    def getConfig(self, DetailId):
+        '''
+            Get device configuration information
+            Pair down result set if DetailId is set
+        '''
+        sql = "SELECT * FROM details "
         
+        if DetailId:
+            sql += " WHERE id = %s" % DetailId
+            
+        sql += " ORDER BY id asc"
+        
+        result = self.query(sql)
+        return result
         
     def setDevice(self, dataset):
         '''
