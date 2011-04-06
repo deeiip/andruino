@@ -178,7 +178,23 @@ class AndrSerial(threading.Thread):
             '''
             self.map.updateMap(data)
 
+        self.updateDb()
         
+    def updateDb(self):
+        '''
+            Get the map and process changes.
+        '''
+        for RegGrp, State in self.getMap():
+            '''
+                Get the map from the avr
+                process changes in the database
+            '''
+            print "Updating Register -> %s" % RegGrp
+            '''
+                Only update the PORT and PIN Registers 
+                Since the DDR register is managed by config
+            '''
+            
         
     
     
