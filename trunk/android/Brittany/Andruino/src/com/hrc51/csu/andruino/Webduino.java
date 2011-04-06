@@ -64,9 +64,7 @@ public class Webduino {
 	    		   url = new URL("http://csu.hrc51.com:8080/read");
 
 	    	   urlConnection = (HttpURLConnection) url.openConnection();
-	    	   BufferedReader in = new BufferedReader(new InputStreamReader(urlConnection.openStream()));
-
-	    	   //BufferedReader in = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
+	    	   BufferedReader in = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
 	    	   String inputLine;
 	    	   inputLine = in.readLine();
 	    	   jp = new JsonParser(inputLine);
