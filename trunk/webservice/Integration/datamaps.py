@@ -143,7 +143,7 @@ class deviceMap():
                
                ''' Store data values in data dictionary '''
                self.AvrMap[ toPort[ portRegData[0][0] ] ][ toReg[ portRegData[0][1] ] ] = decData
-               self.AvrBinMap[ toPort[ portRegData[0][0] ] ][ toReg[ portRegData[0][1] ] ] = binData
+               #self.AvrBinMap[ toPort[ portRegData[0][0] ] ][ toReg[ portRegData[0][1] ] ] = binData
                ''' Save PORT information is decimal format '''
                #print "Low Nibble is what %s " % (portRegData[0][1])
                """
