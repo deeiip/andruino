@@ -239,15 +239,30 @@ class AndrSerial(threading.Thread):
             '''
             pinMap = self.pinMap[RegGrp]
             binPosition = 0
-            for pin in range(pinMap[0], pinMap[1]):
             
+            
+            '''
+            Convert register decimal value to binary arrays
+            Reverse order for proper indexing
+            '''
+            
+            
+            
+            ddrBits = self.convertInt(State['DDR']).reverse()
+            portBits = self.convertInt(State['PORT']).reverse() 
+            pinBits =  self.convertInt(State['PIN']).reverse() 
+
+            for pin in range(pinMap[0], pinMap[1]+1):
+                '''
+                    Record the value of each pin 
+                '''
                 
+                binPosition += 1
             
             
             
             
-            State['PORT']
-            State['PIN']
+            
         
     
     
