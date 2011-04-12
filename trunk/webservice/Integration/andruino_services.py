@@ -219,6 +219,7 @@ class AndrSerial(threading.Thread):
             '''
                 Get the map from the avr
                 process changes in the database
+                Map: {'C': {'DDR': 0, 'PORT': 0, 'PIN': 0}, 'B': {'DDR': 32, 'PORT': 0, 'PIN': 0}, 'D': {'DDR': 0, 'PORT': 1, 'PIN': 3}} 
             '''
             print "Updating Register -> %s" % RegGrp
             '''
