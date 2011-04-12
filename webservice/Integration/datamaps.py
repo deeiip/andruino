@@ -14,6 +14,7 @@ class deviceMap():
         '''
         self.deviceMap = {}
         self.AvrMap = {}
+        self.pinRegMap = {}
         
                
         if (device_type == 'arduino'):
