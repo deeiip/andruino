@@ -31,6 +31,7 @@ class AndrSerial(threading.Thread):
         '''
         ready_sleep_timeout = 20
         self.map = deviceMap(deviceType)
+        self.pinMap = self.map.getPinMap()
         self.dbi = AndruinoDb()
         self.ReadSleepTime = 10
         
@@ -221,11 +222,29 @@ class AndrSerial(threading.Thread):
                 process changes in the database
                 Map: {'C': {'DDR': 0, 'PORT': 0, 'PIN': 0}, 'B': {'DDR': 32, 'PORT': 0, 'PIN': 0}, 'D': {'DDR': 0, 'PORT': 1, 'PIN': 3}} 
             '''
+            
             print "Updating Register -> %s" % RegGrp
             '''
                 Only update the PORT and PIN Registers 
                 Since the DDR register is managed by config
             '''
+            if RegGrp == 'C':
+                '''
+                    This version will not support the analog channel 
+                '''
+                pass
+            
+            '''
+                Convert for pin mapping
+            '''
+            pinMap = self.pinMap[RegGrp]
+            binPosition = 0
+            for pin in range(pinMap[0], pinMap[1]):
+            
+                
+            
+            
+            
             
             State['PORT']
             State['PIN']

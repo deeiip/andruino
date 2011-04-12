@@ -74,6 +74,13 @@ class deviceMap():
             13:'B'   
         }
         
+        
+        self.pinRegMap['PinMap'] = {
+            'D': '0:7',
+            'B': '9:13'                
+        }
+        
+        
         '''
             Binary values for pins
         '''
@@ -95,7 +102,11 @@ class deviceMap():
         }
 
 
-
+    def getPinMap(self):
+        '''
+        Return pin map for seeding database
+        '''
+        return self.pinRegMap['PinMap']
     
     def getMap(self):
         ''' 
