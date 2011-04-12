@@ -254,8 +254,18 @@ class AndrSerial(threading.Thread):
 
             for pin in range(pinMap[0], pinMap[1]+1):
                 '''
-                    Record the value of each pin 
+                    Record the value of each pin per register 
+                    
+                    self.device_id
                 '''
+                print "-Processing Register %s" % RegGrp
+                if ddrBits[binPosition]:
+                    print "Pin [%s] is an output" % pin
+                else:
+                    print "Pin [%s] is an INPUT" % pin
+                
+                #sql = "UPDATE details set value = '%s' WHERE pin = '%s' AND device_id = '%s'" % 
+                
                 
                 binPosition += 1
             
