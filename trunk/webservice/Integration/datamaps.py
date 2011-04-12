@@ -29,23 +29,6 @@ class deviceMap():
         '''
             Defines data dictionary for storing AVR config data
         '''
-        self.AvrBinMap = {
-            'B': {
-                'DDR':None,
-                'PIN':None,
-                'PORT':None,
-            },
-            'C': {
-                'DDR':None,
-                'PIN':None,
-                'PORT':None,
-            },
-            'D': {
-                'DDR':None,
-                'PIN':None,
-                'PORT':None,
-            }
-        }
         self.AvrMap = {
             'B': {
                 'DDR':None,
