@@ -190,6 +190,23 @@ class AndrSerial(threading.Thread):
         '''
         #self.updateDb()
         
+    def convertInt(self, intVal):
+        '''
+            Convert integer to binary array
+            Example
+            >>> intVal = 25
+            >>> bitCount=8
+            >>> [str((intVal >> BitPosition) & 1) for BitPosition in range(bitCount-1, -1, -1)]
+            ['0', '0', '0', '1', '1', '0', '0', '1']
+        '''
+        ''' Set bit count. Could be used for other conversions '''
+    
+        
+        bitCount = 8
+        return [str((intVal >> BitPosition) & 1) for BitPosition in range(bitCount-1, -1, -1)]
+    
+    
+    
     def updateDb(self):
         '''
             Get the map and process changes.
