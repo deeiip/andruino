@@ -134,8 +134,8 @@ class Config:
 	'''
 	@cherrypy.expose
 	def default(self,did,value):
-		Api.writeConfig(did)
 		if (AnDB.config(did,value)):
+			Api.writeConfig(did)
 			return '{"command":"config","response":"pass"}'
 		else:
 			return '{"command":"config","response":"fail"}'

@@ -204,7 +204,7 @@ class AndrSerial(threading.Thread):
     
         
         bitCount = 8
-        return [str((intVal >> BitPosition) & 1) for BitPosition in range(bitCount-1, -1, -1)]
+        return [(intVal >> BitPosition) & 1 for BitPosition in range(bitCount-1, -1, -1)]
     
     
     
@@ -217,7 +217,7 @@ class AndrSerial(threading.Thread):
         '''
         RegMap = self.map.getMap()
         print "Processing Map -> %s" % RegMap
-        for RegGrp in thisMap:
+        for RegGrp in RegMap:
             '''
                 Get the map from the avr
                 process changes in the database
@@ -229,16 +229,16 @@ class AndrSerial(threading.Thread):
                 Only update the PORT and PIN Registers 
                 Since the DDR register is managed by config
             '''
-            if RegGrp == 'C':
+            if RegGrp != 'C':
                 '''
                     This version will not support the analog channel 
                 '''
-                pass
+                
             
             '''
                 Convert for pin mapping
             '''
-            pinMap = self.pinMap[RegGrp]
+            pinMap = self.pinMap[RegGrp].split(':')
             binPosition = 0
             
             
@@ -248,21 +248,36 @@ class AndrSerial(threading.Thread):
             '''
             
             
+            print "INTEGER - DDR:%s , PORT:%s, PIN:%s" % (RegMap[RegGrp]['DDR'], RegMap[RegGrp]['PORT'], RegMap[RegGrp]['PIN'])
+            ddrBits = self.convertInt(RegMap[RegGrp]['DDR'])
+            portBits = self.convertInt(RegMap[RegGrp]['PORT']) 
+            pinBits =  self.convertInt(RegMap[RegGrp]['PIN'])
+            ddrBits.reverse()
+            portBits.reverse()
+            pinBits.reverse()
+            print "DDR:%s , PORT:%s, PIN:%s" % (ddrBits, portBits, pinBits)
+           
             
-            ddrBits = self.convertInt(RegMap[RegGrp]['DDR']).reverse()
-            portBits = self.convertInt(RegMap[RegGrp]['PORT']).reverse() 
-            pinBits =  self.convertInt(RegMap[RegGrp]['PIN']).reverse() 
+            print "-Processing Register %s" % RegGrp
 
-            for pin in range(pinMap[0], pinMap[1]+1):
+            for pin in range(int(pinMap[0]), int(pinMap[1])+1):
                 '''
                     Record the value of each pin per register 
                     
                     self.device_id
                 '''
-                print "-Processing Register %s" % RegGrp
-                if ddrBits[binPosition]:
+                
+                if ddrBits[binPosition] == 1:
+                    '''
+                        Read Port register only update pins that are outputs
+                    '''
+                    print "UPDATE details SET value = %s WHERE pin = %s AND device_id  = %s" % (portBits[binPosition], pin, self.device_id)
                     print "Pin [%s] is an output" % pin
                 else:
+                    '''
+                        Read PIN register only update pins that are inputs. 
+                    '''
+                    print "UPDATE details SET value = %s WHERE pin = %s AND device_id  = %s" % (pinBits[binPosition], pin, self.device_id)
                     print "Pin [%s] is an INPUT" % pin
                 
                 #sql = "UPDATE details set value = '%s' WHERE pin = '%s' AND device_id = '%s'" % 
@@ -270,7 +285,7 @@ class AndrSerial(threading.Thread):
                 
                 binPosition += 1
             
-            
+
             
             
             

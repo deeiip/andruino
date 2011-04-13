@@ -78,7 +78,8 @@ class deviceMap():
         
         self.pinRegMap['PinMap'] = {
             'D': '0:7',
-            'B': '9:13'                
+            'B': '8:13',
+            'C': '0:5'            
         }
         
         
