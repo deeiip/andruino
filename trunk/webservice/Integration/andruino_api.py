@@ -56,6 +56,15 @@ class AndruinoApi():
         '''
         self.serialThread = AndrSerial(self.serialQueue, self.device_id)
         self.serialThread.start()
+        
+        '''
+            Place Messages in queue to set device configuration base
+            on config data from the database.
+            Note: Threads are bound to a particular device_id. So id 
+            does not need to be set. 
+        '''
+        self.writeConfig()
+        
         # TODO 
         '''
             Add interface for starting email thread...
