@@ -75,13 +75,9 @@ class deviceMap():
             13:'B'   
         }
         
-        
         self.pinRegMap['PinMap'] = {
-            '''
-                Pins 0 & 1 are used for serial communication
-                Not monitored or updated in is interface
-            '''
-            'D': '2:7',
+
+            'D': '0:7',
             'B': '8:13',
             'C': '0:5'            
         }
