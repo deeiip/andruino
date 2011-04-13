@@ -49,9 +49,10 @@ class AndruinoDb():
         "label" varchar(100) not null, 
         "config" integer not null, 
         "pin" integer not null, 
-        "value" integer not null, 
-        "ts_value" datetime default current_timestamp,  
-        "ts_output" datetime default current_timestamp, 
+        "ws_value" integer not null,
+        "hw_value" integer not null, 
+        "ws_ts" datetime default current_timestamp,
+        "hw_ts" datetime default current_timestamp,   
         "enabled" integer not null
         );
         """)
