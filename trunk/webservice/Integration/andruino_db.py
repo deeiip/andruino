@@ -79,7 +79,7 @@ class AndruinoDb():
         """)
         sql.append("""
         CREATE TABLE "rules" (
-        "device_id" integer not null references "devices" ("id"), 
+        "detail_id" integer not null references "devices" ("id"), 
         "value" integer not null
         );
         """)
