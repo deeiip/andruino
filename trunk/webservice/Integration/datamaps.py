@@ -77,7 +77,11 @@ class deviceMap():
         
         
         self.pinRegMap['PinMap'] = {
-            'D': '0:7',
+            '''
+                Pins 0 & 1 are used for serial communication
+                Not monitored or updated in is interface
+            '''
+            'D': '2:7',
             'B': '8:13',
             'C': '0:5'            
         }

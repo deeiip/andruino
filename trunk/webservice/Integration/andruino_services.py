@@ -231,60 +231,60 @@ class AndrSerial(threading.Thread):
             '''
             if RegGrp != 'C':
                 '''
-                    This version will not support the analog channel 
+                    This version will not support the analog channel (Register C)
                 '''
                 
             
-            '''
-                Convert for pin mapping
-            '''
-            pinMap = self.pinMap[RegGrp].split(':')
-            binPosition = 0
-            
-            
-            '''
-            Convert register decimal value to binary arrays
-            Reverse order for proper indexing
-            '''
-            
-            
-            print "INTEGER - DDR:%s , PORT:%s, PIN:%s" % (RegMap[RegGrp]['DDR'], RegMap[RegGrp]['PORT'], RegMap[RegGrp]['PIN'])
-            ddrBits = self.convertInt(RegMap[RegGrp]['DDR'])
-            portBits = self.convertInt(RegMap[RegGrp]['PORT']) 
-            pinBits =  self.convertInt(RegMap[RegGrp]['PIN'])
-            ddrBits.reverse()
-            portBits.reverse()
-            pinBits.reverse()
-            print "DDR:%s , PORT:%s, PIN:%s" % (ddrBits, portBits, pinBits)
-           
-            
-            print "-Processing Register %s" % RegGrp
-
-            for pin in range(int(pinMap[0]), int(pinMap[1])+1):
                 '''
-                    Record the value of each pin per register 
+                    Convert for pin mapping
+                '''
+                pinMap = self.pinMap[RegGrp].split(':')
+                binPosition = 0
+                
+                
+                '''
+                Convert register decimal value to binary arrays
+                Reverse order for proper indexing
+                '''
+                
+                
+                print "INTEGER - DDR:%s , PORT:%s, PIN:%s" % (RegMap[RegGrp]['DDR'], RegMap[RegGrp]['PORT'], RegMap[RegGrp]['PIN'])
+                ddrBits = self.convertInt(RegMap[RegGrp]['DDR'])
+                portBits = self.convertInt(RegMap[RegGrp]['PORT']) 
+                pinBits =  self.convertInt(RegMap[RegGrp]['PIN'])
+                ddrBits.reverse()
+                portBits.reverse()
+                pinBits.reverse()
+                print "DDR:%s , PORT:%s, PIN:%s" % (ddrBits, portBits, pinBits)
+               
+                
+                print "-Processing Register %s" % RegGrp
+    
+                for pin in range(int(pinMap[0]), int(pinMap[1])+1):
+                    '''
+                        Record the value of each pin per register 
+                        
+                        self.device_id
+                    '''
                     
-                    self.device_id
-                '''
+                    if ddrBits[binPosition] == 1:
+                        '''
+                            Read Port register only update pins that are outputs
+                        '''
+                        print "UPDATE details SET value = %s WHERE pin = %s AND device_id  = %s" % (portBits[binPosition], pin, self.device_id)
+                        print "Pin [%s] is an output" % pin
+                    else:
+                        '''
+                            Read PIN register only update pins that are inputs. 
+                        '''
+                        print "UPDATE details SET value = %s WHERE pin = %s AND device_id  = %s" % (pinBits[binPosition], pin, self.device_id)
+                        print "Pin [%s] is an INPUT" % pin
+                    
+                    #sql = "UPDATE details set value = '%s' WHERE pin = '%s' AND device_id = '%s'" % 
+                    
+                    
+                    binPosition += 1
                 
-                if ddrBits[binPosition] == 1:
-                    '''
-                        Read Port register only update pins that are outputs
-                    '''
-                    print "UPDATE details SET value = %s WHERE pin = %s AND device_id  = %s" % (portBits[binPosition], pin, self.device_id)
-                    print "Pin [%s] is an output" % pin
-                else:
-                    '''
-                        Read PIN register only update pins that are inputs. 
-                    '''
-                    print "UPDATE details SET value = %s WHERE pin = %s AND device_id  = %s" % (pinBits[binPosition], pin, self.device_id)
-                    print "Pin [%s] is an INPUT" % pin
-                
-                #sql = "UPDATE details set value = '%s' WHERE pin = '%s' AND device_id = '%s'" % 
-                
-                
-                binPosition += 1
-            
 
             
             
