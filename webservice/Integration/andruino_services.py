@@ -52,14 +52,15 @@ class AndrSerial(threading.Thread):
         device_port = self.dbi.getDeviceById(self.device_id)
         
         # setup the serial port
-        #try:
-        self.ser = serial.Serial(device_port['port'], 115200, timeout=0.25)
-    
-        #except SerialException:
-        #    '''
-        #        If port can not be opened...
-        #    '''
-        #    print """Failed to open port [%s]\n Check your configuration and try again""" % device_port['port']
+        try:
+            self.ser = serial.Serial(device_port['port'], 115200, timeout=0.25)
+        except serial.SerialException:
+            '''
+                If port can not be opened...
+            '''
+            print """Failed to open port [%s]\nCheck your configuration and try again""" % device_port['port']
+            sys.exit(2)
+            
         # Wait for the serial post to initialize
         print "Thread is sleeping before starting..."
         time.sleep(ready_sleep_timeout)
@@ -91,7 +92,11 @@ class AndrSerial(threading.Thread):
             '''
                 Read data from the AVR
             '''
-            self.readAvr()
+            try:
+                self.readAvr()
+            except serial.SerialException, why:
+                print "Failed to read from device: %s" %(why)
+                sys.exit(2)
             
             '''
                 UnComment to print debug map
@@ -170,8 +175,22 @@ class AndrSerial(threading.Thread):
         '''
             Read data from arduino
         '''
-        
-        self.ser.write('r')
+        try:
+            '''
+                Attempt to read data from the serial port
+            '''
+            self.ser.write('r')
+
+        except serial.SerialException:
+            print "General Serial port Failure attempting to write."
+            sys.exit(2)
+        except serial.SerialTimeoutException:
+            print "Serial Port Timed out attempting to read device"
+            sys.exit(3)
+        except OSError:
+            print "Error managing serial port. Its dead Jim."
+            sys.exit(3)
+            
         dataSet = self.ser.readlines()
         '''
             Remove trailing line feed carriage return 
@@ -272,6 +291,7 @@ class AndrSerial(threading.Thread):
                             Read Port register only update pins that are outputs
                         '''
                         print "UPDATE details SET value = %s WHERE pin = %s AND device_id  = %s" % (portBits[binPosition], pin, self.device_id)
+                        
                         print "Pin [%s] is an output" % pin
                     else:
                         '''
