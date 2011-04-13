@@ -189,7 +189,7 @@ class AndrSerial(threading.Thread):
         '''
             Update the db
         '''
-        #self.updateDb()
+        self.updateDb()
         
     def convertInt(self, intVal):
         '''
@@ -215,8 +215,9 @@ class AndrSerial(threading.Thread):
             to update the database with changes pulled 
             from the device...
         '''
-        
-        for RegGrp, State in self.getMap():
+        RegMap = self.map.getMap()
+        print "Processing Map -> %s" % RegMap
+        for RegGrp in thisMap:
             '''
                 Get the map from the avr
                 process changes in the database
@@ -248,9 +249,9 @@ class AndrSerial(threading.Thread):
             
             
             
-            ddrBits = self.convertInt(State['DDR']).reverse()
-            portBits = self.convertInt(State['PORT']).reverse() 
-            pinBits =  self.convertInt(State['PIN']).reverse() 
+            ddrBits = self.convertInt(RegMap[RegGrp]['DDR']).reverse()
+            portBits = self.convertInt(RegMap[RegGrp]['PORT']).reverse() 
+            pinBits =  self.convertInt(RegMap[RegGrp]['PIN']).reverse() 
 
             for pin in range(pinMap[0], pinMap[1]+1):
                 '''
