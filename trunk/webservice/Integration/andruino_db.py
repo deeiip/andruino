@@ -154,13 +154,16 @@ class AndruinoDb():
             for pin in range(3,14): 
                 '''
                     Add Pins for Arduino
+                    "ws_value" integer not null,
+                    "hw_value" integer not null,
+                    
                 '''
                 
                 sql = """insert into  details 
-                (device_id, label, config, pin, value, enabled)
+                (device_id, label, config, pin, ws_value, hw_value, enabled)
                 VALUES
-                ('%s','%s','%s','%s','%s','%s')
-                """ % (row['id'], 'default_'+str(pin), 0, pin, 0, 0 )
+                ('%s','%s','%s','%s','%s','%s', '%s')
+                """ % (row['id'], 'default_'+str(pin), 0, pin, 0, 0 ,1)
                 self.exec_sql(sql)
         
         '''
@@ -304,7 +307,7 @@ class AndruinoDb():
 		Retreive the current status of all enabled pins
 	'''
         sql = """SELECT dev.id as did, det.id, det.label, dev.name, det.config,
-			det.pin, det.value, det.ts_value
+			det.pin, det.ws_value as value, det.ws_ts as ts_value, det.hw_value, det.hw_ts  
 		 FROM devices dev, details det
 		 WHERE dev.id=det.device_id
 		   AND dev.enabled=1
@@ -319,13 +322,13 @@ class AndruinoDb():
 		Set a pins output to the value provided
 	'''
         setsql = """UPDATE details 
-		 SET value=%s, ts_output=datetime('now')
+		 SET ws_value=%s, ws_ts=datetime('now')
 		 WHERE id=%s;
         """ % (value, did)
 
         self.exec_sql(setsql)
 
-        sql = """SELECT value
+        sql = """SELECT ws_value
 		 FROM details
 		 WHERE id=%s;
         """ % (did)
@@ -333,7 +336,7 @@ class AndruinoDb():
         result = self.query(sql)
         current = result.next()
 
-        if str(current['value']) == str(value):
+        if str(current['ws_value']) == str(value):
             return True
         else:
             return False
@@ -343,7 +346,7 @@ class AndruinoDb():
 		Set a pins configuration to the value provided
 	'''
         setsql = """UPDATE details 
-		 SET config=%s, ts_output=datetime('now')
+		 SET config=%s, ws_ts=datetime('now')
 		 WHERE id=%s;
         """ % (value, did)
 
