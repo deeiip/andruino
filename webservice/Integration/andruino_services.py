@@ -109,7 +109,7 @@ class AndrSerial(threading.Thread):
             '''
             waitTime = math.ceil(self.ReadSleepTime / self.QueuePollInterval)
             waitTime = int(waitTime)
-            #print "Going to scan %s times" % (str(waitTime))
+            print "Going to scan %s times" % (str(waitTime))
             for s in range(1 , waitTime):
                 msg = self.getMsg() 
                 if msg != None:
@@ -290,19 +290,21 @@ class AndrSerial(threading.Thread):
                         '''
                             Read Port register only update pins that are outputs
                         '''
-                        print "[OUTPUT] UPDATE details SET hw_value = %s, hw_ts=datetime('now') WHERE pin = %s AND device_id  = %s" % (portBits[binPosition], pin, self.device_id)
+                        print "[OUTPUT] UPDATE details SET hw_value = %s, hw_ts=datetime('now', 'localtime') WHERE pin = %s AND device_id  = %s" % (portBits[binPosition], pin, self.device_id)
+                        sql = "UPDATE details SET hw_value = %s, hw_ts=datetime('now', 'localtime') WHERE pin = %s AND device_id  = %s" % (portBits[binPosition], pin, self.device_id)
                         
                         #print "Pin [%s] is an output" % pin
                     else:
                         '''
                             Read PIN register only update pins that are inputs. 
                         '''
-                        print "[INPUT] UPDATE details SET hw_value = %s, hw_ts=datetime('now') WHERE pin = %s AND device_id  = %s" % (pinBits[binPosition], pin, self.device_id)
+                        print "[INPUT] UPDATE details SET hw_value = %s, hw_ts=datetime('now', 'localtime') WHERE pin = %s AND device_id  = %s" % (pinBits[binPosition], pin, self.device_id)
                         #print "Pin [%s] is an INPUT" % pin
+                        sql = "UPDATE details SET hw_value = %s, hw_ts=datetime('now', 'localtime') WHERE pin = %s AND device_id  = %s" % (pinBits[binPosition], pin, self.device_id)
                     
-                    #sql = "UPDATE details set value = '%s' WHERE pin = '%s' AND device_id = '%s'" % 
                     
                     
+                    self.dbi.exec_sql(sql)
                     binPosition += 1
                 
 
