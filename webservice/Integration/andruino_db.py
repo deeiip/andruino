@@ -80,7 +80,8 @@ class AndruinoDb():
         sql.append("""
         CREATE TABLE "rules" (
         "detail_id" integer not null references "devices" ("id"), 
-        "value" integer not null
+        "value" integer not null,
+        "ts_send" datetime default (datetime('now','localtime')) 
         );
         """)
         

@@ -215,7 +215,12 @@ class deviceMap():
                 NewVal = RegDecVal
     	    else: 
                 NewVal = RegDecVal + ReqVal
-             
+                if NewVal > 255:
+                    '''
+                        Ensure the new value is not our of range.
+                        if so reset to the inital value.
+                    '''
+                    NewVal = RegDecVal    
             
         else: 
             '''
