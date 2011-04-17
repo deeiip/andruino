@@ -109,7 +109,7 @@ class AndrSerial(threading.Thread):
             '''
             waitTime = math.ceil(self.ReadSleepTime / self.QueuePollInterval)
             waitTime = int(waitTime)
-            print "Going to scan %s times" % (str(waitTime))
+            #print "Going to scan %s times" % (str(waitTime))
             for s in range(1 , waitTime):
                 msg = self.getMsg() 
                 if msg != None:
@@ -319,7 +319,10 @@ class AndrSerial(threading.Thread):
             Write message to AVR controller
             
         '''
-        ThisReq = "w%s%s" % (addr, data)      
+        ThisReq = "w%s%s" % (addr, data)   
+
+        
+           
         HexAddr = pack('B1', int(addr))
         HexData = pack('B1', int(data))
         
