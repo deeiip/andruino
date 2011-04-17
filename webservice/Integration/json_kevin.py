@@ -286,7 +286,7 @@ class Admin:
 			'''
 				Stop the device thread
 			'''
-			Api.stop()
+			Api.stopSerial()
 			
 		
 	devCtrl.exposed = True
