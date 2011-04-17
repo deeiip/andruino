@@ -37,8 +37,8 @@ class AndruinoDb():
         "name" varchar(100) not null, 
         "port" varchar(100) not null, 
         "type" integer not null, 
-        "ts_added" datetime default current_timestamp, 
-        "ts_updated" datetime default current_timestamp, 
+        "ts_added" datetime default (datetime('now','localtime')), 
+        "ts_updated" datetime default (datetime('now','localtime')), 
         "enabled" integer not null
         );
         """)
@@ -51,15 +51,15 @@ class AndruinoDb():
         "pin" integer not null, 
         "ws_value" integer not null,
         "hw_value" integer not null, 
-        "ws_ts" datetime default current_timestamp,
-        "hw_ts" datetime default current_timestamp,   
+        "ws_ts" datetime default (datetime('now','localtime')),
+        "hw_ts" datetime default (datetime('now','localtime')),   
         "enabled" integer not null
         );
         """)
         sql.append( """
         CREATE TABLE "sessions" (
             "session_id" char(128) UNIQUE NOT NULL,
-            "atime" NOT NULL default current_timestamp,
+            "atime" NOT NULL default (datetime('now','localtime')),
             "data" text
         );
         """)
@@ -74,7 +74,7 @@ class AndruinoDb():
         sql.append("""
         CREATE TABLE "statusreg" (
         "device_id" integer not null references "devices" ("id"), 
-        "ts_value" datetime default current_timestamp
+        "ts_value" datetime default (datetime('now','localtime'))
         );
         """)
         sql.append("""
