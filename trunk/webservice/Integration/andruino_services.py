@@ -297,7 +297,7 @@ class AndrSerial(threading.Thread):
                         '''
                             Read PIN register only update pins that are inputs. 
                         '''
-                        print "[INPUT] UPDATE details SET hw_value = %s, hw_ts=datetime('now') WHERE pin = %s AND device_id  = %s" % (portBits[binPosition], pin, self.device_id)
+                        print "[INPUT] UPDATE details SET hw_value = %s, hw_ts=datetime('now') WHERE pin = %s AND device_id  = %s" % (pinBits[binPosition], pin, self.device_id)
                         #print "Pin [%s] is an INPUT" % pin
                     
                     #sql = "UPDATE details set value = '%s' WHERE pin = '%s' AND device_id = '%s'" % 
