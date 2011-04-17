@@ -235,7 +235,7 @@ class AndrSerial(threading.Thread):
             from the device...
         '''
         RegMap = self.map.getMap()
-        print "Processing Map -> %s" % RegMap
+        #print "Processing Map -> %s" % RegMap
         for RegGrp in RegMap:
             '''
                 Get the map from the avr
@@ -243,7 +243,7 @@ class AndrSerial(threading.Thread):
                 Map: {'C': {'DDR': 0, 'PORT': 0, 'PIN': 0}, 'B': {'DDR': 32, 'PORT': 0, 'PIN': 0}, 'D': {'DDR': 0, 'PORT': 1, 'PIN': 3}} 
             '''
             
-            print "Updating Register -> %s" % RegGrp
+            #print "Updating Register -> %s" % RegGrp
             '''
                 Only update the PORT and PIN Registers 
                 Since the DDR register is managed by config
@@ -277,7 +277,7 @@ class AndrSerial(threading.Thread):
                 #print "DDR:%s , PORT:%s, PIN:%s" % (ddrBits, portBits, pinBits)
                
                 
-                print "-Processing Register %s" % RegGrp
+                #print "-Processing Register %s" % RegGrp
     
                 for pin in range(int(pinMap[0]), int(pinMap[1])+1):
                     '''
@@ -290,7 +290,7 @@ class AndrSerial(threading.Thread):
                         '''
                             Read Port register only update pins that are outputs
                         '''
-                        print "[OUTPUT] UPDATE details SET hw_value = %s, hw_ts=datetime('now', 'localtime') WHERE pin = %s AND device_id  = %s" % (portBits[binPosition], pin, self.device_id)
+                        #print "[OUTPUT] UPDATE details SET hw_value = %s, hw_ts=datetime('now', 'localtime') WHERE pin = %s AND device_id  = %s" % (portBits[binPosition], pin, self.device_id)
                         sql = "UPDATE details SET hw_value = %s, hw_ts=datetime('now', 'localtime') WHERE pin = %s AND device_id  = %s" % (portBits[binPosition], pin, self.device_id)
                         
                         #print "Pin [%s] is an output" % pin
@@ -298,7 +298,7 @@ class AndrSerial(threading.Thread):
                         '''
                             Read PIN register only update pins that are inputs. 
                         '''
-                        print "[INPUT] UPDATE details SET hw_value = %s, hw_ts=datetime('now', 'localtime') WHERE pin = %s AND device_id  = %s" % (pinBits[binPosition], pin, self.device_id)
+                        #print "[INPUT] UPDATE details SET hw_value = %s, hw_ts=datetime('now', 'localtime') WHERE pin = %s AND device_id  = %s" % (pinBits[binPosition], pin, self.device_id)
                         #print "Pin [%s] is an INPUT" % pin
                         sql = "UPDATE details SET hw_value = %s, hw_ts=datetime('now', 'localtime') WHERE pin = %s AND device_id  = %s" % (pinBits[binPosition], pin, self.device_id)
                     
