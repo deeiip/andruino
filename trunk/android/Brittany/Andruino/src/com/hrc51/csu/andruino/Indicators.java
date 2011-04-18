@@ -17,6 +17,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
+import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -63,7 +64,9 @@ public class Indicators extends ListActivity {
         deviceIndicators = filterControls(allControls, selectedDevice);
         ctrl_adapter = new IOAdapter(this, R.layout.indicator_row, deviceIndicators, wc);
         setListAdapter(ctrl_adapter);
-        registerForContextMenu(this.getListView());
+        ListView indicatorList = this.getListView();
+
+        registerForContextMenu(indicatorList);
     }
     
 	@Override
@@ -94,7 +97,10 @@ public class Indicators extends ListActivity {
 			break;
 			
 		case R.id.help:
-			startActivity(new Intent(this, Help.class));
+			//startActivity(new Intent(this, Help.class));
+			Toast.makeText(this,
+					"Server:" +settings.getString("serverurl", "csu.hrc51.com"),
+					Toast.LENGTH_LONG).show();
 			break;
 		}
 
@@ -106,6 +112,11 @@ public class Indicators extends ListActivity {
 	  super.onCreateContextMenu(menu, v, menuInfo);
 	  MenuInflater inflater = getMenuInflater();
 	  inflater.inflate(R.menu.context_menu, menu);
+//	  menu.setHeaderTitle("Indicator Options");
+//	  menu.add(Menu.NONE, 0, Menu.NONE, "Change Indicator Name");
+//	  menu.add(Menu.NONE, 0, Menu.NONE, "Change Pin Number");
+//	  menu.add(Menu.NONE, 0, Menu.NONE, "Delete");
+	  
 	}
 
 	@Override
