@@ -9,6 +9,7 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
@@ -42,9 +43,15 @@ public class IOAdapter extends ArrayAdapter<AndruinoObj> {
             {
             case R.layout.indicator_row:
             	if (andrObj != null) {
-                    TextView indicatorName = (TextView) v.findViewById(R.id.indicator_name);
+                    ImageView indicateState = (ImageView) v.findViewById(R.id.indicate_state);
+            		TextView indicatorName = (TextView) v.findViewById(R.id.indicator_name);
                     TextView deviceName = (TextView) v.findViewById(R.id.device_name_ind);
                     CheckBox notify = (CheckBox)v.findViewById(R.id.notify);
+                    if(indicateState != null)
+                    {
+                    	int resourceId = andrObj.getValue() == 1 ? R.drawable.control_on : R.drawable.control_off;
+                    	indicateState.setImageResource(resourceId);
+                    }
                     if (indicatorName != null) 
                           indicatorName.setText(andrObj.getLabel());                            
                     if(deviceName != null)
@@ -69,11 +76,11 @@ public class IOAdapter extends ArrayAdapter<AndruinoObj> {
                     	tb.setChecked(andrObj.getValue() == 1 ? true : false);
                     	tb.setOnClickListener(new OnClickListener() {
                     	    public void onClick(View v) {
-                    	    	andrObj.setValue(andrObj.getValue()== 1 ? 0 : 1);
+                    	    	andrObj.setValue(andrObj.getValue() == 1 ? 0 : 1);
                     	    	wc.login();
                     	        wc.write(andrObj.getId(), andrObj.getValue());
-                    	        Toast.makeText(context, "You have changed the state of "+andrObj.getLabel()+ " to "+
-                    	        		(andrObj.getValue()), Toast.LENGTH_SHORT).show();
+                    	        Toast.makeText(context, "You have changed the state of "+ andrObj.getLabel() + 
+                    	        		" to "+ (andrObj.getValue()), Toast.LENGTH_SHORT).show();
                     	    }
                     	});
                     }
