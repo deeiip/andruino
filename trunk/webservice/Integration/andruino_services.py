@@ -311,34 +311,7 @@ class AndrSerial(threading.Thread):
                 
 
             
-"""
-DDR:[1, 0, 0, 1, 1, 0, 0, 0] , PORT:[0, 0, 0, 0, 0, 0, 0, 0], PIN:[0, 0, 0, 0, 0, 0, 0, 0]
-[OUTPUT] UPDATE details SET hw_value = 0, hw_ts=datetime('now', 'localtime') WHERE pin = 8 AND device_id  = 1
-[INPUT] UPDATE details SET hw_value = 0, hw_ts=datetime('now', 'localtime') WHERE pin = 9 AND device_id  = 1
-[INPUT] UPDATE details SET hw_value = 0, hw_ts=datetime('now', 'localtime') WHERE pin = 10 AND device_id  = 1
-[OUTPUT] UPDATE details SET hw_value = 0, hw_ts=datetime('now', 'localtime') WHERE pin = 11 AND device_id  = 1
-[OUTPUT] UPDATE details SET hw_value = 0, hw_ts=datetime('now', 'localtime') WHERE pin = 12 AND device_id  = 1
-[INPUT] UPDATE details SET hw_value = 0, hw_ts=datetime('now', 'localtime') WHERE pin = 13 AND device_id  = 1
-DDR:[0, 0, 0, 0, 0, 1, 1, 1] , PORT:[1, 0, 0, 0, 0, 0, 0, 0], PIN:[1, 1, 0, 0, 0, 0, 0, 0]
-[INPUT] UPDATE details SET hw_value = 1, hw_ts=datetime('now', 'localtime') WHERE pin = 0 AND device_id  = 1
-[INPUT] UPDATE details SET hw_value = 1, hw_ts=datetime('now', 'localtime') WHERE pin = 1 AND device_id  = 1
-[INPUT] UPDATE details SET hw_value = 0, hw_ts=datetime('now', 'localtime') WHERE pin = 2 AND device_id  = 1
-[INPUT] UPDATE details SET hw_value = 0, hw_ts=datetime('now', 'localtime') WHERE pin = 3 AND device_id  = 1
-[INPUT] UPDATE details SET hw_value = 0, hw_ts=datetime('now', 'localtime') WHERE pin = 4 AND device_id  = 1
-[OUTPUT] UPDATE details SET hw_value = 0, hw_ts=datetime('now', 'localtime') WHERE pin = 5 AND device_id  = 1
-[OUTPUT] UPDATE details SET hw_value = 0, hw_ts=datetime('now', 'localtime') WHERE pin = 6 AND device_id  = 1
-[OUTPUT] UPDATE details SET hw_value = 0, hw_ts=datetime('now', 'localtime') WHERE pin = 7 AND device_id  = 1
-
-sqlite> select * from details where config = 1;
-3|1|default_5|1|5|0|0|2011-04-17 19:16:28|2011-04-19 18:16:39|1
-4|1|default_6|1|6|1|0|2011-04-17 20:23:27|2011-04-19 18:16:39|1
-5|1|default_7|1|7|0|0|2011-04-17 20:23:41|2011-04-19 18:16:39|1
-8|1|default_10|1|10|0|0|2011-04-17 20:24:47|2011-04-19 18:16:49|1
-9|1|default_11|1|11|0|0|2011-04-19 22:12:03|2011-04-19 18:16:39|1
-
-
-
-"""            
+        
         
     
     
@@ -487,6 +460,33 @@ Subject: %s
 '''
         
 
+"""
+DDR:[1, 0, 0, 1, 1, 0, 0, 0] , PORT:[0, 0, 0, 0, 0, 0, 0, 0], PIN:[0, 0, 0, 0, 0, 0, 0, 0]
+[OUTPUT] UPDATE details SET hw_value = 0, hw_ts=datetime('now', 'localtime') WHERE pin = 8 AND device_id  = 1
+[INPUT] UPDATE details SET hw_value = 0, hw_ts=datetime('now', 'localtime') WHERE pin = 9 AND device_id  = 1
+[INPUT] UPDATE details SET hw_value = 0, hw_ts=datetime('now', 'localtime') WHERE pin = 10 AND device_id  = 1
+[OUTPUT] UPDATE details SET hw_value = 0, hw_ts=datetime('now', 'localtime') WHERE pin = 11 AND device_id  = 1
+[OUTPUT] UPDATE details SET hw_value = 0, hw_ts=datetime('now', 'localtime') WHERE pin = 12 AND device_id  = 1
+[INPUT] UPDATE details SET hw_value = 0, hw_ts=datetime('now', 'localtime') WHERE pin = 13 AND device_id  = 1
+DDR:[0, 0, 0, 0, 0, 1, 1, 1] , PORT:[1, 0, 0, 0, 0, 0, 0, 0], PIN:[1, 1, 0, 0, 0, 0, 0, 0]
+[INPUT] UPDATE details SET hw_value = 1, hw_ts=datetime('now', 'localtime') WHERE pin = 0 AND device_id  = 1
+[INPUT] UPDATE details SET hw_value = 1, hw_ts=datetime('now', 'localtime') WHERE pin = 1 AND device_id  = 1
+[INPUT] UPDATE details SET hw_value = 0, hw_ts=datetime('now', 'localtime') WHERE pin = 2 AND device_id  = 1
+[INPUT] UPDATE details SET hw_value = 0, hw_ts=datetime('now', 'localtime') WHERE pin = 3 AND device_id  = 1
+[INPUT] UPDATE details SET hw_value = 0, hw_ts=datetime('now', 'localtime') WHERE pin = 4 AND device_id  = 1
+[OUTPUT] UPDATE details SET hw_value = 0, hw_ts=datetime('now', 'localtime') WHERE pin = 5 AND device_id  = 1
+[OUTPUT] UPDATE details SET hw_value = 0, hw_ts=datetime('now', 'localtime') WHERE pin = 6 AND device_id  = 1
+[OUTPUT] UPDATE details SET hw_value = 0, hw_ts=datetime('now', 'localtime') WHERE pin = 7 AND device_id  = 1
 
+sqlite> select * from details where config = 1;
+3|1|default_5|1|5|0|0|2011-04-17 19:16:28|2011-04-19 18:16:39|1
+4|1|default_6|1|6|1|0|2011-04-17 20:23:27|2011-04-19 18:16:39|1
+5|1|default_7|1|7|0|0|2011-04-17 20:23:41|2011-04-19 18:16:39|1
+8|1|default_10|1|10|0|0|2011-04-17 20:24:47|2011-04-19 18:16:49|1
+9|1|default_11|1|11|0|0|2011-04-19 22:12:03|2011-04-19 18:16:39|1
+
+
+
+"""    
 
     
