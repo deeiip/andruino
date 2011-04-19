@@ -90,7 +90,7 @@ public class Indicators extends ListActivity {
 			break;
 			
 		case R.id.refresh:
-	        deviceIndicators = filterControls(allControls, selectedDevice);
+	        deviceIndicators = filterControls(wc.read(), selectedDevice);
 	        ctrl_adapter = new IOAdapter(this, R.layout.indicator_row, deviceIndicators, wc);
 	        setListAdapter(ctrl_adapter);
 	        registerForContextMenu(this.getListView());
@@ -157,7 +157,7 @@ public class Indicators extends ListActivity {
 		for(int i = 0; i < controls.size(); i++)
 		{
 			AndruinoObj obj = controls.get(i);
-			if(obj.getDdr() == 1 && obj.getDevice().equals(selectedDevice))
+			if(obj.getDdr() == 0 && obj.getDevice().equals(selectedDevice))
 				deviceIndicators.add(obj);
 		}
 		return deviceIndicators;
