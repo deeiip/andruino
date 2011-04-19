@@ -38,7 +38,7 @@ class AndrSerial(threading.Thread):
         self.QueuePollInterval = 0.5
         self.serialQueue = SerialInterfaceQueue
         self.device_id = device_id
-        
+        self.emailSettings = {}
         '''
             Initialize this thread
         '''
@@ -274,7 +274,7 @@ class AndrSerial(threading.Thread):
                 ddrBits.reverse()
                 portBits.reverse()
                 pinBits.reverse()
-                #print "DDR:%s , PORT:%s, PIN:%s" % (ddrBits, portBits, pinBits)
+                print "DDR:%s , PORT:%s, PIN:%s" % (ddrBits, portBits, pinBits)
                
                 
                 #print "-Processing Register %s" % RegGrp
@@ -300,8 +300,9 @@ class AndrSerial(threading.Thread):
                         '''
                         #print "[INPUT] UPDATE details SET hw_value = %s, hw_ts=datetime('now', 'localtime') WHERE pin = %s AND device_id  = %s" % (pinBits[binPosition], pin, self.device_id)
                         #print "Pin [%s] is an INPUT" % pin
+                        
                         sql = "UPDATE details SET hw_value = %s, hw_ts=datetime('now', 'localtime') WHERE pin = %s AND device_id  = %s" % (pinBits[binPosition], pin, self.device_id)
-                    
+                    print sql
                     
                     
                     self.dbi.exec_sql(sql)
@@ -387,7 +388,22 @@ class AndrSerial(threading.Thread):
         
         return self.serialMsg
 
+        
 """
+    def _setEmailService(self, SmtpServer=None, EmailAcct=None, EmailPw=None):
+        '''
+            Set Email properties
+        '''
+        self.emailSettings['server'] = SmtpServer
+        self.emailSettings['acct'] = EmailAcct
+        self.emailSettings['passwd'] = EmailPw
+    
+    def sendAlert(self, Subject='No Subject Set', Addr, msg='Default Message'  ):
+        '''
+            Send email 
+        '''
+        
+
 
 class AndrEmail(threading.Thread):
     '''

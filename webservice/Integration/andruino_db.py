@@ -308,7 +308,7 @@ class AndruinoDb():
 		Retreive the current status of all enabled pins
 	'''
         sql = """SELECT dev.id as did, det.id, det.label, dev.name, det.config,
-			det.pin, det.ws_value as value, det.ws_ts as ts_value, det.hw_value, det.hw_ts  
+			det.pin, det.hw_value as value, det.ws_ts as ts_value, det.ws_value, det.hw_ts  
 		 FROM devices dev, details det
 		 WHERE dev.id=det.device_id
 		   AND dev.enabled=1

@@ -155,10 +155,10 @@ if __name__ == '__main__':
 	root.userinfo = UserInfo()
 	root.read = Read()
 	root.write = Write()
-	root.admin = Admin()
+	#root.admin = Admin()
 
 	root.config = Config()
-
+	Api.startSerial()
 	cherrypy.server.socket_host = '0.0.0.0'
 	cherrypy.config.update({'tools.sessions.on' : True})
 	cherrypy.quickstart(root)
@@ -166,5 +166,7 @@ if __name__ == '__main__':
 	'''
 		Stop any threads that have started...
 	'''
+	
+	
 	Api.stopSerial()
 
