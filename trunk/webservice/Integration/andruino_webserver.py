@@ -152,7 +152,7 @@ class Exit:
 	} 
 	'''
 	@cherrypy.expose
-	def default(self,did,value):
+	def default(self):
 		Api.stopSerial()
 		sys.exit()
 
