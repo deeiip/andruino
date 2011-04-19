@@ -2,7 +2,7 @@ import cherrypy
 from andruino_db import *
 from andruino_api import *
 import time
-#import os
+import os, sys
 #from tempfile import gettempdir
 
 #import sys, os
@@ -144,7 +144,17 @@ class Config:
 			short term fix for demonstration purposes 
 		'''
 
-
+class Exit:
+	'''
+	_cp_config = { 
+		'tools.session_auth.on': True, 
+		'tools.session_auth.login_screen' : requireLogin,
+	} 
+	'''
+	@cherrypy.expose
+	def default(self,did,value):
+		Api.stopSerial()
+		sys.exit()
 
 
 if __name__ == '__main__':
@@ -155,6 +165,7 @@ if __name__ == '__main__':
 	root.userinfo = UserInfo()
 	root.read = Read()
 	root.write = Write()
+	root.exit = Exit()
 	#root.admin = Admin()
 
 	root.config = Config()
