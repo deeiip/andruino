@@ -388,7 +388,7 @@ class AndrSerial(threading.Thread):
         
         return self.serialMsg
 
-        
+    
 
     
     def sendAlert(self, Subject='No Subject Set', msg='Default Message'  ):
