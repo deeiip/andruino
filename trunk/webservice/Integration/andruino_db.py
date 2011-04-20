@@ -308,11 +308,10 @@ class AndruinoDb():
 		Retreive the current status of all enabled pins
 	'''
         sql = """SELECT dev.id as did, det.id, det.label, dev.name, det.config,
-			det.pin, det.hw_value as value, det.ws_ts as ts_value, det.ws_value, det.hw_ts  
+			det.pin, det.hw_value as value, det.ws_ts as ts_value, det.ws_value, det.hw_ts, det.enabled as enabled  
 		 FROM devices dev, details det
 		 WHERE dev.id=det.device_id
-		   AND dev.enabled=1
-		   AND det.enabled=1;
+		   AND dev.enabled=1;
         """
         result = self.query(sql)
 	return result
@@ -334,6 +333,28 @@ class AndruinoDb():
 	'''
         setsql = """UPDATE devices 
 		 SET enabled=%s 
+		 WHERE id=%s;
+        """ % (value, did)
+
+        self.exec_sql(setsql)
+
+    def setDetLabel(self, did, value):
+	'''
+		Set the label for a pin using the value provided
+	'''
+        setsql = """UPDATE details 
+		 SET label='%s' 
+		 WHERE id=%s;
+        """ % (value, did)
+
+        self.exec_sql(setsql)
+
+    def setDevLabel(self, did, value):
+	'''
+		Set the label for a device using the value provided
+	'''
+        setsql = """UPDATE devices 
+		 SET name='%s' 
 		 WHERE id=%s;
         """ % (value, did)
 

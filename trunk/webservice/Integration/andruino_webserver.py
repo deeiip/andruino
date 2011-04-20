@@ -92,7 +92,8 @@ class Read:
 			response += '"ddr":"'+str(status['config'])+'",'
 			response += '"pin":"'+str(status['pin'])+'",'
 			response += '"value":"'+str(status['value'])+'",'
-			response += '"ts_value":"'+str(status['ts_value'])+'"}'
+			response += '"ts_value":"'+str(status['ts_value'])+'",'
+			response += '"enabled":"'+str(status['enabled'])+'"}'
 			responseList.append(response)
 		return '{"command":"read","response":"'+str(len(responseList))+'","details":['\
 			+",".join(responseList)+']}'
@@ -152,10 +153,12 @@ class Enable:
 	} 
 	'''
 	@cherrypy.expose
-	def pin(self,did,value):
+	def pin(self,did):
 		AnDB.changePin(did,1)
-	def device(self,did,value):
+		return '{"command":"enable","response":"pass"}'
+	def device(self,did):
 		AnDB.changeDevice(did,1)
+		return '{"command":"enable","response":"pass"}'
 
 class Disable:
 	'''
@@ -165,10 +168,27 @@ class Disable:
 	} 
 	'''
 	@cherrypy.expose
-	def pin(self,did,value):
+	def pin(self,did):
 		AnDB.changePin(did,0)
-	def device(self,did,value):
+		return '{"command":"disable","response":"pass"}'
+	def device(self,did):
 		AnDB.changeDevice(did,0)
+		return '{"command":"disable","response":"pass"}'
+
+class SetLabel:
+	'''
+	_cp_config = { 
+		'tools.session_auth.on': True, 
+		'tools.session_auth.login_screen' : requireLogin,
+	} 
+	'''
+	@cherrypy.expose
+	def pin(self,did,label):
+		AnDB.setDetLabel(did,label)
+		return '{"command":"setlabel","response":"pass"}'
+	def device(self,did,label):
+		AnDB.setDevLabel(did,label)
+		return '{"command":"setlabel","response":"pass"}'
 
 class Exit:
 	'''
@@ -194,6 +214,7 @@ if __name__ == '__main__':
 	root.config = Config()
 	root.enable = Enable()
 	root.disable = Disable()
+	root.setlabel = SetLabel()
 	root.exit = Exit()
 
 
