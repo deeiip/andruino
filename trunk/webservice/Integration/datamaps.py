@@ -231,6 +231,7 @@ class deviceMap():
                 '''
                     Prevent writing negative value to register
                 '''
+                
                 NewVal = RegDecVal - ReqVal
             else:
                 NewVal = RegDecVal 
