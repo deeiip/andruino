@@ -152,7 +152,7 @@ class AndruinoDb():
             '''
                 Seed pins 2 - 13
             '''
-            for pin in range(3,14): 
+            for pin in range(2,14): 
                 '''
                     Add Pins for Arduino
                     "ws_value" integer not null,
@@ -234,7 +234,7 @@ class AndruinoDb():
             Get device configuration information
             Pair down result set if DetailId is set
         '''
-        sql = "SELECT * FROM details "
+        sql = "SELECT pin, config FROM details "
         
         if DetailId:
             sql += " WHERE id = %s" % DetailId

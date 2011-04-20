@@ -116,7 +116,7 @@ class AndrSerial(threading.Thread):
                     '''
                         Do something if a message is on the queue
                     '''
-                    #print "Got a message -> %s " % (msg)
+                    print "Got a message -> %s " % (msg)
                     self.parseMsg(msg)
                 time.sleep(self.QueuePollInterval)
         
@@ -208,7 +208,7 @@ class AndrSerial(threading.Thread):
         '''
             Update the db
         '''
-        self.updateDb()
+        #self.updateDb()
         
     def convertInt(self, intVal):
         '''
@@ -271,13 +271,12 @@ class AndrSerial(threading.Thread):
                 ddrBits = self.convertInt(RegMap[RegGrp]['DDR'])
                 portBits = self.convertInt(RegMap[RegGrp]['PORT']) 
                 pinBits =  self.convertInt(RegMap[RegGrp]['PIN'])
-                print "DDR:%s , PORT:%s, PIN:%s" % (ddrBits, portBits, pinBits)
-                '''
+                #print "DDR:%s , PORT:%s, PIN:%s" % (ddrBits, portBits, pinBits)
                 ddrBits.reverse()
                 portBits.reverse()
                 pinBits.reverse()
                 print "REVERSED - DDR:%s , PORT:%s, PIN:%s" % (ddrBits, portBits, pinBits)
-                '''
+
                 
                 #print "-Processing Register %s" % RegGrp
     
