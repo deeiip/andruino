@@ -238,6 +238,8 @@ void setup() {
 	//DDRB = 0x2d;
 	wait_for_host();
 	Serial.println("Starting...");
+	// Clear ddr registers
+	DDRB = 0x00;
 }
 
 void serialParser() {
