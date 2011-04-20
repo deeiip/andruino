@@ -8,11 +8,9 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.view.ContextMenu;
-import android.view.ContextMenu.ContextMenuInfo;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
@@ -29,9 +27,7 @@ public class Indicators extends ListActivity {
 	private IOAdapter ctrl_adapter; 
     private SharedPreferences settings;
 	private Webduino wc;
-	private Spinner selectDevice;
-	private float initialX, deltaX;
-	
+	private Spinner selectDevice;	
 	
 	/** Called when the activity is first created. */
     @Override
@@ -64,7 +60,7 @@ public class Indicators extends ListActivity {
         deviceIndicators = filterControls(allControls, selectedDevice);
         ctrl_adapter = new IOAdapter(this, R.layout.indicator_row, deviceIndicators, wc);
         setListAdapter(ctrl_adapter);
-        ListView indicatorList = this.getListView();
+        ListView indicatorList = getListView();
 
         registerForContextMenu(indicatorList);
     }
@@ -108,47 +104,16 @@ public class Indicators extends ListActivity {
 	}
 	
 	@Override
-	public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
-	  super.onCreateContextMenu(menu, v, menuInfo);
-	  MenuInflater inflater = getMenuInflater();
-	  inflater.inflate(R.menu.context_menu, menu);
-//	  menu.setHeaderTitle("Indicator Options");
-//	  menu.add(Menu.NONE, 0, Menu.NONE, "Change Indicator Name");
-//	  menu.add(Menu.NONE, 0, Menu.NONE, "Change Pin Number");
-//	  menu.add(Menu.NONE, 0, Menu.NONE, "Delete");
-	  
-	}
+	public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+		MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.context_menu, menu);
+    }
 
 	@Override
 	public boolean onContextItemSelected(MenuItem item) {
 	  //AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
 	  
 	  return super.onContextItemSelected(item);
-	}
-	
-	public boolean onTouchEvent(MotionEvent event) {
-        synchronized (event)  
-        {   
-        	//when user touches the screen  
-        	if(event.getAction() == MotionEvent.ACTION_DOWN)  
-        	{  
-        		deltaX = 0;  
-        		initialX = event.getRawX();  
-        	}  
-  
-        	//when screen is released  
-        	if(event.getAction() == MotionEvent.ACTION_UP)  
-        	{  
-        		deltaX = event.getRawX() - initialX;  
-  
-        		//swiped from left to right  
-        		if(deltaX < 0)   
-        			startActivity(new Intent(this, Outputs.class)); 
-  
-        		return true;  
-                }      
-        }  
-		return true;
 	}
 	
 	public ArrayList<AndruinoObj> filterControls(ArrayList<AndruinoObj> controls, String selectedDevice) {
