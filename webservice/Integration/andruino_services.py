@@ -2,7 +2,7 @@
     TEST CODE
 '''
 
-
+import smtplib
 import os, sys
 import serial
 import threading
@@ -389,20 +389,22 @@ class AndrSerial(threading.Thread):
         return self.serialMsg
 
         
-"""
-    def _setEmailService(self, SmtpServer=None, EmailAcct=None, EmailPw=None):
-        '''
-            Set Email properties
-        '''
-        self.emailSettings['server'] = SmtpServer
-        self.emailSettings['acct'] = EmailAcct
-        self.emailSettings['passwd'] = EmailPw
+
     
-    def sendAlert(self, Subject='No Subject Set', Addr, msg='Default Message'  ):
+    def sendAlert(self, Subject='No Subject Set', msg='Default Message'  ):
         '''
             Send email 
         '''
+        thismsg = msg
+        server = smtplib.SMTP('smtp.gmail.com',587)
+        server.ehlo()
+        server.starttls()
+        server.login('addr','mypass')
+        server.sendmail('myname@gmail.com','somename@somewhere.com',thismsg)
+        server.close()
+         
         
+"""
 
 
 class AndrEmail(threading.Thread):
