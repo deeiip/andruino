@@ -3,9 +3,12 @@ package com.hrc51.csu.andruino;
 import java.util.ArrayList;
 
 import android.content.Context;
+import android.view.ContextMenu;
+import android.view.ContextMenu.ContextMenuInfo;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.View.OnCreateContextMenuListener;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
@@ -35,6 +38,13 @@ public class IOAdapter extends ArrayAdapter<AndruinoObj> {
             if (v == null) {
                 LayoutInflater vi = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
                 v = vi.inflate(textViewResourceId, null);
+                v.setOnCreateContextMenuListener(new OnCreateContextMenuListener()
+                	{
+                		public void onCreateContextMenu(ContextMenu contextMenu, View view, ContextMenuInfo arg2)
+                		{
+
+                		}
+                	});
             }
             
             final AndruinoObj andrObj = controls.get(position);
