@@ -13,8 +13,11 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.AdapterView.AdapterContextMenuInfo;
 
 public class Outputs extends ListActivity {
 	private ArrayList<AndruinoObj> allControls;
@@ -84,7 +87,10 @@ public class Outputs extends ListActivity {
 	  super.onCreateContextMenu(menu, v, menuInfo);
 	  MenuInflater inflater = getMenuInflater();
 	  inflater.inflate(R.menu.context_menu, menu);
-		
+      AdapterContextMenuInfo info = (AdapterContextMenuInfo) menuInfo;
+      LinearLayout tView = (LinearLayout)info.targetView;
+      TextView outName = (TextView)tView.findViewById(R.id.output_name);
+      menu.setHeaderTitle(outName.getText().toString());
 	}
 
 	@Override

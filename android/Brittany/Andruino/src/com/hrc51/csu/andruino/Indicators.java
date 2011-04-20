@@ -13,10 +13,13 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 public class Indicators extends ListActivity {
@@ -107,6 +110,10 @@ public class Indicators extends ListActivity {
 	public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
 		MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.context_menu, menu);
+        AdapterContextMenuInfo info = (AdapterContextMenuInfo) menuInfo;
+        LinearLayout tView = (LinearLayout)info.targetView;
+        TextView indName = (TextView)tView.findViewById(R.id.indicator_name);
+        menu.setHeaderTitle(indName.getText().toString());
     }
 
 	@Override
