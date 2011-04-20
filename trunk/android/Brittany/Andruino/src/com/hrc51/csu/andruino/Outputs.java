@@ -1,27 +1,27 @@
 package com.hrc51.csu.andruino;
 
 import java.util.ArrayList;
+
 import android.app.ListActivity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.view.ContextMenu;
+import android.view.ContextMenu.ContextMenuInfo;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
-import android.view.ContextMenu.ContextMenuInfo;
+import android.widget.ListView;
 import android.widget.Toast;
 
 public class Outputs extends ListActivity {
 	private ArrayList<AndruinoObj> allControls;
 	private ArrayList<AndruinoObj> deviceOutputs;
 	private IOAdapter ctrl_adapter; 
-    private SharedPreferences settings;
+	private SharedPreferences settings;
 	private Webduino wc;
-	private float initialX, deltaX;
 	
 	/** Called when the activity is first created. */
     @Override
@@ -35,8 +35,10 @@ public class Outputs extends ListActivity {
         
         ctrl_adapter = new IOAdapter(this, R.layout.output_row, deviceOutputs, wc);
         setListAdapter(ctrl_adapter);
-        registerForContextMenu(this.getListView());
-    }
+        ListView outputList = getListView();
+
+        registerForContextMenu(outputList);   
+        }
     
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -91,32 +93,7 @@ public class Outputs extends ListActivity {
 	  
 	  return super.onContextItemSelected(item);
 	}
-	
-	public boolean onTouchEvent(MotionEvent event) {
-        synchronized (event)  
-        {   
-        	//when user touches the screen  
-            if(event.getAction() == MotionEvent.ACTION_DOWN)  
-            {  
-            	deltaX = 0;  
-                initialX = event.getRawX();  
-            }  
-  
-            //when screen is released  
-            if(event.getAction() == MotionEvent.ACTION_UP)  
-            {  
-            	deltaX = event.getRawX() - initialX;  
-  
-            	//swiped from right to left
-            	if(deltaX > 0)  
-            		startActivity(new Intent(this, Indicators.class));  
-            	
-            	return true;  
-            }      
-        }  
-		return true;
-	}
-	
+		
 	public ArrayList<AndruinoObj> filterControls(ArrayList<AndruinoObj> controls) {
 		ArrayList<AndruinoObj> deviceOutputs = new ArrayList<AndruinoObj>();
 		
