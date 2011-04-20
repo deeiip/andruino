@@ -144,6 +144,32 @@ class Config:
 			short term fix for demonstration purposes 
 		'''
 
+class Enable:
+	'''
+	_cp_config = { 
+		'tools.session_auth.on': True, 
+		'tools.session_auth.login_screen' : requireLogin,
+	} 
+	'''
+	@cherrypy.expose
+	def pin(self,did,value):
+		AnDB.changePin(did,1)
+	def device(self,did,value):
+		AnDB.changeDevice(did,1)
+
+class Disable:
+	'''
+	_cp_config = { 
+		'tools.session_auth.on': True, 
+		'tools.session_auth.login_screen' : requireLogin,
+	} 
+	'''
+	@cherrypy.expose
+	def pin(self,did,value):
+		AnDB.changePin(did,0)
+	def device(self,did,value):
+		AnDB.changeDevice(did,0)
+
 class Exit:
 	'''
 	_cp_config = { 
@@ -165,10 +191,12 @@ if __name__ == '__main__':
 	root.userinfo = UserInfo()
 	root.read = Read()
 	root.write = Write()
-	root.exit = Exit()
-	#root.admin = Admin()
-
 	root.config = Config()
+	root.enable = Enable()
+	root.disable = Disable()
+	root.exit = Exit()
+
+
 	Api.startSerial()
 	cherrypy.server.socket_host = '0.0.0.0'
 	cherrypy.config.update({'tools.sessions.on' : True})

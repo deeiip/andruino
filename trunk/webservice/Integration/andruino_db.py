@@ -317,6 +317,28 @@ class AndruinoDb():
         result = self.query(sql)
 	return result
 
+    def changePin(self, did, value):
+	'''
+		Enable or disable a pin using the value provided
+	'''
+        setsql = """UPDATE details 
+		 SET enabled=%s 
+		 WHERE id=%s;
+        """ % (value, did)
+
+        self.exec_sql(setsql)
+
+    def changeDevice(self, did, value):
+	'''
+		Enable or disable a device using the value provided
+	'''
+        setsql = """UPDATE devices 
+		 SET enabled=%s 
+		 WHERE id=%s;
+        """ % (value, did)
+
+        self.exec_sql(setsql)
+
     
     def write(self, did, value):
 	'''
