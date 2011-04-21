@@ -55,12 +55,13 @@ public class JsonParser {
 				int ddr = Integer.parseInt(detailArray.getJSONObject(i).getString("ddr"));
 				int pin = Integer.parseInt(detailArray.getJSONObject(i).getString("pin"));
 				int value = Integer.parseInt(detailArray.getJSONObject(i).getString("value"));
+				int enabled = Integer.parseInt(detailArray.getJSONObject(i).getString("enabled"));
 				String ts_value = detailArray.getJSONObject(i).getString("ts_value").trim();
 //				boolean notify = detailArray.getJSONObject(i).getString("notify").equals("1") ? true : false;
 				
 				
 				//System.out.println("did: " + did + " id: " + id + " label: " + label);
-				AndruinoObj controlElt = new AndruinoObj(did, id, label, device, ddr, pin, value, ts_value/*, notify */);
+				AndruinoObj controlElt = new AndruinoObj(did, id, label, device, ddr, pin, value, enabled, ts_value/*, notify */);
 				detailList.add(controlElt);
 			}
 		}
