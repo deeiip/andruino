@@ -22,12 +22,12 @@ public class AndruinoMain extends TabActivity {
 	    intent = new Intent().setClass(this, Indicators.class);
 
 	    // Initialize a TabSpec for each tab and add it to the TabHost
-	    spec = tabHost.newTabSpec("indicators").setIndicator("Indicators", res.getDrawable(R.drawable.icon)).setContent(intent);
+	    spec = tabHost.newTabSpec("indicators").setIndicator("Indicators", res.getDrawable(R.drawable.ic_tab_indicators)).setContent(intent);
 	    tabHost.addTab(spec);
 
 	    // Do the same for the other tabs
 	    intent = new Intent().setClass(this, Outputs.class);
-	    spec = tabHost.newTabSpec("outputs").setIndicator("Outputs", res.getDrawable(R.drawable.icon)).setContent(intent);
+	    spec = tabHost.newTabSpec("outputs").setIndicator("Outputs", res.getDrawable(R.drawable.ic_tab_outputs)).setContent(intent);
 	    tabHost.addTab(spec);
 
 	    tabHost.setCurrentTab(0);
