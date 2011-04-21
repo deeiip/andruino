@@ -16,6 +16,7 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Spinner;
@@ -31,6 +32,8 @@ public class Indicators extends ListActivity {
     private SharedPreferences settings;
 	private Webduino wc;
 	private Spinner selectDevice;	
+	private String newLabel;
+	private AndruinoObj selectedObj;
 	
 	/** Called when the activity is first created. */
     @Override
@@ -118,17 +121,58 @@ public class Indicators extends ListActivity {
 
 	@Override
 	public boolean onContextItemSelected(MenuItem item) {
-	  //AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
+	  AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
+	  LinearLayout tView = (LinearLayout)info.targetView;
+	  ImageView indState = (ImageView)tView.findViewById(R.id.indicate_state);
+      TextView indName = (TextView)tView.findViewById(R.id.indicator_name);
+      TextView devNameInd = (TextView)tView.findViewById(R.id.device_name_ind);
+      String pinName = indName.getText().toString();
+      selectedObj = getObjByName(pinName);
 	  
+	  switch(item.getItemId())
+	  {
+	  case R.id.edit_name:
+		  // allow user to edit name of pin
+		  Intent intent = new Intent(this, EditPin.class);
+		  Bundle bundleData = new Bundle();
+	      bundleData.putString("pinName", pinName);
+	      intent.putExtras(bundleData);
+		  this.startActivityForResult(intent, 0);
+		  indName.setText(newLabel);
+//		  wc.setLabel(selectedObj.getId(), newLabel);
+		  break;
+	  case R.id.disable_enable:
+		  // grey out menu item if it's initially enabled
+		  if(selectedObj.getEnabled() == 1)
+		  {
+//			  indState.setImageResource(R.drawable.control_disable);
+//			  indName.setTextColor(Color.GRAY);
+//			  devNameInd.setTextColor(Color.GRAY);
+			  wc.config("disable", selectedObj.getId());
+		  }
+		  // else restore menu item if it's initially disabled
+		  else
+		  {
+			  wc.config("enable", selectedObj.getId());
+		  }
+		  break;
+		  
+	  }
+	  // refresh
+	  deviceIndicators = filterControls(wc.read(), selectedDevice);
+      ctrl_adapter = new IOAdapter(this, R.layout.indicator_row, deviceIndicators, wc);
+      setListAdapter(ctrl_adapter);
+      registerForContextMenu(this.getListView());
+	 
 	  return super.onContextItemSelected(item);
 	}
 	
 	public ArrayList<AndruinoObj> filterControls(ArrayList<AndruinoObj> controls, String selectedDevice) {
 		ArrayList<AndruinoObj> deviceIndicators = new ArrayList<AndruinoObj>();
 		
-		for(int i = 0; i < controls.size(); i++)
+		for(AndruinoObj obj : controls)
 		{
-			AndruinoObj obj = controls.get(i);
+			//AndruinoObj obj = controls.get(i);
 			if(obj.getDdr() == 0 && obj.getDevice().equals(selectedDevice))
 				deviceIndicators.add(obj);
 		}
@@ -138,13 +182,35 @@ public class Indicators extends ListActivity {
 	public ArrayList<String> getDeviceNames(ArrayList<AndruinoObj> allControls) {
 		ArrayList<String> deviceNames = new ArrayList<String>();
 		
-		for(int i = 0; i < allControls.size(); i++)
+		for(AndruinoObj obj : allControls)
 		{
-			AndruinoObj obj = allControls.get(i);
+			//AndruinoObj obj = allControls.get(i);
 			String device = obj.getDevice();
 			if(!deviceNames.contains(device))
 				deviceNames.add(device);
 		}
 		return deviceNames;
+	}
+	
+	public AndruinoObj getObjByName(String name) {
+		AndruinoObj andrObj = new AndruinoObj();
+		for(AndruinoObj obj : deviceIndicators)
+		{
+			if(obj.getLabel().equals(name))
+				andrObj = obj;
+		}
+		
+		return andrObj;
+	}
+	
+	//@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
+		//if (data.endsWith(EditPin.DIALOG_NAME)) {
+		if(intent.getExtras().getString("new") != null && !intent.getExtras().getString("new").equals(""))
+		{
+			this.newLabel = intent.getExtras().getString("new");
+			wc.setLabel(selectedObj.getId(), this.newLabel);
+		}
+		//}
 	}
 }
