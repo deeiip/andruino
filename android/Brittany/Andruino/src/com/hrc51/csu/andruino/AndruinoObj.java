@@ -8,10 +8,16 @@ public class AndruinoObj {
 	private int ddr;
 	private int pin;
 	private int value;
+	private int enabled;
 	private String ts_value;
 //	private boolean notify;
 	
-	public AndruinoObj(int did, int id, String label, String device, int ddr, int pin, int value, String ts_value/*, boolean notify */)
+	public AndruinoObj()
+	{
+
+	}
+	
+	public AndruinoObj(int did, int id, String label, String device, int ddr, int pin, int value, int enabled, String ts_value/*, boolean notify */)
 	{
 		this.did = did;
 		this.id = id;
@@ -20,6 +26,7 @@ public class AndruinoObj {
 		this.ddr = ddr;
 		this.pin = pin;
 		this.value = value;
+		this.enabled = enabled;
 		this.ts_value = ts_value;
 	}
 
@@ -77,6 +84,14 @@ public class AndruinoObj {
 
 	public void setValue(int value) {
 		this.value = value;
+	}
+	
+	public int getEnabled() {
+		return enabled;
+	}
+
+	public void setEnabled(int enabled) {
+		this.enabled = enabled;
 	}
 
 	public String getTs_value() {
