@@ -2,7 +2,9 @@ package com.hrc51.csu.andruino;
 
 import java.util.ArrayList;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Color;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
@@ -14,15 +16,15 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
-import android.widget.ToggleButton;
 
 public class IOAdapter extends ArrayAdapter<AndruinoObj> {
     private ArrayList<AndruinoObj> controls;
     private Context context;
     private int textViewResourceId;
     private Webduino wc;
-
+    private String name;
+    //NewToggleButton test;
+    
     public IOAdapter(Context context, int textViewResourceId, ArrayList<AndruinoObj> controls, Webduino wc) {
             super(context, textViewResourceId, controls);
             this.context = context;
@@ -85,11 +87,14 @@ public class IOAdapter extends ArrayAdapter<AndruinoObj> {
             
             case R.layout.output_row:
 	            if (andrObj != null) {
-                    TextView outputName = (TextView) v.findViewById(R.id.output_name);
-                    TextView deviceName = (TextView) v.findViewById(R.id.device_name_out);
-                    ToggleButton tb = (ToggleButton)v.findViewById(R.id.change_state);
-                    if (outputName != null) 
-                          outputName.setText(andrObj.getLabel());                            
+                    TextView outputName = (TextView)v.findViewById(R.id.output_name);
+                    TextView deviceName = (TextView)v.findViewById(R.id.device_name_out);
+                    NewToggleButton tb = (NewToggleButton)v.findViewById(R.id.change_state);
+                    
+                    if (outputName != null) {
+                          outputName.setText(andrObj.getLabel()); 
+                          name = andrObj.getLabel();
+                    }
                     if(deviceName != null){
                           deviceName.setText("Device: " + andrObj.getDevice());
                     }
@@ -97,11 +102,30 @@ public class IOAdapter extends ArrayAdapter<AndruinoObj> {
                     	tb.setChecked(andrObj.getValue() == 1 ? true : false);
                     	tb.setOnClickListener(new OnClickListener() {
                     	    public void onClick(View v) {
-                    	    	andrObj.setValue(andrObj.getValue() == 1 ? 0 : 1);
-                    	    	wc.login();
-                    	        wc.write(andrObj.getId(), andrObj.getValue());
-                    	        Toast.makeText(context, "You have changed the state of "+ andrObj.getLabel() + 
-                    	        		" to "+ (andrObj.getValue()), Toast.LENGTH_SHORT).show();
+                    	    	//andrObj.setValue(andrObj.getValue() == 1 ? 0 : 1);
+                    	    	//wc.login();
+                    	        
+                    	    	AlertDialog.Builder alert = new AlertDialog.Builder(context);
+                    	    	alert.setTitle("Confirm State Change");
+                    	    	alert.setIcon(android.R.drawable.ic_dialog_alert);
+                    	    	alert.setMessage("Are you sure you want to change the state of " + "" + "?");
+                    	    	
+                    	    	alert.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+								
+									public void onClick(DialogInterface dialog, int which) {
+										
+										//setChecked(andrObj.getValue() == 1 ? false : true);
+										andrObj.setValue(andrObj.getValue() == 1 ? 0 : 1);
+										wc.write(andrObj.getId(), andrObj.getValue());
+									}
+								});
+                    	    	alert.setNegativeButton("No", new DialogInterface.OnClickListener() {
+									
+									public void onClick(DialogInterface dialog, int which) {
+										
+									}
+								});
+                    	    	alert.show();
                     	    }
                     	});
                     }
