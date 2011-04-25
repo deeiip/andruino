@@ -8,7 +8,6 @@ public class NewToggleButton extends ToggleButton {
 	
 	public NewToggleButton(Context context) {
 		super(context);
-		// TODO Auto-generated constructor stub
 	}
 
 	public NewToggleButton(Context context, AttributeSet attrs) {
@@ -20,6 +19,6 @@ public class NewToggleButton extends ToggleButton {
 	}
 	
 	public void toggle() {
-		
+		// overriding toggle method to do nothing so that I can control toggling
 	}
 }

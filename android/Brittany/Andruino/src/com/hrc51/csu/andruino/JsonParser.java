@@ -30,20 +30,6 @@ public class JsonParser {
 		return response;
 	}
 
-//	public ArrayList<String> getDetails() {
-//		ArrayList<String> detailList = new ArrayList<String>();
-//		try {
-//			for (int i = 0; i < Integer.parseInt(response); i++) {
-//				detailList.add(detailArray.getJSONObject(i).getString("label").toString());
-//			}
-//		}
-//		catch (Exception e) {
-//			e.printStackTrace();
-//		}
-//
-//		return detailList;
-//	}
-
 	public ArrayList<AndruinoObj> getDetails() {
 		ArrayList<AndruinoObj> detailList = new ArrayList<AndruinoObj>();
 		try {
@@ -59,21 +45,21 @@ public class JsonParser {
 				String ts_value = detailArray.getJSONObject(i).getString("ts_value").trim();
 //				boolean notify = detailArray.getJSONObject(i).getString("notify").equals("1") ? true : false;
 				
-				
-				//System.out.println("did: " + did + " id: " + id + " label: " + label);
 				AndruinoObj controlElt = new AndruinoObj(did, id, label, device, ddr, pin, value, enabled, ts_value/*, notify */);
 				detailList.add(controlElt);
 			}
 		}
-		catch (Exception e) {}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
 
 		return detailList;
 	}
 	
 	public String getValueByName(String name) {
 		try {
-				return jObject.getString(name);
-			}
+			return jObject.getString(name);
+		}
 		catch (Exception e) {
 			return e.toString();
 		}
