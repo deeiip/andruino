@@ -89,6 +89,7 @@ public class IOAdapter extends ArrayAdapter<AndruinoObj> {
 	            if (andrObj != null) {
                     TextView outputName = (TextView)v.findViewById(R.id.output_name);
                     TextView deviceName = (TextView)v.findViewById(R.id.device_name_out);
+                    final String displayName = andrObj.getLabel();
                     final NewToggleButton tb = (NewToggleButton)v.findViewById(R.id.change_state);
                     
                     if (outputName != null) {
@@ -105,7 +106,7 @@ public class IOAdapter extends ArrayAdapter<AndruinoObj> {
                     	    	AlertDialog.Builder alert = new AlertDialog.Builder(context);
                     	    	alert.setTitle("Confirm State Change");
                     	    	alert.setIcon(android.R.drawable.ic_dialog_alert);
-                    	    	alert.setMessage("Are you sure you want to change the state of " + "" + "?");
+                    	    	alert.setMessage("Are you sure you want to change the state of " + displayName + " to " + (andrObj.getValue() == 1 ? 0 : 1) +"?");
                     	    	
                     	    	alert.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
 								
