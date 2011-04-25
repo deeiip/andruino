@@ -22,7 +22,7 @@ public class IOAdapter extends ArrayAdapter<AndruinoObj> {
     private Context context;
     private int textViewResourceId;
     private Webduino wc;
-    private String name;
+    //private String name;
     //NewToggleButton test;
     
     public IOAdapter(Context context, int textViewResourceId, ArrayList<AndruinoObj> controls, Webduino wc) {
@@ -89,11 +89,10 @@ public class IOAdapter extends ArrayAdapter<AndruinoObj> {
 	            if (andrObj != null) {
                     TextView outputName = (TextView)v.findViewById(R.id.output_name);
                     TextView deviceName = (TextView)v.findViewById(R.id.device_name_out);
-                    NewToggleButton tb = (NewToggleButton)v.findViewById(R.id.change_state);
+                    final NewToggleButton tb = (NewToggleButton)v.findViewById(R.id.change_state);
                     
                     if (outputName != null) {
                           outputName.setText(andrObj.getLabel()); 
-                          name = andrObj.getLabel();
                     }
                     if(deviceName != null){
                           deviceName.setText("Device: " + andrObj.getDevice());
@@ -102,9 +101,7 @@ public class IOAdapter extends ArrayAdapter<AndruinoObj> {
                     	tb.setChecked(andrObj.getValue() == 1 ? true : false);
                     	tb.setOnClickListener(new OnClickListener() {
                     	    public void onClick(View v) {
-                    	    	//andrObj.setValue(andrObj.getValue() == 1 ? 0 : 1);
-                    	    	//wc.login();
-                    	        
+
                     	    	AlertDialog.Builder alert = new AlertDialog.Builder(context);
                     	    	alert.setTitle("Confirm State Change");
                     	    	alert.setIcon(android.R.drawable.ic_dialog_alert);
@@ -113,9 +110,9 @@ public class IOAdapter extends ArrayAdapter<AndruinoObj> {
                     	    	alert.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
 								
 									public void onClick(DialogInterface dialog, int which) {
-										
-										//setChecked(andrObj.getValue() == 1 ? false : true);
+										tb.setChecked(andrObj.getValue() == 1 ? false : true);
 										andrObj.setValue(andrObj.getValue() == 1 ? 0 : 1);
+										wc.login();
 										wc.write(andrObj.getId(), andrObj.getValue());
 									}
 								});
