@@ -35,7 +35,7 @@ public class Webduino {
 	    	   in.close();
 	    	   urlConnection.disconnect();
 
-	    	   if (jp.getResponse() == "pass")
+	    	   if (jp.getResponse().equals("pass"))
 	    		   return true;
 	    	   else
 	    			   return false;
@@ -129,7 +129,7 @@ public class Webduino {
 	    	   in.close();
 	    	   urlConnection.disconnect();
 	    	   
-	    	   if (jp.getResponse() == "pass")
+	    	   if (jp.getResponse().equals("pass"))
 	    		   return true;
 	    	   else
 	    		   return false;
@@ -160,7 +160,7 @@ public class Webduino {
 	    	   in.close();
 	    	   urlConnection.disconnect();
 	    	   
-	    	   if (jp.getResponse() == "pass")
+	    	   if (jp.getResponse().equals("pass"))
 	    		   return true;
 	    	   else
 	    			   return false;
@@ -191,7 +191,7 @@ public class Webduino {
 	    	   in.close();
 	    	   urlConnection.disconnect();
 	    	   
-	    	   if (jp.getResponse() == "pass")
+	    	   if (jp.getResponse().equals("pass"))
 	    		   return true;
 	    	   else
 	    			   return false;
