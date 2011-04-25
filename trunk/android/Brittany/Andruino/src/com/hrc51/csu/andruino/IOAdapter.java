@@ -22,8 +22,6 @@ public class IOAdapter extends ArrayAdapter<AndruinoObj> {
     private Context context;
     private int textViewResourceId;
     private Webduino wc;
-    //private String name;
-    //NewToggleButton test;
     
     public IOAdapter(Context context, int textViewResourceId, ArrayList<AndruinoObj> controls, Webduino wc) {
             super(context, textViewResourceId, controls);
@@ -35,17 +33,15 @@ public class IOAdapter extends ArrayAdapter<AndruinoObj> {
     
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-    	
     	View v = convertView;
             if (v == null) {
                 LayoutInflater vi = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
                 v = vi.inflate(textViewResourceId, null);
+                
+                // adding this listener so that the checkboxes in each row don't swallow the on-click event
                 v.setOnCreateContextMenuListener(new OnCreateContextMenuListener()
                 	{
-                		public void onCreateContextMenu(ContextMenu contextMenu, View view, ContextMenuInfo arg2)
-                		{
-
-                		}
+                		public void onCreateContextMenu(ContextMenu contextMenu, View view, ContextMenuInfo arg2) {}
                 	});
             }
             
@@ -113,15 +109,12 @@ public class IOAdapter extends ArrayAdapter<AndruinoObj> {
 									public void onClick(DialogInterface dialog, int which) {
 										tb.setChecked(andrObj.getValue() == 1 ? false : true);
 										andrObj.setValue(andrObj.getValue() == 1 ? 0 : 1);
-										wc.login();
 										wc.write(andrObj.getId(), andrObj.getValue());
 									}
 								});
                     	    	alert.setNegativeButton("No", new DialogInterface.OnClickListener() {
 									
-									public void onClick(DialogInterface dialog, int which) {
-										
-									}
+									public void onClick(DialogInterface dialog, int which) {}
 								});
                     	    	alert.show();
                     	    }

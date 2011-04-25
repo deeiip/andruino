@@ -55,10 +55,8 @@ public class Outputs extends ListActivity {
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		//Toast.makeText(this, "Just a test", Toast.LENGTH_SHORT).show();
-
-		switch (item.getItemId()) {
-		// We have only one menu option
+		switch (item.getItemId()) 
+		{
 		case R.id.settings:
 			// Launch Preference activity
 			Intent i = new Intent(this, Settings.class);
@@ -100,7 +98,6 @@ public class Outputs extends ListActivity {
 	  AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
 	  LinearLayout tView = (LinearLayout)info.targetView;
       TextView outName = (TextView)tView.findViewById(R.id.output_name);
-      //TextView devNameOut = (TextView)tView.findViewById(R.id.device_name_out);
       String pinName = outName.getText().toString();
       selectedObj = getObjByName(pinName);
 	  
@@ -129,40 +126,31 @@ public class Outputs extends ListActivity {
 			  }
 		  });
 		  alert.show();
-//		  Intent intent = new Intent(this, EditPin.class);
-//		  Bundle bundleData = new Bundle();
-//	      bundleData.putString("pinName", pinName);
-//	      intent.putExtras(bundleData);
-//		  this.startActivityForResult(intent, 0);
-//		  indName.setText(newLabel);
+
+
 		  break;
 	  case R.id.disable_enable:
 		  // grey out menu item if it's initially enabled
 		  if(selectedObj.getEnabled() == 1)
-		  {
-//			  indState.setImageResource(R.drawable.control_disable);
-//			  indName.setTextColor(Color.GRAY);
-//			  devNameInd.setTextColor(Color.GRAY);
 			  wc.config("disable", selectedObj.getId());
-		  }
 		  // else restore menu item if it's initially disabled
 		  else
-		  {
 			  wc.config("enable", selectedObj.getId());
-		  }
-			 //new RetrieveControlsTask().execute();
-
 		  break;
-		  
 	  }
 	  // refresh
-	  deviceOutputs = filterControls(wc.read());
-      ctrl_adapter = new IOAdapter(this, R.layout.output_row, deviceOutputs, wc);
-      setListAdapter(ctrl_adapter);
-      registerForContextMenu(this.getListView());
+	  refresh();
+	  //new RetrieveControlsTask().execute();
 	  return super.onContextItemSelected(item);
 	}
-		
+	
+	public void refresh() {
+		  deviceOutputs = filterControls(wc.read());
+	      ctrl_adapter = new IOAdapter(this, R.layout.output_row, deviceOutputs, wc);
+	      setListAdapter(ctrl_adapter);
+	      registerForContextMenu(getListView());
+	}
+	
 	public ArrayList<AndruinoObj> filterControls(ArrayList<AndruinoObj> controls) {
 		ArrayList<AndruinoObj> deviceOutputs = new ArrayList<AndruinoObj>();
 		
@@ -197,12 +185,6 @@ public class Outputs extends ListActivity {
 	        allControls = wc.read();
 	        publishProgress();
 	        return null;
-		}
-
-		@Override
-		protected void onProgressUpdate(AndruinoObj... obj) {
-			//((ArrayAdapter<AndruinoObj>)getListAdapter()).add(obj[0]);
-
 		}
 
 		@Override

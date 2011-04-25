@@ -37,10 +37,8 @@ public class Indicators extends ListActivity {
     private SharedPreferences settings;
 	private Webduino wc;
 	private Spinner selectDevice;	
-	//private String newLabel;
 	private AndruinoObj selectedObj;
 	private EditText labelEdit;
-	//private ProgressDialog progress = null;
 	
 	/** Called when the activity is first created. */
     @Override
@@ -65,7 +63,6 @@ public class Indicators extends ListActivity {
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-
 		switch (item.getItemId()) {
 		case R.id.settings:
 			// Launch Preference activity
@@ -78,17 +75,10 @@ public class Indicators extends ListActivity {
 			
 		case R.id.refresh:
 			new RetrieveControlsTask().execute();
-//	        deviceIndicators = filterControls(wc.read(), selectedDevice);
-//	        ctrl_adapter = new IOAdapter(this, R.layout.indicator_row, deviceIndicators, wc);
-//	        setListAdapter(ctrl_adapter);
-//	        registerForContextMenu(this.getListView());
 			break;
 			
 		case R.id.help:
-			//startActivity(new Intent(this, Help.class));
-			Toast.makeText(this,
-					"Server:" +settings.getString("serverurl", "csu.hrc51.com"),
-					Toast.LENGTH_LONG).show();
+			startActivity(new Intent(this, Help.class));
 			break;
 		}
 
@@ -109,9 +99,7 @@ public class Indicators extends ListActivity {
 	public boolean onContextItemSelected(MenuItem item) {
 	  AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
 	  LinearLayout tView = (LinearLayout)info.targetView;
-	  //ImageView indState = (ImageView)tView.findViewById(R.id.indicate_state);
       TextView indName = (TextView)tView.findViewById(R.id.indicator_name);
-      //TextView devNameInd = (TextView)tView.findViewById(R.id.device_name_ind);
       String pinName = indName.getText().toString();
       selectedObj = getObjByName(pinName);
 	  
@@ -121,7 +109,7 @@ public class Indicators extends ListActivity {
 		  // allow user to edit name of pin
 		  AlertDialog.Builder alert = new AlertDialog.Builder(this);
 		  LayoutInflater factory = LayoutInflater.from(this);
-          final View textEntryView = factory.inflate(R.layout.edit_pin_dialog, null);
+          final View textEntryView = factory.inflate(R.layout.edit_pin_dialog, null);          
           labelEdit = (EditText)textEntryView.findViewById(R.id.label_edit);
           labelEdit.setText(pinName);
           labelEdit.setSelectAllOnFocus(true);
@@ -135,42 +123,24 @@ public class Indicators extends ListActivity {
 			  }
 		  });
 		  alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-			  public void onClick(DialogInterface dialog, int which) {
-					
-			  }
+			  public void onClick(DialogInterface dialog, int which) {}
 		  });
 		  alert.show();
-//		  Intent intent = new Intent(this, EditPin.class);
-//		  Bundle bundleData = new Bundle();
-//	      bundleData.putString("pinName", pinName);
-//	      intent.putExtras(bundleData);
-//		  this.startActivityForResult(intent, 0);
-//		  indName.setText(newLabel);
 		  break;
+		  
 	  case R.id.disable_enable:
-		  // grey out menu item if it's initially enabled
+		  // disable item if it's initially enabled
 		  if(selectedObj.getEnabled() == 1)
-		  {
-//			  indState.setImageResource(R.drawable.control_disable);
-//			  indName.setTextColor(Color.GRAY);
-//			  devNameInd.setTextColor(Color.GRAY);
 			  wc.config("disable", selectedObj.getId());
-		  }
 		  // else restore menu item if it's initially disabled
 		  else
-		  {
 			  wc.config("enable", selectedObj.getId());
-		  }
-			 //new RetrieveControlsTask().execute();
-
 		  break;
 		  
 	  }
 	  // refresh
-	  deviceIndicators = filterControls(wc.read(), selectedDevice);
-      ctrl_adapter = new IOAdapter(this, R.layout.indicator_row, deviceIndicators, wc);
-      setListAdapter(ctrl_adapter);
-      registerForContextMenu(this.getListView());
+	  refresh();
+	  //new RetrieveControlsTask().execute();
 	  return super.onContextItemSelected(item);
 	}
 	
@@ -208,21 +178,6 @@ public class Indicators extends ListActivity {
 		return andrObj;
 	}
 	
-	//@Override
-//	protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
-//		//if (data.endsWith(EditPin.DIALOG_NAME)) {
-//		if(intent != null)
-//		{
-//			if(intent.getExtras().getString("new") != null && !intent.getExtras().getString("new").equals(""))
-//			{
-//				this.newLabel = intent.getExtras().getString("new");
-//				wc.setLabel(selectedObj.getId(), this.newLabel);
-//				//new RetrieveControlsTask().execute();
-//			}
-//		}
-//		//}
-//	}
-	
 	public void refresh() {
 		  deviceIndicators = filterControls(wc.read(), selectedDevice);
 	      ctrl_adapter = new IOAdapter(this, R.layout.indicator_row, deviceIndicators, wc);
@@ -232,8 +187,7 @@ public class Indicators extends ListActivity {
 	
 	class RetrieveControlsTask extends AsyncTask<Void, AndruinoObj, Void> {
 		ProgressDialog progress;
-		protected void onPreExecute()
-		{
+		protected void onPreExecute() {
 			progress = ProgressDialog.show(Indicators.this,"Please wait...", "Retrieving data from " + settings.getString("serverurl", null) + "...", true);
 		}
 		
@@ -242,12 +196,6 @@ public class Indicators extends ListActivity {
 	        allControls = wc.read();
 	        publishProgress();
 	        return null;
-		}
-
-		@Override
-		protected void onProgressUpdate(AndruinoObj... obj) {
-			//((ArrayAdapter<AndruinoObj>)getListAdapter()).add(obj[0]);
-
 		}
 
 		@Override
@@ -260,9 +208,7 @@ public class Indicators extends ListActivity {
 	        selectDevice.setAdapter(new ArrayAdapter<String>(Indicators.this,android.R.layout.simple_spinner_item, deviceNames));
 	        selectDevice.setOnItemSelectedListener(new OnItemSelectedListener()
 	        {
-	            public void onItemSelected(AdapterView<?> arg0, 
-	            View arg1, int arg2, long arg3) 
-	            {
+	            public void onItemSelected(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
 	                int index = selectDevice.getSelectedItemPosition();
 	                selectedDevice = deviceNames.get(index).toString();
 	                deviceIndicators = filterControls(allControls, selectedDevice);
@@ -275,8 +221,6 @@ public class Indicators extends ListActivity {
 	 
 	            public void onNothingSelected(AdapterView<?> arg0) {}
 	        });
-	        
-	        
 		}
 	}
 }
