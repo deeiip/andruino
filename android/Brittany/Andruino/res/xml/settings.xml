@@ -8,5 +8,6 @@
         <CheckBoxPreference android:key="usessl" android:title="Use HTTPS" android:summary="Does your server use SSL?"></CheckBoxPreference>
         <EditTextPreference android:key="username" android:title="User Name" android:defaultValue="matt" android:summary="Enter your username."></EditTextPreference>
         <EditTextPreference android:key="password" android:title="Password" android:defaultValue="password" android:shouldDisableView="true" android:summary="Enter your password." android:password="true"></EditTextPreference>
+        <CheckBoxPreference android:key="confirmation" android:title="Enable Confirmation" android:summary="Do you want to confirm before changing an output's state?"></CheckBoxPreference>
     </PreferenceCategory>
 </PreferenceScreen>
