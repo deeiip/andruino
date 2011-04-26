@@ -80,6 +80,21 @@ public class Indicators extends ListActivity {
 		case R.id.help:
 			startActivity(new Intent(this, Help.class));
 			break;
+			
+		case R.id.about:
+			AlertDialog.Builder about = new AlertDialog.Builder(Indicators.this);
+	    	about.setTitle("Andruino 1.0.0");
+	    	//about.setIcon(android.R.drawable.ic_dialog_alert);
+	    	about.setMessage("\u00a9" + " 2011 by Brittany Jones, Matt Kunkel, Kevin Fox, Sushant Arora. All Rights Reserved.");
+	    	
+	    	about.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+			
+				public void onClick(DialogInterface dialog, int which) {
+					dialog.dismiss();
+				}
+			});
+	    	about.show();
+			break;
 		}
 
 		return true;
