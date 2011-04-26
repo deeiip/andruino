@@ -18,7 +18,6 @@
         <activity android:name="Indicators" android:label="Indicators"></activity> 
         <activity android:name="Outputs" android:label="Outputs"></activity>
         <activity android:name="Help" android:label="Help"></activity>
-         <activity android:name="EditPin" android:label="Edit Pin Name" android:theme="@android:style/Theme.Dialog"></activity>
     </application>
     
     <uses-permission android:name="android.permission.INTERNET" />
