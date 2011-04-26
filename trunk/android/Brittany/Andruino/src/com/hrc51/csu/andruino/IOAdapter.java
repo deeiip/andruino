@@ -130,6 +130,8 @@ public class IOAdapter extends ArrayAdapter<AndruinoObj> {
                     }
                     else
                     {
+                    	//tb.setPressed(true); 
+                    	tb.setEnabled(true);
                     	outputName.setTextColor(Color.WHITE);
             			deviceName.setTextColor(Color.WHITE);
                     }
