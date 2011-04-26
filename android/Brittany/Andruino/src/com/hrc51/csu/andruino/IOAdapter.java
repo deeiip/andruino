@@ -63,7 +63,7 @@ public class IOAdapter extends ArrayAdapter<AndruinoObj> {
                     if (indicatorName != null) 
                           indicatorName.setText(andrObj.getLabel());                            
                     if(deviceName != null)
-                          deviceName.setText("Device: " + andrObj.getDevice());
+                          deviceName.setText("Device: " + andrObj.getDevice() + ", Pin: " + andrObj.getId());
                     if(andrObj.getEnabled() == 0)
                     {
           			  indicateState.setImageResource(R.drawable.control_disable);
@@ -92,7 +92,7 @@ public class IOAdapter extends ArrayAdapter<AndruinoObj> {
                           outputName.setText(andrObj.getLabel()); 
                     }
                     if(deviceName != null){
-                          deviceName.setText("Device: " + andrObj.getDevice());
+                          deviceName.setText("Device: " + andrObj.getDevice() + ", Pin: " + andrObj.getId());
                     }
                     if(tb != null){
                     	tb.setChecked(andrObj.getValue() == 1 ? true : false);
@@ -119,6 +119,19 @@ public class IOAdapter extends ArrayAdapter<AndruinoObj> {
                     	    	alert.show();
                     	    }
                     	});
+                    }
+                    if(andrObj.getEnabled() == 0)
+                    {
+          			  	//tb.setVisibility(View.INVISIBLE);
+                    	tb.setPressed(false); 
+                    	tb.setEnabled(false);
+                    	outputName.setTextColor(Color.DKGRAY);
+          			  	deviceName.setTextColor(Color.DKGRAY);
+                    }
+                    else
+                    {
+                    	outputName.setTextColor(Color.WHITE);
+            			deviceName.setTextColor(Color.WHITE);
                     }
 	            }
             	break;
