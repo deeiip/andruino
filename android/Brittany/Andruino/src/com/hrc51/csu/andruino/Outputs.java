@@ -68,15 +68,26 @@ public class Outputs extends ListActivity {
 			break;
 			
 		case R.id.refresh:
-	        allControls = wc.read();
-			deviceOutputs = filterControls(allControls);
-	        ctrl_adapter = new IOAdapter(this, R.layout.output_row, deviceOutputs, wc);
-	        setListAdapter(ctrl_adapter);
-	        registerForContextMenu(this.getListView());
+			new RetrieveControlsTask().execute();
 			break;
 			
 		case R.id.help:
 			startActivity(new Intent(this, Help.class));
+			break;
+			
+		case R.id.about:
+			AlertDialog.Builder about = new AlertDialog.Builder(Outputs.this);
+	    	about.setTitle("Andruino 1.0.0");
+	    	//about.setIcon(android.R.drawable.ic_dialog_alert);
+	    	about.setMessage("\u00a9" + " 2011 by Brittany Jones, Matt Kunkel, Kevin Fox, Sushant Arora. All Rights Reserved.");
+	    	
+	    	about.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+			
+				public void onClick(DialogInterface dialog, int which) {
+					dialog.dismiss();
+				}
+			});
+	    	about.show();
 			break;
 		}
 
