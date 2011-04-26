@@ -5,7 +5,9 @@ import java.util.ArrayList;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.preference.PreferenceManager;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.LayoutInflater;
@@ -22,6 +24,7 @@ public class IOAdapter extends ArrayAdapter<AndruinoObj> {
     private Context context;
     private int textViewResourceId;
     private Webduino wc;
+    private SharedPreferences settings;
     
     public IOAdapter(Context context, int textViewResourceId, ArrayList<AndruinoObj> controls, Webduino wc) {
             super(context, textViewResourceId, controls);
@@ -29,6 +32,7 @@ public class IOAdapter extends ArrayAdapter<AndruinoObj> {
             this.textViewResourceId = textViewResourceId;
             this.controls = controls;
             this.wc = wc;
+            this.settings = PreferenceManager.getDefaultSharedPreferences(context);
     }
     
     @Override
@@ -69,11 +73,13 @@ public class IOAdapter extends ArrayAdapter<AndruinoObj> {
           			  indicateState.setImageResource(R.drawable.control_disable);
           			  indicatorName.setTextColor(Color.DKGRAY);
           			  deviceName.setTextColor(Color.DKGRAY);
+          			  //disable checkbox
                     }
                     else
                     {
                     	indicatorName.setTextColor(Color.WHITE);
             			deviceName.setTextColor(Color.WHITE);
+            			//enable checkbox
                     }
 //                    if(notify != null)
 //                    	notify.setChecked(andrObj.isNotify());
@@ -96,29 +102,40 @@ public class IOAdapter extends ArrayAdapter<AndruinoObj> {
                     }
                     if(tb != null){
                     	tb.setChecked(andrObj.getValue() == 1 ? true : false);
-                    	tb.setOnClickListener(new OnClickListener() {
-                    	    public void onClick(View v) {
-
-                    	    	AlertDialog.Builder alert = new AlertDialog.Builder(context);
-                    	    	alert.setTitle("Confirm State Change");
-                    	    	alert.setIcon(android.R.drawable.ic_dialog_alert);
-                    	    	alert.setMessage("Are you sure you want to change the state of " + displayName + " to " + (andrObj.getValue() == 1 ? 0 : 1) +"?");
-                    	    	
-                    	    	alert.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-								
-									public void onClick(DialogInterface dialog, int which) {
-										tb.setChecked(andrObj.getValue() == 1 ? false : true);
-										andrObj.setValue(andrObj.getValue() == 1 ? 0 : 1);
-										wc.write(andrObj.getId(), andrObj.getValue());
-									}
-								});
-                    	    	alert.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    	if(settings.getBoolean("confirmation", false)){
+	                    	tb.setOnClickListener(new OnClickListener() {
+	                    	    public void onClick(View v) {
+	
+	                    	    	AlertDialog.Builder alert = new AlertDialog.Builder(context);
+	                    	    	alert.setTitle("Confirm State Change");
+	                    	    	alert.setIcon(android.R.drawable.ic_dialog_alert);
+	                    	    	alert.setMessage("Are you sure you want to change the state of " + displayName + " to " + (andrObj.getValue() == 1 ? 0 : 1) +"?");
+	                    	    	
+	                    	    	alert.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
 									
-									public void onClick(DialogInterface dialog, int which) {}
-								});
-                    	    	alert.show();
-                    	    }
-                    	});
+										public void onClick(DialogInterface dialog, int which) {
+											tb.setChecked(andrObj.getValue() == 1 ? false : true);
+											andrObj.setValue(andrObj.getValue() == 1 ? 0 : 1);
+											wc.write(andrObj.getId(), andrObj.getValue());
+										}
+									});
+	                    	    	alert.setNegativeButton("No", new DialogInterface.OnClickListener() {
+										
+										public void onClick(DialogInterface dialog, int which) {}
+									});
+	                    	    	alert.show();
+	                    	    }
+	                    	});
+                    	}
+                    	else {
+	                    	tb.setOnClickListener(new OnClickListener() {
+	                    	    public void onClick(View v) {
+	                    	    	tb.setChecked(andrObj.getValue() == 1 ? false : true);
+									andrObj.setValue(andrObj.getValue() == 1 ? 0 : 1);
+									wc.write(andrObj.getId(), andrObj.getValue());
+	                    	    }
+	                    	});
+                    	}
                     }
                     if(andrObj.getEnabled() == 0)
                     {
