@@ -7,6 +7,7 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+
 import android.content.SharedPreferences;
 
 public class Webduino {
@@ -20,12 +21,52 @@ public class Webduino {
 	public boolean login() {
 	       URL url;
 	       HttpURLConnection urlConnection;
+	       String username = serverSettings.getString("username", "matt");
+	       String password = serverSettings.getString("password", "password");
+	       
+	       try {
+	    	   if (serverSettings.getBoolean("usessl", false))
+	        	   url = new URL("https://"+serverSettings.getString("serverurl", "csu.hrc51.com")
+	        			   +":"+serverSettings.getString("serverport", "8080")+"/" 
+	        			   +username+"/"+password);
+	    	   else
+	    		   url = new URL("http://"+serverSettings.getString("serverurl", "csu.hrc51.com")
+	    				   +":"+serverSettings.getString("serverport", "8080")+"/" 
+	        			   +username+"/"+password);
+
+	    	   urlConnection = (HttpURLConnection) url.openConnection();
+	    	   urlConnection.connect();
+	    	   BufferedReader in = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
+	    	   String inputLine;
+	    	   inputLine = in.readLine();
+	    	   jp = new JsonParser(inputLine);
+	    	   in.close();
+	    	   urlConnection.disconnect();
+
+	    	   if (jp.getResponse().equals("pass"))
+	    		   return true;
+	    	   else
+	    		   return false;
+	       }
+	       catch (MalformedURLException e) {
+	    	   return false;
+	       }
+	       catch (IOException e) {
+	    	   return false;
+	       }
+	}
+	
+	public boolean logout() {
+	       URL url;
+	       HttpURLConnection urlConnection;
 
 	       try {
 	    	   if (serverSettings.getBoolean("usessl", false))
-	        	   url = new URL("https://"+serverSettings.getString("serverurl", "csu.hrc51.com")+":"+serverSettings.getString("serverport", "8080")+"/");
+	        	   url = new URL("https://"+serverSettings.getString("serverurl", "csu.hrc51.com")
+	        			   +":"+serverSettings.getString("serverport", "8080")+"/logout");
 	    	   else
-	    		   url = new URL("http://"+serverSettings.getString("serverurl", "csu.hrc51.com")+":"+serverSettings.getString("serverport", "8080")+"/");
+	    		   url = new URL("http://"+serverSettings.getString("serverurl", "csu.hrc51.com")
+	    				   +":"+serverSettings.getString("serverport", "8080")+"/logout");
 
 	    	   urlConnection = (HttpURLConnection) url.openConnection();
 	    	   BufferedReader in = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
@@ -38,7 +79,7 @@ public class Webduino {
 	    	   if (jp.getResponse().equals("pass"))
 	    		   return true;
 	    	   else
-	    			   return false;
+	    		   return false;
 	       }
 	       catch (MalformedURLException e) {
 	    	   return false;
@@ -55,9 +96,11 @@ public class Webduino {
 
 	       try {
 	    	   if (serverSettings.getBoolean("usessl", false))
-	        	   url = new URL("https://"+serverSettings.getString("serverurl", "csu.hrc51.com")+":"+serverSettings.getString("serverport", "8080")+"/");
+	        	   url = new URL("https://"+serverSettings.getString("serverurl", "csu.hrc51.com")
+	        			   +":"+serverSettings.getString("serverport", "8080")+"/");
 	    	   else
-	    		   url = new URL("http://"+serverSettings.getString("serverurl", "csu.hrc51.com")+":"+serverSettings.getString("serverport", "8080")+"/");
+	    		   url = new URL("http://"+serverSettings.getString("serverurl", "csu.hrc51.com")
+	    				   +":"+serverSettings.getString("serverport", "8080")+"/");
 
 	    	   urlConnection = (HttpURLConnection) url.openConnection();
 	    	   BufferedReader in = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
@@ -82,14 +125,18 @@ public class Webduino {
 	       URL url;
 	       HttpURLConnection urlConnection;
 	       ArrayList<AndruinoObj> alError = new ArrayList<AndruinoObj>();
-
+	       
 	       try {
 	    	   if (serverSettings.getBoolean("usessl", false))
-	        	   url = new URL("https://"+serverSettings.getString("serverurl", "csu.hrc51.com")+":"+serverSettings.getString("serverport", "8080")+"/read");	    		   
+	        	   url = new URL("https://"+serverSettings.getString("serverurl", "csu.hrc51.com")
+	        			   +":"+serverSettings.getString("serverport", "8080")+"/read");	    		   
 	    	   else
-	    		   url = new URL("http://"+serverSettings.getString("serverurl", "csu.hrc51.com")+":"+serverSettings.getString("serverport", "8080")+"/read");
+	    		   url = new URL("http://"+serverSettings.getString("serverurl", "csu.hrc51.com")
+	    				   +":"+serverSettings.getString("serverport", "8080")+"/read");
 
 	    	   urlConnection = (HttpURLConnection) url.openConnection();
+	    	   urlConnection.connect();
+
 	    	   BufferedReader in = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
 	    	   String inputLine;
 	    	   inputLine = in.readLine();
@@ -117,9 +164,11 @@ public class Webduino {
 
 	       try {
 	    	   if (serverSettings.getBoolean("usessl", false))
-	        	   url = new URL("https://"+serverSettings.getString("serverurl", "csu.hrc51.com")+":"+serverSettings.getString("serverport", "8080")+"/write/"+did+"/"+value);
+	        	   url = new URL("https://"+serverSettings.getString("serverurl", "csu.hrc51.com")
+	        			   +":"+serverSettings.getString("serverport", "8080")+"/write/"+did+"/"+value);
 	    	   else
-	    		   url = new URL("http://"+serverSettings.getString("serverurl", "csu.hrc51.com")+":"+serverSettings.getString("serverport", "8080")+"/write/"+did+"/"+value);
+	    		   url = new URL("http://"+serverSettings.getString("serverurl", "csu.hrc51.com")
+	    				   +":"+serverSettings.getString("serverport", "8080")+"/write/"+did+"/"+value);
 
 	    	   urlConnection = (HttpURLConnection) url.openConnection();
 	    	   BufferedReader in = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
@@ -142,15 +191,18 @@ public class Webduino {
 	       }
 	}
 
-	public boolean config(String action, int did) {
+	public boolean enable(boolean isEnabled, int did) {
 	       URL url;
 	       HttpURLConnection urlConnection;
+    	   String action = isEnabled ? "enable" : "disable";
 
 	       try {
 	    	   if (serverSettings.getBoolean("usessl", false))
-	        	   url = new URL("https://"+serverSettings.getString("serverurl", "csu.hrc51.com")+":"+serverSettings.getString("serverport", "8080")+"/"+action+"/pin/"+did);
+	        	   url = new URL("https://"+serverSettings.getString("serverurl", "csu.hrc51.com")
+	        			   +":"+serverSettings.getString("serverport", "8080")+"/"+action+"/pin/"+did);
 	    	   else
-	    		   url = new URL("http://"+serverSettings.getString("serverurl", "csu.hrc51.com")+":"+serverSettings.getString("serverport", "8080")+"/"+action+"/pin/"+did);
+	    		   url = new URL("http://"+serverSettings.getString("serverurl", "csu.hrc51.com")
+	    				   +":"+serverSettings.getString("serverport", "8080")+"/"+action+"/pin/"+did);
 
 	    	   urlConnection = (HttpURLConnection) url.openConnection();
 	    	   BufferedReader in = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
@@ -179,9 +231,13 @@ public class Webduino {
 
 	       try {
 	    	   if (serverSettings.getBoolean("usessl", false))
-	        	   url = new URL("https://"+serverSettings.getString("serverurl", "csu.hrc51.com")+":"+serverSettings.getString("serverport", "8080")+"/setlabel/pin/"+did+"/"+newLabel);
+	        	   url = new URL("https://"+serverSettings.getString("serverurl", "csu.hrc51.com")
+	        			   +":"+serverSettings.getString("serverport", "8080")+"/setlabel/pin/"+did+"/"
+	        			   +newLabel);
 	    	   else
-	    		   url = new URL("http://"+serverSettings.getString("serverurl", "csu.hrc51.com")+":"+serverSettings.getString("serverport", "8080")+"/setlabel/pin/"+did+"/"+newLabel);
+	    		   url = new URL("http://"+serverSettings.getString("serverurl", "csu.hrc51.com")
+	    				   +":"+serverSettings.getString("serverport", "8080")+"/setlabel/pin/"+did+"/"
+	    				   +newLabel);
 
 	    	   urlConnection = (HttpURLConnection) url.openConnection();
 	    	   BufferedReader in = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
