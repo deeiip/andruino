@@ -143,10 +143,10 @@ public class Outputs extends ListActivity {
 	  case R.id.disable_enable:
 		  // grey out menu item if it's initially enabled
 		  if(selectedObj.getEnabled() == 1)
-			  wc.config("disable", selectedObj.getId());
+			  wc.enable(false, selectedObj.getId());
 		  // else restore menu item if it's initially disabled
 		  else
-			  wc.config("enable", selectedObj.getId());
+			  wc.enable(true, selectedObj.getId());
 		  break;
 	  }
 	  // refresh
