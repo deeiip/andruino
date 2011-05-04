@@ -14,12 +14,15 @@
     <Spinner android:layout_height="wrap_content" 
     	android:layout_width="fill_parent" 
     	android:id="@+id/selectDevice"/>
+   <!-- 
     <TextView android:id="@+id/textView2" 
     	android:layout_width="fill_parent" 
     	android:layout_height="wrap_content" 
     	android:text="Check the box next to an indicator to enable notifications for that particular input\n"
     	android:textStyle="italic"
     	android:gravity="center_horizontal"/>	
+     -->
+     	
     <ListView android:layout_height="wrap_content" 
     	android:layout_width="fill_parent" 
     	android:id="@+id/android:list"/>
