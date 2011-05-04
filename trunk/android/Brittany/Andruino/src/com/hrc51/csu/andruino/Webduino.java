@@ -7,38 +7,50 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
-
 import android.content.SharedPreferences;
 
 public class Webduino {
 	SharedPreferences serverSettings;
 	JsonParser jp;
+	HttpURLConnection urlConnection;
+	private boolean authenticated;
+	private boolean useSSL;
+	private String serverURL;
+	private String serverPort;
+	private String username;
+	private String password;
+	private String cookieJar;
 
 	public Webduino(SharedPreferences settings) {
-		serverSettings = settings;
+		updateSettings(settings);
 	}
-	
+
+	public void updateSettings(SharedPreferences settings){
+		serverSettings = settings;
+		useSSL = serverSettings.getBoolean("usessl", false);
+		serverURL = serverSettings.getString("serverurl", "csu.hrc51.com");
+		serverPort = serverSettings.getString("serverport", "8080");
+	    username = serverSettings.getString("username", "matt");
+	    password = serverSettings.getString("password", "password");
+	}
+
 	public boolean login() {
 	       URL url;
-	       HttpURLConnection urlConnection;
-	       String username = serverSettings.getString("username", "matt");
-	       String password = serverSettings.getString("password", "password");
-	       
 	       try {
-	    	   if (serverSettings.getBoolean("usessl", false))
-	        	   url = new URL("https://"+serverSettings.getString("serverurl", "csu.hrc51.com")
-	        			   +":"+serverSettings.getString("serverport", "8080")+"/" 
-	        			   +username+"/"+password);
-	    	   else
-	    		   url = new URL("http://"+serverSettings.getString("serverurl", "csu.hrc51.com")
-	    				   +":"+serverSettings.getString("serverport", "8080")+"/" 
-	        			   +username+"/"+password);
+	    	   if (useSSL)
+	        	   url = new URL("https://"+serverURL+":"+serverPort+"/login/"+username+"/"+password);
+	    	   else // don't use ssl
+	    		   url = new URL("http://"+serverURL+":"+serverPort+"/login/"+username+"/"+password);
 
 	    	   urlConnection = (HttpURLConnection) url.openConnection();
+<<<<<<< .mine
+	    	   cookieJar = urlConnection.getHeaderField("Set-Cookie");
+=======
 	    	   
 	    	   // setting cookies
 	    	   urlConnection.setRequestProperty("cookie", "username="+username+"; password="+password);
 	    	   urlConnection.connect();
+>>>>>>> .r271
 	    	   
 	    	   BufferedReader in = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
 	    	   String inputLine;
@@ -48,29 +60,35 @@ public class Webduino {
 	    	   urlConnection.disconnect();
 
 	    	   if (jp.getResponse().equals("pass"))
+	    	   {
+	    		   authenticated = true;
 	    		   return true;
+	    	   }
 	    	   else
+	    	   {
+	    		   authenticated = false;
 	    		   return false;
+	    	   }
 	       }
 	       catch (MalformedURLException e) {
+    		   authenticated = false;
 	    	   return false;
 	       }
 	       catch (IOException e) {
+    		   authenticated = false;
 	    	   return false;
 	       }
 	}
 	
 	public boolean logout() {
-	       URL url;
-	       HttpURLConnection urlConnection;
+	       if (!authenticated) return true;
 
+	       URL url;
 	       try {
-	    	   if (serverSettings.getBoolean("usessl", false))
-	        	   url = new URL("https://"+serverSettings.getString("serverurl", "csu.hrc51.com")
-	        			   +":"+serverSettings.getString("serverport", "8080")+"/logout");
-	    	   else
-	    		   url = new URL("http://"+serverSettings.getString("serverurl", "csu.hrc51.com")
-	    				   +":"+serverSettings.getString("serverport", "8080")+"/logout");
+	    	   if (useSSL)
+	        	   url = new URL("https://"+serverURL+":"+serverPort+"/logout");
+	    	   else // don't use ssl
+	    		   url = new URL("http://"+serverURL+":"+serverPort+"/logout");
 
 	    	   urlConnection = (HttpURLConnection) url.openConnection();
 	    	   BufferedReader in = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
@@ -79,68 +97,36 @@ public class Webduino {
 	    	   jp = new JsonParser(inputLine);
 	    	   in.close();
 	    	   urlConnection.disconnect();
+    		   authenticated = false;
 
-	    	   if (jp.getResponse().equals("pass"))
-	    		   return true;
-	    	   else
-	    		   return false;
+	    	   if (jp.getResponse().equals("pass")) return true;
+	    	   else return false;
 	       }
-	       catch (MalformedURLException e) {
-	    	   return false;
-	       }
-	       catch (IOException e) {
-	    	   return false;
-	       }
-	}
-	
-	public String index() {
-	       URL url;
-	       HttpURLConnection urlConnection;
-	       String response;
-
-	       try {
-	    	   if (serverSettings.getBoolean("usessl", false))
-	        	   url = new URL("https://"+serverSettings.getString("serverurl", "csu.hrc51.com")
-	        			   +":"+serverSettings.getString("serverport", "8080")+"/");
-	    	   else
-	    		   url = new URL("http://"+serverSettings.getString("serverurl", "csu.hrc51.com")
-	    				   +":"+serverSettings.getString("serverport", "8080")+"/");
-
-	    	   urlConnection = (HttpURLConnection) url.openConnection();
-	    	   BufferedReader in = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
-	    	   String inputLine;
-	    	   inputLine = in.readLine();
-	    	   jp = new JsonParser(inputLine);
-	    	   response = "Command: " + jp.getCommand() + "\n";
-	    	   response += "Response: " + jp.getResponse() + "\n";
-	    	   in.close();
-	    	   urlConnection.disconnect();
-	    	   return response;
-	       }
-	       catch (MalformedURLException e) {
-	    	   return("url Error");
-	       }
-	       catch (IOException e) {
-	    	   return("IO Error: "+e);
-	       }
+	       catch (MalformedURLException e) { return false; }
+	       catch (IOException e) { return false; }
 	}
 	
 	public ArrayList<AndruinoObj> read() {
+	       if (!authenticated) login();
+
 	       URL url;
-	       HttpURLConnection urlConnection;
 	       ArrayList<AndruinoObj> alError = new ArrayList<AndruinoObj>();
+<<<<<<< .mine
+=======
 	       String username;
 	       String password;
 	       
+>>>>>>> .r271
 	       try {
-	    	   if (serverSettings.getBoolean("usessl", false))
-	        	   url = new URL("https://"+serverSettings.getString("serverurl", "csu.hrc51.com")
-	        			   +":"+serverSettings.getString("serverport", "8080")+"/read");	    		   
-	    	   else
-	    		   url = new URL("http://"+serverSettings.getString("serverurl", "csu.hrc51.com")
-	    				   +":"+serverSettings.getString("serverport", "8080")+"/read");
+	    	   if (useSSL)
+	        	   url = new URL("https://"+serverURL+":"+serverPort+"/read");
+	    	   else // don't use ssl
+	    		   url = new URL("http://"+serverURL+":"+serverPort+"/read");
 
 	    	   urlConnection = (HttpURLConnection) url.openConnection();
+<<<<<<< .mine
+	    	   urlConnection.setRequestProperty("Cookie",cookieJar);
+=======
 	    	   
 	    	   //getting cookies from server
 	    	    for (int i=0; ; i++) {
@@ -175,11 +161,11 @@ public class Webduino {
 	    	   
 	    	   urlConnection.connect();
 
+>>>>>>> .r271
 	    	   BufferedReader in = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
 	    	   String inputLine;
 	    	   inputLine = in.readLine();
 	    	   jp = new JsonParser(inputLine);
-	    	   	    	   
 	    	   in.close();
 	    	   urlConnection.disconnect();
 	    	   return jp.getDetails();
@@ -197,18 +183,17 @@ public class Webduino {
 	}
 	
 	public boolean write(int did, int value) {
-	       URL url;
-	       HttpURLConnection urlConnection;
+	       if (!authenticated) login();
 
+	       URL url;
 	       try {
-	    	   if (serverSettings.getBoolean("usessl", false))
-	        	   url = new URL("https://"+serverSettings.getString("serverurl", "csu.hrc51.com")
-	        			   +":"+serverSettings.getString("serverport", "8080")+"/write/"+did+"/"+value);
-	    	   else
-	    		   url = new URL("http://"+serverSettings.getString("serverurl", "csu.hrc51.com")
-	    				   +":"+serverSettings.getString("serverport", "8080")+"/write/"+did+"/"+value);
+	    	   if (useSSL)
+	        	   url = new URL("https://"+serverURL+":"+serverPort+"/write/"+did+"/"+value);
+	    	   else // don't use ssl
+	    		   url = new URL("http://"+serverURL+":"+serverPort+"/write/"+did+"/"+value);
 
 	    	   urlConnection = (HttpURLConnection) url.openConnection();
+	    	   urlConnection.setRequestProperty("Cookie",cookieJar);
 	    	   BufferedReader in = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
 	    	   String inputLine;
 	    	   inputLine = in.readLine();
@@ -216,33 +201,26 @@ public class Webduino {
 	    	   in.close();
 	    	   urlConnection.disconnect();
 	    	   
-	    	   if (jp.getResponse().equals("pass"))
-	    		   return true;
-	    	   else
-	    		   return false;
+	    	   if (jp.getResponse().equals("pass")) return true;
+	    	   else return false;
 	       }
-	       catch (MalformedURLException e) {
-	    	   return false;
-	       }
-	       catch (IOException e) {
-	    	   return false;
-	       }
+	       catch (MalformedURLException e) { return false; }
+	       catch (IOException e) { return false; }
 	}
 
 	public boolean enable(boolean isEnabled, int did) {
-	       URL url;
-	       HttpURLConnection urlConnection;
-    	   String action = isEnabled ? "enable" : "disable";
+	       if (!authenticated) login();
 
+	       URL url;
+    	   String action = isEnabled ? "enable" : "disable";
 	       try {
-	    	   if (serverSettings.getBoolean("usessl", false))
-	        	   url = new URL("https://"+serverSettings.getString("serverurl", "csu.hrc51.com")
-	        			   +":"+serverSettings.getString("serverport", "8080")+"/"+action+"/pin/"+did);
-	    	   else
-	    		   url = new URL("http://"+serverSettings.getString("serverurl", "csu.hrc51.com")
-	    				   +":"+serverSettings.getString("serverport", "8080")+"/"+action+"/pin/"+did);
+	    	   if (useSSL)
+	        	   url = new URL("https://"+serverURL+":"+serverPort+"/"+action+"/pin/"+did);
+	    	   else // don't use ssl
+	    		   url = new URL("http://"+serverURL+":"+serverPort+"/"+action+"/pin/"+did);
 
 	    	   urlConnection = (HttpURLConnection) url.openConnection();
+	    	   urlConnection.setRequestProperty("Cookie",cookieJar);
 	    	   BufferedReader in = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
 	    	   String inputLine;
 	    	   inputLine = in.readLine();
@@ -250,51 +228,36 @@ public class Webduino {
 	    	   in.close();
 	    	   urlConnection.disconnect();
 	    	   
-	    	   if (jp.getResponse().equals("pass"))
-	    		   return true;
-	    	   else
-	    			   return false;
+	    	   if (jp.getResponse().equals("pass")) return true;
+	    	   else return false;
 	       }
-	       catch (MalformedURLException e) {
-	    	   return false;
-	       }
-	       catch (IOException e) {
-	    	   return false;
-	       }
+	       catch (MalformedURLException e) { return false; }
+	       catch (IOException e) { return false; }
 	}
 	
 	public boolean setLabel(int did, String newLabel) {
-	       URL url;
-	       HttpURLConnection urlConnection;
+	       if (!authenticated) login();
 
+	       URL url;
 	       try {
-	    	   if (serverSettings.getBoolean("usessl", false))
-	        	   url = new URL("https://"+serverSettings.getString("serverurl", "csu.hrc51.com")
-	        			   +":"+serverSettings.getString("serverport", "8080")+"/setlabel/pin/"+did+"/"
-	        			   +newLabel);
-	    	   else
-	    		   url = new URL("http://"+serverSettings.getString("serverurl", "csu.hrc51.com")
-	    				   +":"+serverSettings.getString("serverport", "8080")+"/setlabel/pin/"+did+"/"
-	    				   +newLabel);
+	    	   if (useSSL)
+	        	   url = new URL("https://"+serverURL+":"+serverPort+"/setlabel/pin/"+did+"/"+newLabel);
+	    	   else // don't use ssl
+	    		   url = new URL("http://"+serverURL+":"+serverPort+"/setlabel/pin/"+did+"/"+newLabel);
 
 	    	   urlConnection = (HttpURLConnection) url.openConnection();
+	    	   urlConnection.setRequestProperty("Cookie",cookieJar);
 	    	   BufferedReader in = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
 	    	   String inputLine;
 	    	   inputLine = in.readLine();
 	    	   jp = new JsonParser(inputLine);
 	    	   in.close();
 	    	   urlConnection.disconnect();
-	    	   
-	    	   if (jp.getResponse().equals("pass"))
-	    		   return true;
-	    	   else
-	    			   return false;
+
+	    	   if (jp.getResponse().equals("pass")) return true;
+	    	   else return false;
 	       }
-	       catch (MalformedURLException e) {
-	    	   return false;
-	       }
-	       catch (IOException e) {
-	    	   return false;
-	       }
+	       catch (MalformedURLException e) { return false; }
+	       catch (IOException e) { return false; }
 	}
 }
