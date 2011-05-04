@@ -84,9 +84,7 @@ public class Indicators extends ListActivity {
 		case R.id.about:
 			AlertDialog.Builder about = new AlertDialog.Builder(Indicators.this);
 	    	about.setTitle("Andruino 1.0.0");
-	    	//about.setIcon(android.R.drawable.ic_dialog_alert);
 	    	about.setMessage("\u00a9" + " 2011 by Brittany Jones, Matt Kunkel, Kevin Fox, Sushant Arora. All Rights Reserved.");
-	    	
 	    	about.setPositiveButton("OK", new DialogInterface.OnClickListener() {
 			
 				public void onClick(DialogInterface dialog, int which) {
@@ -114,7 +112,7 @@ public class Indicators extends ListActivity {
 	public boolean onContextItemSelected(MenuItem item) {
 	  AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
 	  LinearLayout tView = (LinearLayout)info.targetView;
-      TextView indName = (TextView)tView.findViewById(R.id.indicator_name);
+      final TextView indName = (TextView)tView.findViewById(R.id.indicator_name);
       String pinName = indName.getText().toString();
       selectedObj = getObjByName(pinName);
 	  
@@ -135,6 +133,7 @@ public class Indicators extends ListActivity {
 			  public void onClick(DialogInterface dialog, int which) {
 				  String newLabel = labelEdit.getText().toString();
 				  wc.setLabel(selectedObj.getId(), newLabel);
+				  refresh();
 			  }
 		  });
 		  alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -150,12 +149,10 @@ public class Indicators extends ListActivity {
 		  // else restore menu item if it's initially disabled
 		  else
 			  wc.enable(true, selectedObj.getId());
+		  refresh();
 		  break;
-		  
 	  }
-	  // refresh
-	  refresh();
-	  //new RetrieveControlsTask().execute();
+	  
 	  return super.onContextItemSelected(item);
 	}
 	
