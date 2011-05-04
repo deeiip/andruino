@@ -43,15 +43,7 @@ public class Webduino {
 	    		   url = new URL("http://"+serverURL+":"+serverPort+"/login/"+username+"/"+password);
 
 	    	   urlConnection = (HttpURLConnection) url.openConnection();
-<<<<<<< .mine
 	    	   cookieJar = urlConnection.getHeaderField("Set-Cookie");
-=======
-	    	   
-	    	   // setting cookies
-	    	   urlConnection.setRequestProperty("cookie", "username="+username+"; password="+password);
-	    	   urlConnection.connect();
->>>>>>> .r271
-	    	   
 	    	   BufferedReader in = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
 	    	   String inputLine;
 	    	   inputLine = in.readLine();
@@ -111,12 +103,6 @@ public class Webduino {
 
 	       URL url;
 	       ArrayList<AndruinoObj> alError = new ArrayList<AndruinoObj>();
-<<<<<<< .mine
-=======
-	       String username;
-	       String password;
-	       
->>>>>>> .r271
 	       try {
 	    	   if (useSSL)
 	        	   url = new URL("https://"+serverURL+":"+serverPort+"/read");
@@ -124,44 +110,7 @@ public class Webduino {
 	    		   url = new URL("http://"+serverURL+":"+serverPort+"/read");
 
 	    	   urlConnection = (HttpURLConnection) url.openConnection();
-<<<<<<< .mine
 	    	   urlConnection.setRequestProperty("Cookie",cookieJar);
-=======
-	    	   
-	    	   //getting cookies from server
-	    	    for (int i=0; ; i++) {
-	    	        String headerName = urlConnection.getHeaderFieldKey(i);
-	    	        String headerValue = urlConnection.getHeaderField(i);
-
-	    	        if (headerName == null && headerValue == null) {
-	    	            // No more headers
-	    	            break;
-	    	        }
-	    	        if ("Set-Cookie".equalsIgnoreCase(headerName)) {
-	    	            // Parse cookies
-	    	            String[] fields = headerValue.split(";\\s*");
-
-	    	            // Parse each field
-	    	            for (int j=1; j<fields.length; j++) {
-	    	            	if(fields[j].contains("username"))
-	    	            	{
-	    	            		username = fields[j].substring(fields[j].indexOf("=") + 1, fields[j].length());
-	    	            	}
-	    	            	else if(fields[j].contains("password"))
-	    	            	{
-	    	            		password = fields[j].substring(fields[j].indexOf("=") + 1, fields[j].length());
-	    	            	}
-	    	            }
-
-	    	            // Save the cookie...
-	    	        }
-	    	    }
-	    	   
-	    	   
-	    	   
-	    	   urlConnection.connect();
-
->>>>>>> .r271
 	    	   BufferedReader in = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
 	    	   String inputLine;
 	    	   inputLine = in.readLine();
