@@ -7,6 +7,7 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+
 import android.content.SharedPreferences;
 
 public class Webduino {
@@ -44,11 +45,19 @@ public class Webduino {
 
 	    	   urlConnection = (HttpURLConnection) url.openConnection();
 	    	   cookieJar = urlConnection.getHeaderField("Set-Cookie");
-	    	   BufferedReader in = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
-	    	   String inputLine;
-	    	   inputLine = in.readLine();
-	    	   jp = new JsonParser(inputLine);
-	    	   in.close();
+	    	   
+	    	   BufferedReader in;
+	    	   try {
+		    	   in = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
+		    	   String inputLine;
+		    	   inputLine = in.readLine();
+		    	   jp = new JsonParser(inputLine);
+		    	   in.close();
+	    	   }
+	    	   catch (IOException e){
+	    		   login();
+	    	   }
+	    	   
 	    	   urlConnection.disconnect();
 
 	    	   if (jp.getResponse().equals("pass"))
@@ -83,11 +92,19 @@ public class Webduino {
 	    		   url = new URL("http://"+serverURL+":"+serverPort+"/logout");
 
 	    	   urlConnection = (HttpURLConnection) url.openConnection();
-	    	   BufferedReader in = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
-	    	   String inputLine;
-	    	   inputLine = in.readLine();
-	    	   jp = new JsonParser(inputLine);
-	    	   in.close();
+	    	   
+	    	   BufferedReader in;
+	    	   try {
+		    	   in = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
+		    	   String inputLine;
+		    	   inputLine = in.readLine();
+		    	   jp = new JsonParser(inputLine);
+		    	   in.close();
+	    	   }
+	    	   catch (IOException e){
+	    		   logout();
+	    	   }
+	    	   
 	    	   urlConnection.disconnect();
     		   authenticated = false;
 
@@ -111,11 +128,18 @@ public class Webduino {
 
 	    	   urlConnection = (HttpURLConnection) url.openConnection();
 	    	   urlConnection.setRequestProperty("Cookie",cookieJar);
-	    	   BufferedReader in = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
-	    	   String inputLine;
-	    	   inputLine = in.readLine();
-	    	   jp = new JsonParser(inputLine);
-	    	   in.close();
+	    	   
+	    	   BufferedReader in;
+	    	   try {
+		    	   in = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
+		    	   String inputLine;
+		    	   inputLine = in.readLine();
+		    	   jp = new JsonParser(inputLine);
+		    	   in.close();
+	    	   }
+	    	   catch (IOException e){
+	    		   read();
+	    	   }
 	    	   urlConnection.disconnect();
 	    	   return jp.getDetails();
 	       }
@@ -143,11 +167,19 @@ public class Webduino {
 
 	    	   urlConnection = (HttpURLConnection) url.openConnection();
 	    	   urlConnection.setRequestProperty("Cookie",cookieJar);
-	    	   BufferedReader in = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
-	    	   String inputLine;
-	    	   inputLine = in.readLine();
-	    	   jp = new JsonParser(inputLine);
-	    	   in.close();
+	    	   
+	    	   BufferedReader in;
+	    	   try {
+		    	   in = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
+		    	   String inputLine;
+		    	   inputLine = in.readLine();
+		    	   jp = new JsonParser(inputLine);
+		    	   in.close();
+	    	   }
+	    	   catch (IOException e){
+	    		   write(did, value);
+	    	   }
+	    	   
 	    	   urlConnection.disconnect();
 	    	   
 	    	   if (jp.getResponse().equals("pass")) return true;
@@ -170,11 +202,19 @@ public class Webduino {
 
 	    	   urlConnection = (HttpURLConnection) url.openConnection();
 	    	   urlConnection.setRequestProperty("Cookie",cookieJar);
-	    	   BufferedReader in = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
-	    	   String inputLine;
-	    	   inputLine = in.readLine();
-	    	   jp = new JsonParser(inputLine);
-	    	   in.close();
+
+	    	   BufferedReader in;
+	    	   try {
+		    	   in = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
+		    	   String inputLine;
+		    	   inputLine = in.readLine();
+		    	   jp = new JsonParser(inputLine);
+		    	   in.close();
+	    	   }
+	    	   catch (IOException e){
+	    		   enable(isEnabled, did);
+	    	   }
+	    	   
 	    	   urlConnection.disconnect();
 	    	   
 	    	   if (jp.getResponse().equals("pass")) return true;
@@ -196,11 +236,19 @@ public class Webduino {
 
 	    	   urlConnection = (HttpURLConnection) url.openConnection();
 	    	   urlConnection.setRequestProperty("Cookie",cookieJar);
-	    	   BufferedReader in = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
-	    	   String inputLine;
-	    	   inputLine = in.readLine();
-	    	   jp = new JsonParser(inputLine);
-	    	   in.close();
+	    	   
+	    	   BufferedReader in;
+	    	   try {
+		    	   in = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
+		    	   String inputLine;
+		    	   inputLine = in.readLine();
+		    	   jp = new JsonParser(inputLine);
+		    	   in.close();
+	    	   }
+	    	   catch (IOException e){
+	    		   setLabel(did, newLabel);
+	    	   }
+	    	   
 	    	   urlConnection.disconnect();
 
 	    	   if (jp.getResponse().equals("pass")) return true;

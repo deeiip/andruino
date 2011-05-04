@@ -23,7 +23,7 @@ public class Help extends Activity {
         TextView editServerInfo = (TextView)findViewById(R.id.editServerInfo);
         TextView enableHTTPS = (TextView)findViewById(R.id.enableHTTPS);
         TextView editCredentials = (TextView)findViewById(R.id.editCredentials);
-        TextView enableConfirm = (TextView)findViewById(R.id.enableConfirm);
+//        TextView enableConfirm = (TextView)findViewById(R.id.enableConfirm);
 
         
         // defining information to be displayed in the TextViews
@@ -66,8 +66,8 @@ public class Help extends Activity {
         String editC = "Select the list item titled \"User Name\" to edit the username associated with " +
         		"the server connection and select \"Password\" to edit the password associated with the " +
         		"server connection.\n";
-        String enableC = "Check the box for the list item titled \"Enable Confirmation\" in order to be " +
-        		"prompted for a confirmation prior to changing the state of an output on the Outputs page.";
+//        String enableC = "Check the box for the list item titled \"Enable Confirmation\" in order to be " +
+//        		"prompted for a confirmation prior to changing the state of an output on the Outputs page.";
 
 
         // updating TextViews with information
@@ -82,7 +82,7 @@ public class Help extends Activity {
         editServerInfo.setText(editS);
         enableHTTPS.setText(enableH);
         editCredentials.setText(editC);
-        enableConfirm.setText(enableC);
+//        enableConfirm.setText(enableC);
 
     }
 }

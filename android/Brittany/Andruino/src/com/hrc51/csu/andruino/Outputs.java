@@ -112,13 +112,13 @@ public class Outputs extends ListActivity {
       String pinName = outName.getText().toString();
       selectedObj = getObjByName(pinName);
 	  
-	  switch(item.getItemId())
+      switch(item.getItemId())
 	  {
 	  case R.id.edit_name:
 		  // allow user to edit name of pin
 		  AlertDialog.Builder alert = new AlertDialog.Builder(this);
 		  LayoutInflater factory = LayoutInflater.from(this);
-          final View textEntryView = factory.inflate(R.layout.edit_pin_dialog, null);
+          final View textEntryView = factory.inflate(R.layout.edit_pin_dialog, null);          
           labelEdit = (EditText)textEntryView.findViewById(R.id.label_edit);
           labelEdit.setText(pinName);
           labelEdit.setSelectAllOnFocus(true);
@@ -129,29 +129,26 @@ public class Outputs extends ListActivity {
 			  public void onClick(DialogInterface dialog, int which) {
 				  String newLabel = labelEdit.getText().toString();
 				  wc.setLabel(selectedObj.getId(), newLabel);
+				  refresh();
 			  }
 		  });
 		  alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-			  public void onClick(DialogInterface dialog, int which) {
-					
-			  }
+			  public void onClick(DialogInterface dialog, int which) {}
 		  });
 		  alert.show();
-
-
 		  break;
+		  
 	  case R.id.disable_enable:
-		  // grey out menu item if it's initially enabled
+		  // disable item if it's initially enabled
 		  if(selectedObj.getEnabled() == 1)
 			  wc.enable(false, selectedObj.getId());
 		  // else restore menu item if it's initially disabled
 		  else
 			  wc.enable(true, selectedObj.getId());
+		  refresh();
 		  break;
 	  }
-	  // refresh
-	  refresh();
-	  //new RetrieveControlsTask().execute();
+
 	  return super.onContextItemSelected(item);
 	}
 	

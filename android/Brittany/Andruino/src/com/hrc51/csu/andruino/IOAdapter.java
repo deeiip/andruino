@@ -16,7 +16,6 @@ import android.view.View.OnClickListener;
 import android.view.View.OnCreateContextMenuListener;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -59,7 +58,7 @@ public class IOAdapter extends ArrayAdapter<AndruinoObj> {
                     ImageView indicateState = (ImageView) v.findViewById(R.id.indicate_state);
             		TextView indicatorName = (TextView) v.findViewById(R.id.indicator_name);
                     TextView deviceName = (TextView) v.findViewById(R.id.device_name_ind);
-                    CheckBox notify = (CheckBox)v.findViewById(R.id.notify);
+                    //CheckBox notify = (CheckBox)v.findViewById(R.id.notify);
                     if(indicateState != null)
                     {
                     	int resourceId = andrObj.getValue() == 1 ? R.drawable.control_on : R.drawable.control_off;
@@ -74,13 +73,13 @@ public class IOAdapter extends ArrayAdapter<AndruinoObj> {
           			  indicateState.setImageResource(R.drawable.control_disable);
           			  indicatorName.setTextColor(Color.DKGRAY);
           			  deviceName.setTextColor(Color.DKGRAY);
-          			  notify.setEnabled(false);
+          			  //notify.setEnabled(false);
                     }
                     else
                     {
                     	indicatorName.setTextColor(Color.WHITE);
             			deviceName.setTextColor(Color.WHITE);
-            			notify.setEnabled(true);
+            			//notify.setEnabled(true);
                     }
 //                    if(notify != null)
 //                    	notify.setChecked(andrObj.isNotify());
@@ -140,7 +139,6 @@ public class IOAdapter extends ArrayAdapter<AndruinoObj> {
                     }
                     if(andrObj.getEnabled() == 0)
                     {
-          			  	//tb.setVisibility(View.INVISIBLE);
                     	tb.setPressed(false); 
                     	tb.setEnabled(false);
                     	outputName.setTextColor(Color.DKGRAY);
@@ -148,7 +146,6 @@ public class IOAdapter extends ArrayAdapter<AndruinoObj> {
                     }
                     else
                     {
-                    	//tb.setPressed(true); 
                     	tb.setEnabled(true);
                     	outputName.setTextColor(Color.WHITE);
             			deviceName.setTextColor(Color.WHITE);

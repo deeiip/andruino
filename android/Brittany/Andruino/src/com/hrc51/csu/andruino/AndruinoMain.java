@@ -13,10 +13,10 @@ public class AndruinoMain extends TabActivity {
 	    super.onCreate(savedInstanceState);
 	    setContentView(R.layout.main);
 
-	    Resources res = getResources(); // Resource object to get Drawables
-	    TabHost tabHost = getTabHost();  // The activity TabHost
-	    TabSpec spec;  // Reusable TabSpec for each tab
-	    Intent intent;  // Reusable Intent for each tab
+	    Resources res = getResources();
+	    TabHost tabHost = getTabHost(); 
+	    TabSpec spec; 
+	    Intent intent;  
 
 	    // Create an Intent to launch an Activity for the tab (to be reused)
 	    intent = new Intent().setClass(this, Indicators.class);
