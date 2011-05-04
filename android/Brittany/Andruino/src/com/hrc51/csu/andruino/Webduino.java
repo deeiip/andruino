@@ -35,7 +35,11 @@ public class Webduino {
 	        			   +username+"/"+password);
 
 	    	   urlConnection = (HttpURLConnection) url.openConnection();
+	    	   
+	    	   // setting cookies
+	    	   urlConnection.setRequestProperty("cookie", "username="+username+"; password="+password);
 	    	   urlConnection.connect();
+	    	   
 	    	   BufferedReader in = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
 	    	   String inputLine;
 	    	   inputLine = in.readLine();
@@ -125,6 +129,8 @@ public class Webduino {
 	       URL url;
 	       HttpURLConnection urlConnection;
 	       ArrayList<AndruinoObj> alError = new ArrayList<AndruinoObj>();
+	       String username;
+	       String password;
 	       
 	       try {
 	    	   if (serverSettings.getBoolean("usessl", false))
@@ -135,6 +141,38 @@ public class Webduino {
 	    				   +":"+serverSettings.getString("serverport", "8080")+"/read");
 
 	    	   urlConnection = (HttpURLConnection) url.openConnection();
+	    	   
+	    	   //getting cookies from server
+	    	    for (int i=0; ; i++) {
+	    	        String headerName = urlConnection.getHeaderFieldKey(i);
+	    	        String headerValue = urlConnection.getHeaderField(i);
+
+	    	        if (headerName == null && headerValue == null) {
+	    	            // No more headers
+	    	            break;
+	    	        }
+	    	        if ("Set-Cookie".equalsIgnoreCase(headerName)) {
+	    	            // Parse cookies
+	    	            String[] fields = headerValue.split(";\\s*");
+
+	    	            // Parse each field
+	    	            for (int j=1; j<fields.length; j++) {
+	    	            	if(fields[j].contains("username"))
+	    	            	{
+	    	            		username = fields[j].substring(fields[j].indexOf("=") + 1, fields[j].length());
+	    	            	}
+	    	            	else if(fields[j].contains("password"))
+	    	            	{
+	    	            		password = fields[j].substring(fields[j].indexOf("=") + 1, fields[j].length());
+	    	            	}
+	    	            }
+
+	    	            // Save the cookie...
+	    	        }
+	    	    }
+	    	   
+	    	   
+	    	   
 	    	   urlConnection.connect();
 
 	    	   BufferedReader in = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
