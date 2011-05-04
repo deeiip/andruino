@@ -31,6 +31,7 @@
 			android:layout_height="wrap_content" 
 			android:layout_width="wrap_content" 
 			android:id="@+id/checkState"></TextView>
+		<!-- 
 		<TextView android:text="Enabling notifications for an input" 
 			android:layout_height="wrap_content" 
 			android:layout_width="wrap_content" 
@@ -41,6 +42,8 @@
 			android:layout_height="wrap_content" 
 			android:layout_width="wrap_content" 
 			android:id="@+id/enableNotification"></TextView>
+		-->
+		
 		<TextView android:text="Editing an input name" 
 			android:layout_height="wrap_content" 
 			android:layout_width="wrap_content" 
@@ -135,7 +138,6 @@
 			android:layout_height="wrap_content" 
 			android:layout_width="wrap_content" 
 			android:id="@+id/editCredentials"></TextView>
-		<!-- 
 		<TextView android:text="Enabling/disabling confirmations" 
 			android:layout_height="wrap_content" 
 			android:layout_width="wrap_content" 
@@ -146,6 +148,5 @@
 			android:layout_height="wrap_content" 
 			android:layout_width="wrap_content" 
 			android:id="@+id/enableConfirm"></TextView>
-		-->
 	</LinearLayout>
 </ScrollView>

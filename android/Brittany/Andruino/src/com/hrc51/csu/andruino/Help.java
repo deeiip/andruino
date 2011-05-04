@@ -14,7 +14,7 @@ public class Help extends Activity {
         // defining views for this activity
         TextView helpIntro = (TextView)findViewById(R.id.helpIntro);
         TextView checkState = (TextView)findViewById(R.id.checkState);
-        TextView enableNotification = (TextView)findViewById(R.id.enableNotification);
+//        TextView enableNotification = (TextView)findViewById(R.id.enableNotification);
         TextView editIndName = (TextView)findViewById(R.id.editIndName);
         TextView enableInd = (TextView)findViewById(R.id.enableInd);
         TextView changeState = (TextView)findViewById(R.id.changeState);
@@ -23,7 +23,7 @@ public class Help extends Activity {
         TextView editServerInfo = (TextView)findViewById(R.id.editServerInfo);
         TextView enableHTTPS = (TextView)findViewById(R.id.enableHTTPS);
         TextView editCredentials = (TextView)findViewById(R.id.editCredentials);
-//        TextView enableConfirm = (TextView)findViewById(R.id.enableConfirm);
+        TextView enableConfirm = (TextView)findViewById(R.id.enableConfirm);
 
         
         // defining information to be displayed in the TextViews
@@ -34,8 +34,8 @@ public class Help extends Activity {
         		"input is indicated by the color of the circle on the left-hand side of the indicator name. " +
         		"Red indicates that the input is \"off,\" green indicates that it is \"on\" and grey " +
         		"indicates that it is \"disabled.\"\n";
-        String enableN = "You can enable email notifications for a particular input by simply checking the" +
-        		" box next to the indicator for which you want notifications.\n";
+//        String enableN = "You can enable email notifications for a particular input by simply checking the" +
+//        		" box next to the indicator for which you want notifications.\n";
         String editI = "To edit the name of an input, long-press on the item which will cause a context " +
         		"menu to appear. Select \"Edit pin name\" from the menu. A box should pop up that will " +
         		"allow you to edit the name of the input. Select \"OK\" for the change to take effect.\n";
@@ -66,14 +66,14 @@ public class Help extends Activity {
         String editC = "Select the list item titled \"User Name\" to edit the username associated with " +
         		"the server connection and select \"Password\" to edit the password associated with the " +
         		"server connection.\n";
-//        String enableC = "Check the box for the list item titled \"Enable Confirmation\" in order to be " +
-//        		"prompted for a confirmation prior to changing the state of an output on the Outputs page.";
+        String enableC = "Check the box for the list item titled \"Enable Confirmation\" in order to be " +
+        		"prompted for a confirmation prior to changing the state of an output on the Outputs page.";
 
 
         // updating TextViews with information
         helpIntro.setText(intro);
         checkState.setText(check);
-        enableNotification.setText(enableN);
+//        enableNotification.setText(enableN);
         changeState.setText(change);
         editIndName.setText(editI);
         enableInd.setText(enableI);
@@ -82,7 +82,7 @@ public class Help extends Activity {
         editServerInfo.setText(editS);
         enableHTTPS.setText(enableH);
         editCredentials.setText(editC);
-//        enableConfirm.setText(enableC);
+        enableConfirm.setText(enableC);
 
     }
 }
