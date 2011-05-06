@@ -42,8 +42,7 @@ public class Help extends Activity {
         String enableI = "To enable or disable an input, long-press on the item which will cause a context " +
         		"menu to appear. Select \"Disable/Enable pin\" from the menu. If the pin was initially " +
         		"enabled, it will be disabled and appear greyed out in the list; If the pin was initially " +
-        		"disabled, it will no longer appear greyed out in the list. Disabling an input will also " +
-        		"disable email notifications for that particular input.\n";
+        		"disabled, it will no longer appear greyed out in the list.\n";
         String change = "You can change the state of a control from the Controls page. In order to do so, " +
         		"click on the toggle button that appears next to the control of interest. Depending on " +
         		"whether you have confirmations enabled in your application settings, a dialog box may " +
