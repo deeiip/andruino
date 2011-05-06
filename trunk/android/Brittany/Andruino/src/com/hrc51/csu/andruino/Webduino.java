@@ -46,18 +46,25 @@ public class Webduino {
 	    	   urlConnection = (HttpURLConnection) url.openConnection();
 	    	   cookieJar = urlConnection.getHeaderField("Set-Cookie");
 	    	   
+//	    	   BufferedReader in;
+//	    	   try {
+//		    	   in = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
+//		    	   String inputLine;
+//		    	   inputLine = in.readLine();
+//		    	   jp = new JsonParser(inputLine);
+//		    	   in.close();
+//	    	   }
+//	    	   catch (IOException e){
+//	    		   login();
+//	    	   }
 	    	   BufferedReader in;
-	    	   try {
+
 		    	   in = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
 		    	   String inputLine;
 		    	   inputLine = in.readLine();
 		    	   jp = new JsonParser(inputLine);
 		    	   in.close();
-	    	   }
-	    	   catch (IOException e){
-	    		   login();
-	    	   }
-	    	   
+
 	    	   urlConnection.disconnect();
 
 	    	   if (jp.getResponse().equals("pass"))

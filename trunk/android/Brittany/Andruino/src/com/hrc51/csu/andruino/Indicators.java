@@ -51,7 +51,7 @@ public class Indicators extends ListActivity {
 		deviceNames = new ArrayList<String>();
 		deviceIndicators = new ArrayList<AndruinoObj>();
 		
-		new RetrieveControlsTask().execute();
+		//new RetrieveControlsTask().execute();
     }
     
 	@Override
@@ -93,8 +93,26 @@ public class Indicators extends ListActivity {
 			});
 	    	about.show();
 			break;
+			
+		case R.id.login:
+			int itr = 1;
+			while(itr <= 3)
+			{
+				itr++;
+				if(wc.login()) 
+				{
+					new RetrieveControlsTask().execute();
+					break;
+				}
+			}
+			if(itr == 3)
+			{
+				Toast.makeText(this,
+					"Cannot connect to server. Check your settings.",
+					Toast.LENGTH_LONG).show();
+			}
+			break;
 		}
-
 		return true;
 	}
 	
@@ -205,7 +223,7 @@ public class Indicators extends ListActivity {
 		
 		@Override
 		protected Void doInBackground(Void... unused) {
-	        allControls = wc.read();
+			allControls = wc.read();
 	        publishProgress();
 	        return null;
 		}

@@ -2,6 +2,7 @@ package com.hrc51.csu.andruino;
 
 import java.util.ArrayList;
 
+
 import android.app.AlertDialog;
 import android.app.ListActivity;
 import android.app.ProgressDialog;
@@ -78,7 +79,6 @@ public class Outputs extends ListActivity {
 		case R.id.about:
 			AlertDialog.Builder about = new AlertDialog.Builder(Outputs.this);
 	    	about.setTitle("Andruino 1.0.0");
-	    	//about.setIcon(android.R.drawable.ic_dialog_alert);
 	    	about.setMessage("\u00a9" + " 2011 by Brittany Jones, Matt Kunkel, Kevin Fox, Sushant Arora. All Rights Reserved.");
 	    	
 	    	about.setPositiveButton("OK", new DialogInterface.OnClickListener() {
@@ -88,6 +88,25 @@ public class Outputs extends ListActivity {
 				}
 			});
 	    	about.show();
+			break;
+			
+		case R.id.login:
+			int itr = 1;
+			while(itr <= 3)
+			{
+				itr++;
+				if(wc.login()) 
+				{
+					new RetrieveControlsTask().execute();
+					break;
+				}
+			}
+			if(itr == 3)
+			{
+				Toast.makeText(this,
+					"Cannot connect to server. Check your settings.",
+					Toast.LENGTH_LONG).show();
+			}
 			break;
 		}
 
